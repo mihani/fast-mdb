@@ -33,7 +33,9 @@
         "twig/twig": "^3.0"
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.30"
+        "symfony/debug-bundle": "5.2.*",
+        "symfony/maker-bundle": "^1.30",
+        "symfony/var-dumper": "5.2.*"
     },
     "config": {
         "optimize-autoloader": true,
