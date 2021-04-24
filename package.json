@@ -22,6 +22,7 @@
         "bootstrap-icons": "^1.4.1",
         "feather-icons": "^4.28.0",
         "jquery": "^3.6.0",
-        "node-sass": "^5.0.0"
+        "node-sass": "^5.0.0",
+        "perfect-scrollbar": "^1.5.0"
     }
 }
