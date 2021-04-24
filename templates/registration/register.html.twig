@@ -3,43 +3,51 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-<div class="card o-hidden border-0 shadow-lg my-5">
-    <div class="card-body p-0">
-        <div class="row">
-            <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
-            <div class="col-lg-7">
-                <div class="p-5">
-                    <div class="text-center">
-                        <h1 class="h4 text-gray-900 mb-4">Register</h1>
-                    </div>
-                    {% for flashError in app.flashes('verify_email_error') %}
-                        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
-                    {% endfor %}
-
-                    {{ form_start(registrationForm, {'attr': {'class': 'user'} }) }}
-                        <div class="form-group">
-                            {{ form_widget(registrationForm.email) }}
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-sm-6 mb-3 mb-sm-0">
-                                {{ form_widget(registrationForm.plainPassword.first) }}
-                            </div>
-                            <div class="col-sm-6">
-                                {{ form_widget(registrationForm.plainPassword.second) }}
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="custom-control custom-checkbox">
-                                {{ form_label(registrationForm.agreeTerms) }}
-                                {{ form_widget(registrationForm.agreeTerms) }}
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn">Register</button>
-                    {{ form_end(registrationForm) }}
-                </div>
+<div class="row h-100">
+    <div class="col-lg-5 col-12">
+        <div id="auth-left">
+            <div class="auth-logo">
+{#                <a href="index.html"><img src="assets/images/logo/logo.png" alt="Logo"></a>#}
             </div>
+            <h1 class="auth-title">Sign Up</h1>
+            <p class="auth-subtitle mb-5">Input your data to register to our website.</p>
+
+            {{ form_start(registrationForm) }}
+                {% for flashError in app.flashes('verify_email_error') %}
+                    <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+                {% endfor %}
+
+                <div class="form-group position-relative has-icon-left mb-4">
+                    {{ form_widget(registrationForm.email, {'attr': {'class':'form-control form-control-xl', 'placeholder':'Email'}}) }}
+                    <div class="form-control-icon">
+                        <i class="bi bi-envelope"></i>
+                    </div>
+                </div>
+                <div class="form-group position-relative has-icon-left mb-4">
+                    {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class':'form-control form-control-xl', 'placeholder':'Password'}}) }}
+                    <div class="form-control-icon">
+                        <i class="bi bi-shield-lock"></i>
+                    </div>
+                </div>
+                <div class="form-group position-relative has-icon-left mb-4">
+                    {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class':'form-control form-control-xl', 'placeholder':'Confirm Password'}}) }}
+                    <div class="form-control-icon">
+                        <i class="bi bi-shield-lock"></i>
+                    </div>
+                </div>
+                <div class="form-check">
+                    <div class="checkbox">
+                        {{ form_label(registrationForm.agreeTerms) }}
+                        {{ form_widget(registrationForm.agreeTerms, {'attr': {'class':'form-check-input'}}) }}
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Sign Up</button>
+            {{ form_end(registrationForm) }}
+        </div>
+    </div>
+    <div class="col-lg-7 d-none d-lg-block">
+        <div id="auth-right">
+
         </div>
     </div>
 </div>
