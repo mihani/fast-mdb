@@ -9,7 +9,7 @@ class DashboardController extends AbstractController
 {
     public const MENU_ITEM = 'dashboard';
 
-    #[Route('/', name: 'app_dashboard_list')]
+    #[Route('/', name: 'dashboard_index')]
     public function index()
     {
         if (!$this->getUser()) {

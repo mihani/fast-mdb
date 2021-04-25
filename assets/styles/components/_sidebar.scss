@@ -54,7 +54,6 @@
         }
         
         .sidebar-link {
-            display: block;
             padding: .7rem 1rem;
             font-size: 1rem;
             display: flex;
@@ -65,6 +64,9 @@
             color:#25396f;
             svg,i {
                 color:#7c8db5;
+                &:before {
+                    vertical-align: text-top;
+                }
             }
             span {
                 margin-left: 1rem;

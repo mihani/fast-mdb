@@ -13,9 +13,16 @@
         <ul class="menu">
             <li class="sidebar-title">Menu</li>
             <li class="sidebar-item">
-                <a href="{{ path('app_dashboard_list') }}" class='sidebar-link'>
+                <a href="{{ path('dashboard_index') }}" class='sidebar-link'>
                     <i class="bi bi-grid-fill"></i>
                     <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-title">Admin</li>
+            <li class="sidebar-item">
+                <a href="{{ path('company_index') }}" class='sidebar-link'>
+                    <i class="bi bi-building"></i>
+                    <span>Société</span>
                 </a>
             </li>
         </ul>

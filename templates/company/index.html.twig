@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des sociétés{% endblock %}
+
+{% block body %}
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Liste des sociétés</h3>
+            </div>
+        </div>
+    </div>
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+                <a class="btn btn-primary" href="{{ path('company_new') }}">Create new</a>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped" id="company-table">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Date de creation</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for company in companies %}
+                        <tr>
+                            <td>{{ company.name }}</td>
+                            <td>{{ company.createdAt ? company.createdAt|date('d-m-Y H:i:s') : '' }}</td>
+                            <td>
+                                <a class="btn btn-primary" href="{{ path('company_show', {'id': company.id}) }}">Show</a>
+                                <a class="btn btn-outline-secondary" href="{{ path('company_edit', {'id': company.id}) }}">Edit</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">No records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

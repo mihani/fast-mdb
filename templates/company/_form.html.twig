@@ -1,0 +1,15 @@
+{{ form_start(form, {'attr':{'class':'form form-vertical'}}) }}
+<div class="form-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name, {'attr':{'class':'form-control'}}) }}
+            </div>
+        </div>
+        <div class="col-12 d-flex justify-content-end">
+            <button class="btn btn btn-primary me-1 mb-1">{{ button_label|default('Save') }}</button>
+        </div>
+    </div>
+</div>
+{{ form_end(form) }}
