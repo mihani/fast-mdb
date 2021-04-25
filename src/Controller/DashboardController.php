@@ -7,6 +7,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractController
 {
+    public const MENU_ITEM = 'dashboard';
+
     #[Route('/', name: 'app_dashboard_list')]
     public function index()
     {
