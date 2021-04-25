@@ -18,6 +18,8 @@
                     <span>{{ 'menu.main.items.dashboard'|trans }}</span>
                 </a>
             </li>
+
+            {% if is_granted('ROLE_ADMIN') %}
             <li class="sidebar-title">{{ 'menu.admin.title'|trans }}</li>
             <li class="sidebar-item">
                 <a href="{{ path('company_index') }}" class='sidebar-link'>
@@ -31,6 +33,7 @@
                     <span>{{ 'menu.admin.items.user'|trans }}</span>
                 </a>
             </li>
+            {% endif %}
         </ul>
     </div>
     <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
