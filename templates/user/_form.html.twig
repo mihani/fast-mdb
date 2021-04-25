@@ -1,0 +1,39 @@
+{{ form_start(form, {'attr':{'class':'form form-vertical'}}) }}
+<div class="form-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                {{ form_label(form.firstname) }}
+                {{ form_widget(form.firstname, {'attr':{'class':'form-control'}}) }}
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group">
+                {{ form_label(form.lastname) }}
+                {{ form_widget(form.lastname, {'attr':{'class':'form-control'}}) }}
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group">
+                {{ form_label(form.email) }}
+                {{ form_widget(form.email, {'attr':{'class':'form-control'}}) }}
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group">
+                {{ form_label(form.company) }}
+                {{ form_widget(form.company, {'attr':{'class':'form-select'}}) }}
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group">
+                {{ form_label(form.roles) }}
+                {{ form_widget(form.roles, {'attr':{'class':'choices form-select'}}) }}
+            </div>
+        </div>
+    </div>
+    <div class="col-12 d-flex justify-content-end">
+        <button class="btn btn btn-primary me-1 mb-1">{{ button_label|default('admin.user.button.save'|trans) }}</button>
+    </div>
+</div>
+{{ form_end(form) }}

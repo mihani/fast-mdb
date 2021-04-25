@@ -1,3 +1,25 @@
+reset_password:
+  title: Réinitialiser votre mot de passe
+  form_field:
+    password: Nouveau mot de passe
+    repeat_password: Confirmer le mot de passe
+  button:
+    reset_password: Réinitialiser
+request_reset_password:
+  title: Mot de passe perdu
+  form_field:
+    email: Email
+  enter_email_and_send_you_email: "Renseignez votre adresse email et nous vous enverrons un email pour le réinitialiser."
+  remember_account: Vous avez un compte ?
+  log_in: Connectez-vous
+  button:
+    send_reset_email: Envoyer l'email
+check_email:
+  title: L'email a été envoyé
+  email_send_with_link: "Un email a été envoyé, celui-ci contient un lien pour réinitialiser votre mot de passe."
+  link_will_expire: "Ce lien expire dans %expireTime%"
+  if_do_not_receive_email: "Si vous ne recevez pas l'email veuillez vérifier dans le dossier spam ou"
+  try_again: Réessayez
 login:
   title: "Connexion"
   already_logged_with: "Vous êtes déjà connecté en tant que %email%"
@@ -15,6 +37,7 @@ menu:
     title: Admin
     items:
       company: Société
+      user: User
 dashboard:
   title: Dashboard
   project:
@@ -47,3 +70,29 @@ admin:
       created_at: Date de création
       updated_at: Dernière mise à jour
     no_record: Aucune société trouvé
+  user:
+    edit:
+      title: "Modifier \"%userFullname%\""
+    new:
+      title: Créer un utilisateur
+    list:
+      title: "Liste des utilisateurs"
+    button:
+      create: "Créer un utilisateur"
+      show: "Voir"
+      edit: "Modifier"
+      save: "Sauvegarder"
+      delete: "Supprimer"
+      update: "Mettre à jour"
+      back_to_list: Retour à la liste
+    field:
+      email: Email
+      roles: Roles
+      firstname: Prénom
+      lastname: Nom
+      created_at: Date de création
+      updated_at: Dernière mise à jour
+    no_record: Aucun utilisateur trouvé
+    role:
+      admin: Admin
+      user: User

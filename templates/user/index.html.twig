@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{'admin.user.list.title'|trans}}{% endblock %}
+
+{% block body %}
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>{{'admin.user.list.title'|trans}}</h3>
+            </div>
+        </div>
+    </div>
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+                <a class="btn btn-primary" href="{{ path('user_new') }}">{{ 'admin.user.button.create'|trans }}</a>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped" id="user-table">
+                    <thead>
+                        <tr>
+                            <th>{{ 'admin.user.field.lastname'|trans }}</th>
+                            <th>{{ 'admin.user.field.firstname'|trans }}</th>
+                            <th>{{ 'admin.user.field.email'|trans }}</th>
+                            <th>{{ 'admin.user.field.roles'|trans }}</th>
+                            <th>{{ 'admin.user.field.created_at'|trans }}</th>
+                            <th>{{ 'admin.user.field.updated_at'|trans }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.lastname }}</td>
+                            <td>{{ user.firstname }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                            <td>{{ user.createdAt ? user.createdAt|date('d-m-Y H:i:s') : '' }}</td>
+                            <td>{{ user.updatedAt ? user.updatedAt|date('d-m-Y H:i:s') : '' }}</td>
+                            <td>
+                                <a class="btn btn-primary" href="{{ path('user_show', {'id': user.id}) }}">{{ 'admin.company.button.show'|trans }}</a>
+                                <a class="btn btn-outline-secondary" href="{{ path('user_edit', {'id': user.id}) }}">{{ 'admin.company.button.edit'|trans }}</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7">{{ 'admin.user.no_record'|trans }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

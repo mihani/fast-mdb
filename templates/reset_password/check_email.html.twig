@@ -1,0 +1,16 @@
+{% extends 'base-login.html.twig' %}
+
+{% block title %}{{ 'check_email.title'|trans }}{% endblock %}
+
+{% block body %}
+    {% for flashError in app.flashes('reset_password_error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+    <p class="auth-subtitle mb-5">
+        {{ 'check_email.email_send_with_link'|trans }}
+        {{ 'check_email.link_will_expire'|trans({'%expireTime%': resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle')}) }}
+    </p>
+    <p class="auth-subtitle mb-5">
+        {{ 'check_email.if_do_not_receive_email'|trans }} <a href="{{ path('app_forgot_password_request') }}">{{ 'check_email.try_again'|trans }}</a>
+    </p>
+{% endblock %}

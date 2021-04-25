@@ -3,14 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <title>{% block title %}{{ 'login.title'|trans }}{% endblock %}</title>
+    <title>Fast MDB - {% block title %}{{ 'login.title'|trans }}{% endblock %}</title>
     {% block stylesheets %}
         {{ encore_entry_link_tags('auth') }}
     {% endblock %}
 </head>
 <body>
     <div id="auth">
-        {% block body %}{% endblock %}
+        <div class="row h-100">
+            <div class="col-lg-6 col-12">
+                <div id="auth-left">
+                    <div class="auth-logo">
+                        {#<a href="index.html"><img src="assets/images/logo/logo.png" alt="Logo"></a>#}
+                    </div>
+                    {% block body %}{% endblock %}
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <div id="auth-right">
+
+                </div>
+            </div>
+        </div>
     </div>
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}

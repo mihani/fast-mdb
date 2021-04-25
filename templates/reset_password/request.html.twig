@@ -1,0 +1,26 @@
+{% extends 'base-login.html.twig' %}
+
+{% block title %}{{ 'request_reset_password.title'|trans }}{% endblock %}
+
+{% block body %}
+    <h1 class="auth-title">{{ 'request_reset_password.title'|trans }}</h1>
+    <p class="auth-subtitle mb-5">{{ 'request_reset_password.enter_email_and_send_you_email'|trans }}</p>
+
+    {% for flashError in app.flashes('reset_password_error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+    {{ form_start(requestForm) }}
+    <div class="form-group position-relative has-icon-left mb-4">
+        {{ form_widget(requestForm.email, {'attr':{'class':'form-control form-control-xl'}}) }}
+        <div class="form-control-icon">
+            <i class="bi bi-envelope"></i>
+        </div>
+    </div>
+    <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">{{ 'request_reset_password.button.send_reset_email'|trans }}</button>
+    {{ form_end(requestForm) }}
+    <div class="text-center mt-5 text-lg fs-4">
+        <p class='text-gray-600'>
+            {{ 'request_reset_password.remember_account'|trans }} <a href="{{ path('app_login') }}" class="font">{{ 'request_reset_password.log_in'|trans }}</a>.
+        </p>
+    </div>
+{% endblock %}
