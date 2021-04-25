@@ -1,0 +1,49 @@
+login:
+  title: "Connexion"
+  already_logged_with: "Vous êtes déjà connecté en tant que %email%"
+  form_field:
+    email: "Email"
+    paswword: "Mot de passe"
+    submit: "Connexion"
+  forgot_password: "Mot de passe oublié ?"
+menu:
+  main:
+    title: "Menu"
+    items:
+      dashboard: "Dashboard"
+  admin:
+    title: Admin
+    items:
+      company: Société
+dashboard:
+  title: Dashboard
+  project:
+    list:
+      title: Liste des projets
+    create:
+      title: Créer un projet
+    button:
+      go: Go !
+admin:
+  company:
+    edit:
+      title: "Modifier \"%company%\""
+    list:
+      title: "Liste des sociétés"
+    new:
+      title: "Créer une société"
+    delete:
+      sure_question: "Etes-vous sur de supprimer cette société ?"
+    button:
+      create: "Créer"
+      show: "Voir"
+      edit: "Modifier"
+      save: "Sauvegarder"
+      delete: "Supprimer"
+      update: "Mettre à jour"
+      back_to_list: Retour à la liste
+    field:
+      name: Nom
+      created_at: Date de création
+      updated_at: Dernière mise à jour
+    no_record: Aucune société trouvé

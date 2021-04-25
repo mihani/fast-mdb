@@ -11,18 +11,18 @@
     </div>
     <div class="sidebar-menu">
         <ul class="menu">
-            <li class="sidebar-title">Menu</li>
+            <li class="sidebar-title">{{ 'menu.main.title'|trans }}</li>
             <li class="sidebar-item">
                 <a href="{{ path('dashboard_index') }}" class='sidebar-link'>
                     <i class="bi bi-grid-fill"></i>
-                    <span>Dashboard</span>
+                    <span>{{ 'menu.main.items.dashboard'|trans }}</span>
                 </a>
             </li>
-            <li class="sidebar-title">Admin</li>
+            <li class="sidebar-title">{{ 'menu.admin.title'|trans }}</li>
             <li class="sidebar-item">
                 <a href="{{ path('company_index') }}" class='sidebar-link'>
                     <i class="bi bi-building"></i>
-                    <span>Société</span>
+                    <span>{{ 'menu.admin.items.company'|trans }}</span>
                 </a>
             </li>
         </ul>

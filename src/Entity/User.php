@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
- * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @UniqueEntity(fields={"email"}, message="Un compte existe déjà avec cette email")
  */
 class User implements UserInterface
 {
@@ -38,9 +38,20 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\ManyToOne(targetEntity=Company::class)
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $isVerified = false;
+    private $company;
+
+    /**
+     * @ORM\Column(type="string", length=180)
+     */
+    private $firstname;
+
+    /**
+     * @ORM\Column(type="string", length=180)
+     */
+    private $lastname;
 
     public function getId(): ?int
     {
@@ -123,14 +134,38 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function isVerified(): bool
+    public function getCompany(): ?Company
     {
-        return $this->isVerified;
+        return $this->company;
     }
 
-    public function setIsVerified(bool $isVerified): self
+    public function setCompany(?Company $company): self
     {
-        $this->isVerified = $isVerified;
+        $this->company = $company;
+
+        return $this;
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(string $firstname): self
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): self
+    {
+        $this->lastname = $lastname;
 
         return $this;
     }
