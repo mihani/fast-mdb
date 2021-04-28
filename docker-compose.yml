@@ -42,5 +42,34 @@ services:
       - ./:/srv/
     command: echo "node service disabled" && /bin/true
 
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
+    volumes:
+      - elastic:/usr/share/elasticsearch/data
+    environment:
+      - node.name=fast-mdb
+      - cluster.name=es-docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.12.0
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elastic:9200
+    ports:
+      - 5601:5601
+    depends_on:
+      - elastic
+
 volumes:
   mysql: ~
+  elastic: ~
