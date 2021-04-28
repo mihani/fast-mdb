@@ -1,0 +1,25 @@
+<?php
+
+$finder = (new PhpCsFixer\Finder())
+    ->in(__DIR__)
+    ->exclude('var')
+    ->exclude('migrations')
+;
+
+return (new PhpCsFixer\Config())
+    ->setRules([
+        '@Symfony' => true,
+        '@PSR2' => true,
+        '@PSR1' => true,
+        '@PHP73Migration' => true,
+        '@PhpCsFixer' => true,
+        '@DoctrineAnnotation' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'list_syntax' => ['syntax' => 'long'],
+        'php_unit_test_class_requires_covers' => false,
+        'php_unit_internal_class' => false,
+        'yoda_style' => false
+    ])
+    ->setFinder($finder)
+;
+

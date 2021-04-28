@@ -15,10 +15,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    use TimestampableEntity;
     public const ROLE_USER = 'ROLE_USER';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
-
-    use TimestampableEntity;
 
     /**
      * @ORM\Id

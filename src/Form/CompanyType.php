@@ -14,7 +14,7 @@ class CompanyType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'admin.company.field.name'
+                'label' => 'admin.company.field.name',
             ])
         ;
     }

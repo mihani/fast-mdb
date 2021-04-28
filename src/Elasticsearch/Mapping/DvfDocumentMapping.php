@@ -12,20 +12,20 @@ class DvfDocumentMapping
                     'type' => 'text',
                     'fields' => [
                         'raw' => [
-                            'type' => 'keyword'
-                        ]
-                    ]
+                            'type' => 'keyword',
+                        ],
+                    ],
                 ],
                 'created_at' => [
-                    'type' => 'date'
+                    'type' => 'date',
                 ],
-            ]
+            ],
         ],
         'disposition_number' => [ // Numero de disposition
-            'type' => 'text'
+            'type' => 'text',
         ],
         'mutation_date' => [ // Date de mutation
-            'type' => 'date'
+            'type' => 'date',
         ],
         'mutation_nature' => [ // Nature de la mutation
             'type' => 'text',
@@ -69,18 +69,18 @@ class DvfDocumentMapping
                         'name' => [  // Voie
                             'type' => 'text',
                         ],
-                    ]
+                    ],
                 ],
                 'city' => [
                     'type' => 'object',
                     'properties' => [
                         'name' => [ // Commune
-                            'type' => 'text'
+                            'type' => 'text',
                         ],
                         'code' => [ // Code commune
-                            'type' => 'text'
+                            'type' => 'text',
                         ],
-                    ]
+                    ],
                 ],
                 'postal_code' => [
                     'type' => 'text',
@@ -88,7 +88,7 @@ class DvfDocumentMapping
                 'department_code' => [
                     'type' => 'text',
                 ],
-            ]
+            ],
         ],
         'cadastre' => [
             'type' => 'object',
@@ -102,14 +102,13 @@ class DvfDocumentMapping
                         'code' => [ // Section
                             'type' => 'text',
                         ],
-
-                    ]
+                    ],
                 ],
                 'plan_number' => [ // No plan
-                    'type' => 'text'
+                    'type' => 'text',
                 ],
                 'part_number' => [ // No volume
-                    'type' => 'text'
+                    'type' => 'text',
                 ],
                 'lots' => [
                     'type' => 'object',
@@ -127,9 +126,9 @@ class DvfDocumentMapping
                                             'type' => 'text',
                                         ],
                                         'surface_carrez' => [ // Surface carrez du lot
-                                            'type' => 'double'
-                                        ]
-                                    ]
+                                            'type' => 'double',
+                                        ],
+                                    ],
                                 ],
                                 '2' => [
                                     'type' => 'object',
@@ -138,9 +137,9 @@ class DvfDocumentMapping
                                             'type' => 'text',
                                         ],
                                         'surface_carrez' => [ // Surface carrez du lot
-                                            'type' => 'double'
-                                        ]
-                                    ]
+                                            'type' => 'double',
+                                        ],
+                                    ],
                                 ],
                                 '3' => [
                                     'type' => 'object',
@@ -149,9 +148,9 @@ class DvfDocumentMapping
                                             'type' => 'text',
                                         ],
                                         'surface_carrez' => [ // Surface carrez du lot
-                                            'type' => 'double'
-                                        ]
-                                    ]
+                                            'type' => 'double',
+                                        ],
+                                    ],
                                 ],
                                 '4' => [
                                     'type' => 'object',
@@ -160,9 +159,9 @@ class DvfDocumentMapping
                                             'type' => 'text',
                                         ],
                                         'surface_carrez' => [ // Surface carrez du lot
-                                            'type' => 'double'
-                                        ]
-                                    ]
+                                            'type' => 'double',
+                                        ],
+                                    ],
                                 ],
                                 '5' => [
                                     'type' => 'object',
@@ -171,15 +170,15 @@ class DvfDocumentMapping
                                             'type' => 'text',
                                         ],
                                         'surface_carrez' => [ // Surface carrez du lot
-                                            'type' => 'double'
-                                        ]
-                                    ]
+                                            'type' => 'double',
+                                        ],
+                                    ],
                                 ],
-                            ]
+                            ],
                         ],
-                    ]
+                    ],
                 ],
-            ]
+            ],
         ],
         'premises' => [ // "local" information
             'type' => 'object',
@@ -189,8 +188,8 @@ class DvfDocumentMapping
                 ],
                 'type' => [ // Type local
                     'type' => 'text',
-                ]
-            ]
+                ],
+            ],
         ],
     ];
 }
