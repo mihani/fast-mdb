@@ -14,6 +14,6 @@ install:
 ## Quality assurance
 ## -----------------
 phpcs-fixer:
-	$(DOCKER_COMPOSE) run --rm php vendor/bin/php-cs-fixer fix --verbose
+	$(DOCKER_COMPOSE) exec php vendor/bin/php-cs-fixer fix --verbose
 
 .PHONY : clean

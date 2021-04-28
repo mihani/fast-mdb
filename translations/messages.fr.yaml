@@ -45,10 +45,29 @@ dashboard:
       title: Liste des projets
     create:
       title: Créer un projet
-      search_bar:
-        placeholder: Rechercher une adresse...
-    button:
-      go: Go !
+      more_information_address: Infos précise de l'adresse
+      urban_doc_available: Document d'urbanisme disponible
+      gps_coordinates:
+        title: Coordonnées GPS
+        latitude: Latitude
+        longitude: Longitude
+      insee_code: Code insee
+      map:
+        aerial_view_with_casdastral_cut: Vue aérienne avec découpe cadastrale
+        dynamic_street_view: StreetView dynamique
+      square_metre_price: "Prix au mètre carré de la commune : %price%€/m"
+      sales_in_delimited_area: "Ventes réalisées dans un rayon de %km%km (par proximité)"
+      table:
+        head:
+          address: Adresse
+          sales_price: Prix de vente
+          date: Date
+      form_field:
+        search_bar: Rechercher une adresse...
+        submit: Go !
+      error:
+        geo_api:
+          retrieve_more_info: Un problème est survenu à la récupération des données de l'adresse
 admin:
   company:
     edit:

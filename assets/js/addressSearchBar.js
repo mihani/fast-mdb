@@ -8,10 +8,10 @@ $(document).ready(function() {
             $('#search-bar__list-group').css('display','none');
         })
         .on('click', '.result-item', function (){
-            $('#dashboard-new-project-search-bar').val($(this).children('div').text());
+            $('.dashboard-new-project-search-bar').val($(this).children('div').text());
         })
 
-    $('#dashboard-new-project-search-bar').keypress(function (){
+    $('.dashboard-new-project-search-bar').keyup(function (){
         let addressSearched = $(this).val();
         if (addressSearched === ''){
             return;
