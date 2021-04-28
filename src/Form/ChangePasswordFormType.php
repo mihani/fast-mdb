@@ -31,12 +31,12 @@ class ChangePasswordFormType extends AbstractType
                     ],
                     'attr' => [
                         'placeholder' => 'reset_password.form_field.password',
-                    ]
+                    ],
                 ],
                 'second_options' => [
                     'attr' => [
                         'placeholder' => 'reset_password.form_field.repeat_password',
-                    ]
+                    ],
                 ],
                 'invalid_message' => 'The password fields must match.',
                 // Instead of being set onto the object directly,

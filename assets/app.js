@@ -2,5 +2,5 @@
 import './styles/bootstrap.scss';
 import './styles/app.scss';
 
-import $ from 'jquery';
+const $ = require('jquery');
 require('bootstrap');

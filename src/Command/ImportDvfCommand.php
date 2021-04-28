@@ -15,9 +15,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ImportDvfCommand extends Command
 {
-    protected static $defaultName = 'fast-mdb:import:dvf';
-
     private const BULK_INSERT_BATCH = 500;
+    protected static $defaultName = 'fast-mdb:import:dvf';
 
     private string $elasticHost;
     private string $elasticDvfIndexName;
@@ -46,15 +45,16 @@ class ImportDvfCommand extends Command
         /** @var Client $client */
         $client = ClientBuilder::create()
             ->setHosts([$this->elasticHost])
-            ->build();
+            ->build()
+        ;
 
         $output->writeln([
             '',
             '<fg=black;bg=green>Import DFV Begin</>',
-            ''
+            '',
         ]);
 
-        if (null === $input->getOption('delete')){
+        if (null === $input->getOption('delete')) {
             $output->writeln([
                 '<fg=black;bg=yellow>Delete begin...</>',
                 '',
@@ -65,15 +65,15 @@ class ImportDvfCommand extends Command
                 'body' => [
                     'query' => [
                         'match' => [
-                            'dvf_metadata.year' => $dvfYear
-                        ]
-                    ]
-                ]
+                            'dvf_metadata.year' => $dvfYear,
+                        ],
+                    ],
+                ],
             ];
 
             try {
                 $result = $client->deleteByQuery($removeParams);
-            }catch (Missing404Exception $missing404Exception){
+            } catch (Missing404Exception $missing404Exception) {
                 $skipDeleteMessage = true;
                 $output->writeln([
                     '<fg=black;bg=yellow>Index Not found</>',
@@ -81,7 +81,7 @@ class ImportDvfCommand extends Command
                 ]);
             }
 
-            if (!$skipDeleteMessage){
+            if (!$skipDeleteMessage) {
                 $output->writeln([
                     sprintf('<fg=black;bg=yellow>%s/%s documents deleted</>', $result['deleted'], $result['total']),
                     '',
@@ -91,7 +91,7 @@ class ImportDvfCommand extends Command
 
         try {
             $client->indices()->get(['index' => $this->elasticDvfIndexName]);
-        }catch (Missing404Exception $missing404Exception){
+        } catch (Missing404Exception $missing404Exception) {
             $output->writeln([
                 sprintf('<fg=black;bg=yellow>Index %s not found - Creation begin</>', $this->elasticDvfIndexName),
                 '',
@@ -102,15 +102,15 @@ class ImportDvfCommand extends Command
                 'body' => [
                     'settings' => [
                         'number_of_shards' => 2,
-                        'number_of_replicas' => 1
+                        'number_of_replicas' => 1,
                     ],
                     'mappings' => [
-                        '_source'=> [
-                            'enabled' => true
+                        '_source' => [
+                            'enabled' => true,
                         ],
                         'properties' => DvfDocumentMapping::MAPPING,
-                    ]
-                ]
+                    ],
+                ],
             ];
 
             $client->indices()->create($indexParams);
@@ -129,45 +129,46 @@ class ImportDvfCommand extends Command
 
         $url = $input->getArgument('url-file');
 
-        if (false === filter_var($url, FILTER_VALIDATE_URL)){
+        if (false === filter_var($url, FILTER_VALIDATE_URL)) {
             throw new \HttpUrlException('Argument url is not valid url');
         }
 
         $stream = fopen($url, 'r');
 
-        if ($stream !== false){
+        if ($stream !== false) {
             $documentParams = ['body' => []];
 
             $i = 0;
             $j = 0;
 
-            while ($data = fgetcsv($stream,0,'|')){
-                if ($i === 0){
+            while ($data = fgetcsv($stream, 0, '|')) {
+                if ($i === 0) {
                     ++$i;
+
                     continue;
                 }
 
                 $documentParams['body'][] = [
                     'index' => [
                         '_index' => $this->elasticDvfIndexName,
-                        '_id' =>  Uuid::uuid4()->toString(),
-                    ]
+                        '_id' => Uuid::uuid4()->toString(),
+                    ],
                 ];
 
                 $documentParams['body'][] = [
                     'dvf_metadata' => [
                         'year' => $dvfYear,
-                        'created_at' => (new \DateTime())->getTimestamp()
+                        'created_at' => (new \DateTime())->getTimestamp(),
                     ],
                     'disposition_number' => $data[7],
                     'mutation_date' => (\DateTime::createFromFormat('d/m/Y', $data[8]))->format('Y-m-d'),
                     'mutation_nature' => $data[9],
-                    'land_value' => (double) $data[10],
-                    'actual_build_area' => (double) $data[38],
+                    'land_value' => (float) $data[10],
+                    'actual_build_area' => (float) $data[38],
                     'room_count' => (int) $data[39],
                     'culture_nature' => $data[40],
                     'speciale_culture_nature' => $data[41],
-                    'land_area' => (double) $data[42],
+                    'land_area' => (float) $data[42],
                     'address' => [
                         'lane' => [
                             'number' => $data[11],
@@ -199,36 +200,36 @@ class ImportDvfCommand extends Command
                             'details' => [
                                 '1' => [
                                     'code' => $data[24],
-                                    'surface_carrez' => (double) $data[25],
+                                    'surface_carrez' => (float) $data[25],
                                 ],
                                 '2' => [
                                     'code' => $data[26],
-                                    'surface_carrez' => (double) $data[27],
+                                    'surface_carrez' => (float) $data[27],
                                 ],
                                 '3' => [
                                     'code' => $data[28],
-                                    'surface_carrez' => (double) $data[29],
+                                    'surface_carrez' => (float) $data[29],
                                 ],
                                 '4' => [
                                     'code' => $data[30],
-                                    'surface_carrez' => (double) $data[31],
+                                    'surface_carrez' => (float) $data[31],
                                 ],
                                 '5' => [
                                     'code' => $data[32],
-                                    'surface_carrez' => (double) $data[33],
+                                    'surface_carrez' => (float) $data[33],
                                 ],
-                            ]
-                        ]
-                    ]
+                            ],
+                        ],
+                    ],
                 ];
 
-                if ($i % self::BULK_INSERT_BATCH === 0){
+                if ($i % self::BULK_INSERT_BATCH === 0) {
                     ++$j;
                     $responses = $client->bulk($documentParams);
                     $documentParams = ['body' => []];
                     unset($responses);
                     $output->writeln([
-                        sprintf("<fg=black;bg=cyan>%d DVF unit inserted</>", self::BULK_INSERT_BATCH*$j),
+                        sprintf('<fg=black;bg=cyan>%d DVF unit inserted</>', self::BULK_INSERT_BATCH * $j),
                         '',
                     ]);
                 }
@@ -238,13 +239,13 @@ class ImportDvfCommand extends Command
             if (!empty($documentParams['body'])) {
                 $client->bulk($documentParams);
                 $output->writeln([
-                    "<fg=black;bg=cyan>Last insert</>",
+                    '<fg=black;bg=cyan>Last insert</>',
                     '',
                 ]);
             }
 
             $output->writeln([
-                sprintf("<fg=black;bg=green>Import done ! - %s was insert</>", $i),
+                sprintf('<fg=black;bg=green>Import done ! - %s was insert</>', $i),
                 '',
             ]);
         }
