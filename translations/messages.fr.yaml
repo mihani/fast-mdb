@@ -45,6 +45,8 @@ dashboard:
       title: Liste des projets
     create:
       title: Créer un projet
+      search_bar:
+        placeholder: Rechercher une adresse...
     button:
       go: Go !
 admin:
