@@ -46,7 +46,10 @@ dashboard:
     create:
       title: Créer un projet
       more_information_address: Infos précise de l'adresse
-      urban_doc_available: Document d'urbanisme disponible
+      urban_document:
+        document_available: Document d'urbanisme disponible
+        download_archive: Télécharger l'archive
+        no_documents_exist: Aucun document n'existe pour cette adresse
       gps_coordinates:
         title: Coordonnées GPS
         latitude: Latitude
@@ -68,6 +71,9 @@ dashboard:
       error:
         geo_api:
           retrieve_more_info: Un problème est survenu à la récupération des données de l'adresse
+        urban_portal:
+          retrieve_urban_docs: Un problème est survenue lors de la récupération des documents d'urbanisme
+          retrieve_urban_docs_details: Un problème est survenue lors de la récupération des détails du document %name%
 admin:
   company:
     edit:

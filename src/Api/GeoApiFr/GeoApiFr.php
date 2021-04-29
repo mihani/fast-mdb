@@ -10,6 +10,8 @@ class GeoApiFr
 {
     const BASE_URL = 'https://api-adresse.data.gouv.fr/';
 
+    const SEARCH_ENDPOINT = 'search/';
+
     private HttpClientInterface $client;
 
     public function __construct(HttpClientInterface $client)
@@ -17,34 +19,13 @@ class GeoApiFr
         $this->client = $client;
     }
 
-    public function search(string $address, array $params = []): ResponseInterface
-    {
-        $formatParams = '';
-        if (empty($params)) {
-            foreach ($params as $key => $param) {
-                $formatParams .= '&'.$key.'='.$param;
-            }
-        }
-
-        $url = sprintf(
-            '%ssearch/?q=%s%s',
-            self::BASE_URL,
-            str_replace(' ', '+', $address),
-            $formatParams
-        );
-
-        return $this->doRequest($url, Request::METHOD_GET);
-    }
-
-    private function doRequest(string $url, string $method): ResponseInterface
+    public function search(array $userParams): ResponseInterface
     {
         return $this->client->request(
-            $method,
-            $url,
+            Request::METHOD_GET,
+            self::BASE_URL.self::SEARCH_ENDPOINT,
             [
-                'headers' => [
-                    'Access-Control-Allow-Origin' => '*',
-                ],
+                'query' => $userParams,
             ]
         );
     }
