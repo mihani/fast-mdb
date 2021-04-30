@@ -64,8 +64,25 @@
                                     </p>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <h6>{{ 'dashboard.project.create.urban_doc_available'|trans }}</h6>
-                                    <p>Liste documents</p>
+                                    <h6>{{ 'dashboard.project.create.urban_document.document_available'|trans }}</h6>
+                                    {% if urbanDocuments is null %}
+                                        <p>{{ 'dashboard.project.create.urban_document.no_documents_exist'|trans }}</p>
+                                    {% else %}
+                                        <ul>
+                                            {% for urbanDocument in urbanDocuments %}
+                                                <li>{{ urbanDocument.name }} -
+                                                    <a href="{{ urbanDocument.archiveLink }}">
+                                                        <small>{{ 'dashboard.project.create.urban_document.download_archive'|trans }}</small>
+                                                    </a>
+                                                </li>
+                                                <ul>
+                                                    {% for file in urbanDocument.files %}
+                                                        <li><a target="_blank" href="{{ file.link }}">{{ file.name }}</a></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
