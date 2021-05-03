@@ -89,25 +89,23 @@
                             {# Maps part#}
                             <div class="row">
                                 <div class="col-12 col-md-6">
-                                    <h6>{{ 'dashboard.project.create.map.aerial_view_with_casdastral_cut'|trans }}</h6>
+                                    <h6>{{ 'dashboard.project.preview.map.aerial_view_with_casdastral_cut'|trans }}</h6>
                                     <div
                                         id="aerial-map"
                                         data-longitude="{{ addressData.longitude }}"
                                         data-latitude="{{ addressData.latitude }}"
-                                        data-insee_code="{{ addressData.inseeCode }}"
-                                        data-department_code="{{ addressData.departmentCode }}"
-                                        data-geojson_data_endpoint="{{ path('dashboard_retrieve_geojson_data') }}"
                                     >
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <h6>Vue dynamique</h6>
                                     <div
-                                            id="street-view-map-pano"
-                                            data-longitude="{{ addressData.longitude }}"
-                                            data-latitude="{{ addressData.latitude }}"
+                                        id="street-view-map-pano"
+                                        data-longitude="{{ addressData.longitude }}"
+                                        data-latitude="{{ addressData.latitude }}"
                                     >
-                                        <p>{{ 'dashboard.project.preview.map.no_street_view_exist'|trans }}</p></div>
+                                        <p>{{ 'dashboard.project.preview.map.no_street_view_exist'|trans }}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

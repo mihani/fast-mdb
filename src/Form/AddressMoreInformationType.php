@@ -14,7 +14,7 @@ class AddressMoreInformationType extends AbstractType
         $builder
             ->add('address', TextType::class, [
                 'attr' => [
-                    'placeholder' => 'dashboard.project.create.form_field.search_bar',
+                    'placeholder' => 'dashboard.project.preview.form_field.search_bar',
                     'autocomplete' => 'off',
                 ],
             ])

@@ -1,6 +1,6 @@
 "use strict";
 
-const $ = require('jquery');
+import * as $ from 'jquery';
 
 $(document).ready(function() {
     $('body')
