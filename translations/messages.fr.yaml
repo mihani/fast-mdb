@@ -43,7 +43,7 @@ dashboard:
   project:
     list:
       title: Liste des projets
-    create:
+    preview:
       title: Créer un projet
       more_information_address: Infos précise de l'adresse
       urban_document:
@@ -58,6 +58,7 @@ dashboard:
       map:
         aerial_view_with_casdastral_cut: Vue aérienne avec découpe cadastrale
         dynamic_street_view: StreetView dynamique
+        no_street_view_exist: Il n'existe pas de street map pour cette adresse
       square_metre_price: "Prix au mètre carré de la commune : %price%€/m"
       sales_in_delimited_area: "Ventes réalisées dans un rayon de %km%km (par proximité)"
       table:

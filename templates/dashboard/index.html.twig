@@ -22,7 +22,7 @@
             <div class="card">
                 <div class="card-content">
                     <div class="card-body">
-                        <h4 class="cart-title">{{ 'dashboard.project.create.title'|trans }}</h4>
+                        <h4 class="cart-title">{{ 'dashboard.project.preview.title'|trans }}</h4>
                         <div class="row">
                             <div class="col-12 col-md-12">
                                 {{ form_start(searchBarForm, {'attr': {'class':'search-bar'}}) }}
@@ -31,7 +31,7 @@
                                         <i class="bi bi-search"></i>
                                     </span>
                                     {{ form_widget(searchBarForm.address, {'attr':{'class':'form-control dashboard-new-project-search-bar','aria-describedby':'search-address-button'}}) }}
-                                    <button class="btn btn-primary" type="submit" id="search-address-button">{{'dashboard.project.create.form_field.submit'|trans}}</button>
+                                    <button class="btn btn-primary" type="submit" id="search-address-button">{{'dashboard.project.preview.form_field.submit'|trans}}</button>
                                 </div>
                                 <div id="search-bar__list-group" class="list-group search-bar__list-group">
 
@@ -48,31 +48,31 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12 col-md-6">
-                                    <h6>{{ 'dashboard.project.create.more_information_address'|trans }}</h6>
+                                    <h6>{{ 'dashboard.project.preview.more_information_address'|trans }}</h6>
                                     <p>
                                         {{ addressData.address.name }}
                                         <br>
                                         {{ addressData.address.postCode }} {{ addressData.address.city }}
                                     </p>
-                                    <h6>{{ 'dashboard.project.create.insee_code'|trans }}</h6>
+                                    <h6>{{ 'dashboard.project.preview.insee_code'|trans }}</h6>
                                     <p>{{ addressData.cityCode }}</p>
-                                    <h6>{{ 'dashboard.project.create.gps_coordinates.title'|trans }}</h6>
+                                    <h6>{{ 'dashboard.project.preview.gps_coordinates.title'|trans }}</h6>
                                     <p>
-                                        {{ 'dashboard.project.create.gps_coordinates.latitude'|trans }} : {{ addressData.latitude }}
+                                        {{ 'dashboard.project.preview.gps_coordinates.latitude'|trans }} : {{ addressData.latitude }}
                                         <br>
-                                        {{ 'dashboard.project.create.gps_coordinates.longitude'|trans }} : {{ addressData.longitude }}
+                                        {{ 'dashboard.project.preview.gps_coordinates.longitude'|trans }} : {{ addressData.longitude }}
                                     </p>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <h6>{{ 'dashboard.project.create.urban_document.document_available'|trans }}</h6>
+                                    <h6>{{ 'dashboard.project.preview.urban_document.document_available'|trans }}</h6>
                                     {% if urbanDocuments is null %}
-                                        <p>{{ 'dashboard.project.create.urban_document.no_documents_exist'|trans }}</p>
+                                        <p>{{ 'dashboard.project.preview.urban_document.no_documents_exist'|trans }}</p>
                                     {% else %}
                                         <ul>
                                             {% for urbanDocument in urbanDocuments %}
                                                 <li>{{ urbanDocument.name }} -
                                                     <a href="{{ urbanDocument.archiveLink }}">
-                                                        <small>{{ 'dashboard.project.create.urban_document.download_archive'|trans }}</small>
+                                                        <small>{{ 'dashboard.project.preview.urban_document.download_archive'|trans }}</small>
                                                     </a>
                                                 </li>
                                                 <ul>
@@ -83,6 +83,20 @@
                                             {% endfor %}
                                         </ul>
                                     {% endif %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <h6>Vue aérienne avec découpe cadastrale</h6>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <h6>Vue dynamique</h6>
+                                    <div
+                                        id="street-view-map-pano"
+                                        data-longitude="{{ addressData.longitude }}"
+                                        data-latitude="{{ addressData.latitude }}"
+                                    >
+                                        <p>{{ 'dashboard.project.preview.map.no_street_view_exist'|trans }}</p></div>
                                 </div>
                             </div>
                         </div>
@@ -96,4 +110,5 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('addressSearchBar') }}
+    {{ encore_entry_script_tags('streetViewMap') }}
 {% endblock %}
