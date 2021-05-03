@@ -73,8 +73,8 @@ class DashboardController extends AbstractController
                     'city' => $addressData['properties']['city'],
                 ],
                 'cityCode' => $addressData['properties']['citycode'],
-                'latitude' => $addressData['properties']['x'],
-                'longitude' => $addressData['properties']['y'],
+                'latitude' => $addressData['geometry']['coordinates'][1],
+                'longitude' => $addressData['geometry']['coordinates'][0],
             ];
         }
 

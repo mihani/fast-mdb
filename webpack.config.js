@@ -24,6 +24,7 @@ Encore
     .addEntry('auth', './assets/auth.js')
     .addEntry('main', './assets/js/main.js')
     .addEntry('addressSearchBar', './assets/js/addressSearchBar.js')
+    .addEntry('streetViewMap', './assets/js/map/streetViewMap.js')
 
     // enables the Symfony UX Stimulus bridge (used in image/bootstrap.js)
     // .enableStimulusBridge('./image/controllers.json')
