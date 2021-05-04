@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Api\CadastralApi\CadastralApi;
 use App\Api\GeoApiFr\GeoApiFr;
 use App\Api\GeoPortailUrbanisme\GeoPortailUrbanisme;
 use App\Form\AddressMoreInformationType;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -40,7 +42,7 @@ class DashboardController extends AbstractController
         if ($searchBarForm->isSubmitted() && $searchBarForm->isValid()) {
             $addressData = $this->getMoreAddressInfo($searchBarForm->get('address')->getData());
             if ($addressData !== null) {
-                $urbanDocuments = $this->getUrbanDocuments($addressData['cityCode']);
+                $urbanDocuments = $this->getUrbanDocuments($addressData['inseeCode']);
             }
         }
 
@@ -65,16 +67,16 @@ class DashboardController extends AbstractController
 
         if ($response->getStatusCode() === Response::HTTP_OK) {
             $addressData = $response->toArray()['features'][0];
-
             return [
                 'address' => [
                     'name' => $addressData['properties']['name'],
                     'postCode' => $addressData['properties']['postcode'],
                     'city' => $addressData['properties']['city'],
                 ],
-                'cityCode' => $addressData['properties']['citycode'],
-                'latitude' => $addressData['geometry']['coordinates'][1],
+                'departmentCode' => explode(',',$addressData['properties']['context'])[0],
+                'inseeCode' => $addressData['properties']['citycode'],
                 'longitude' => $addressData['geometry']['coordinates'][0],
+                'latitude' => $addressData['geometry']['coordinates'][1],
             ];
         }
 

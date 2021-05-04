@@ -1,3 +1,24 @@
-#street-view-map-pano {
+#street-view-map-pano,
+#aerial-map {
     height: 300px;
+
+    .label {
+        border: none;
+        font-weight: bold;
+        background-color: #fff;
+        padding: 0 2px;
+        box-shadow: none;
+
+        &__section {
+            color: #ff7e38;
+        }
+
+        &__section-prefix {
+            color: #5f0f80;
+        }
+
+        &__land {
+            color: #037216;
+        }
+    }
 }

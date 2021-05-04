@@ -75,6 +75,8 @@ dashboard:
         urban_portal:
           retrieve_urban_docs: Un problème est survenue lors de la récupération des documents d'urbanisme
           retrieve_urban_docs_details: Un problème est survenue lors de la récupération des détails du document %name%
+  button:
+    display_land_data: Afficher les parcelles
 admin:
   company:
     edit:

@@ -46,8 +46,9 @@
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body">
+                            {# Address and urban documents part#}
                             <div class="row">
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-5">
                                     <h6>{{ 'dashboard.project.preview.more_information_address'|trans }}</h6>
                                     <p>
                                         {{ addressData.address.name }}
@@ -55,7 +56,7 @@
                                         {{ addressData.address.postCode }} {{ addressData.address.city }}
                                     </p>
                                     <h6>{{ 'dashboard.project.preview.insee_code'|trans }}</h6>
-                                    <p>{{ addressData.cityCode }}</p>
+                                    <p>{{ addressData.inseeCode }}</p>
                                     <h6>{{ 'dashboard.project.preview.gps_coordinates.title'|trans }}</h6>
                                     <p>
                                         {{ 'dashboard.project.preview.gps_coordinates.latitude'|trans }} : {{ addressData.latitude }}
@@ -63,7 +64,7 @@
                                         {{ 'dashboard.project.preview.gps_coordinates.longitude'|trans }} : {{ addressData.longitude }}
                                     </p>
                                 </div>
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-7">
                                     <h6>{{ 'dashboard.project.preview.urban_document.document_available'|trans }}</h6>
                                     {% if urbanDocuments is null %}
                                         <p>{{ 'dashboard.project.preview.urban_document.no_documents_exist'|trans }}</p>
@@ -85,9 +86,16 @@
                                     {% endif %}
                                 </div>
                             </div>
+                            {# Maps part#}
                             <div class="row">
                                 <div class="col-12 col-md-6">
-                                    <h6>Vue aérienne avec découpe cadastrale</h6>
+                                    <h6>{{ 'dashboard.project.preview.map.aerial_view_with_casdastral_cut'|trans }}</h6>
+                                    <div
+                                        id="aerial-map"
+                                        data-longitude="{{ addressData.longitude }}"
+                                        data-latitude="{{ addressData.latitude }}"
+                                    >
+                                    </div>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <h6>Vue dynamique</h6>
@@ -96,7 +104,8 @@
                                         data-longitude="{{ addressData.longitude }}"
                                         data-latitude="{{ addressData.latitude }}"
                                     >
-                                        <p>{{ 'dashboard.project.preview.map.no_street_view_exist'|trans }}</p></div>
+                                        <p>{{ 'dashboard.project.preview.map.no_street_view_exist'|trans }}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -111,4 +120,5 @@
     {{ parent() }}
     {{ encore_entry_script_tags('addressSearchBar') }}
     {{ encore_entry_script_tags('streetViewMap') }}
+    {{ encore_entry_script_tags('aerialViewMap') }}
 {% endblock %}

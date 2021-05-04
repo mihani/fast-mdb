@@ -1,6 +1,6 @@
 "use strict";
 
-const $ = require('jquery');
+import * as $ from 'jquery';
 
 $(document).ready(function() {
     $('body')
@@ -33,16 +33,15 @@ $(document).ready(function() {
             return elementWhichShowResult.css('display','flex').html(resultLines);
         })
     });
-
-    function fillTemplateWithData(address, context) {
-        return '<a href="#" class="list-group-item list-group-item-action result-item">'+
-            '<div class="d-flex w-100 justify-content-between">' +
-                '<h6 class="mb-1">' + address + '</h6>' +
-            '</div>' +
-            '<p class="mb-1">' +
-                '<small>'+context+'</small>' +
-            '</p>' +
-        '</a>'
-    }
 });
 
+function fillTemplateWithData(address, context) {
+    return '<a href="#" class="list-group-item list-group-item-action result-item">'+
+        '<div class="d-flex w-100 justify-content-between">' +
+        '<h6 class="mb-1">' + address + '</h6>' +
+        '</div>' +
+        '<p class="mb-1">' +
+        '<small>'+context+'</small>' +
+        '</p>' +
+        '</a>'
+}
