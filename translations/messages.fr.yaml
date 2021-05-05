@@ -60,7 +60,14 @@ dashboard:
         dynamic_street_view: StreetView dynamique
         no_street_view_exist: Il n'existe pas de street map pour cette adresse
       square_metre_price: "Prix au mètre carré de la commune : %price%€/m"
-      sales_in_delimited_area: "Ventes réalisées dans un rayon de %km%km (par proximité)"
+      no_proximity_sale: "Pas de ventes réalisé depuis 2016 dans ce rayon."
+      sales_in_delimited_area:
+        title: "Ventes réalisées dans un rayon de %km% km (par proximité)"
+        table:
+          header:
+            address: Adresse
+            price: Prix de vente
+            date: Date
       table:
         head:
           address: Adresse
@@ -75,8 +82,6 @@ dashboard:
         urban_portal:
           retrieve_urban_docs: Un problème est survenue lors de la récupération des documents d'urbanisme
           retrieve_urban_docs_details: Un problème est survenue lors de la récupération des détails du document %name%
-  button:
-    display_land_data: Afficher les parcelles
 admin:
   company:
     edit:
