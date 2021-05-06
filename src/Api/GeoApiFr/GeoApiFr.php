@@ -1,11 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Api\GeoApiFr;
 
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
+/**
+ * @author Maud Remoriquet <maud.remoriquet@gmail.com>
+ */
 class GeoApiFr
 {
     const BASE_URL = 'https://api-adresse.data.gouv.fr/';
@@ -14,9 +20,9 @@ class GeoApiFr
 
     private HttpClientInterface $client;
 
-    public function __construct(HttpClientInterface $client)
+    public function __construct()
     {
-        $this->client = $client;
+        $this->client = HttpClient::create();
     }
 
     public function search(array $userParams): ResponseInterface

@@ -1,7 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Elasticsearch\Mapping;
 
+/**
+ * @author Maud Remoriquet <maud.remoriquet@gmail.com>
+ */
 class DvfDocumentMapping
 {
     public const MAPPING = [
@@ -20,6 +25,9 @@ class DvfDocumentMapping
                     'type' => 'date',
                 ],
             ],
+        ],
+        'location' => [
+            'type' => 'geo_point',
         ],
         'disposition_number' => [ // Numero de disposition
             'type' => 'text',
