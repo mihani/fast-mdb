@@ -69,7 +69,7 @@ class Project
     private $company;
 
     /**
-     * @ORM\OneToMany(targetEntity=UrbanDocument::class, mappedBy="project", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=UrbanDocument::class, mappedBy="project", orphanRemoval=true, cascade={"persist"})
      */
     private $urbanDocuments;
 
