@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
- * @author Maud Remoriquet <maud.remoriquet@gmail.com>
+ * @author mihani <maud.remoriquet@gmail.com>
  */
 class ImportDvfCommand extends Command
 {
@@ -47,7 +47,7 @@ class ImportDvfCommand extends Command
     private array $addressesNotFound;
     private array $addressesTimeout;
 
-    public function __construct(string $name = null, $elasticHost, $elasticDvfIndexName, GeoApiFr $geoApiFr, LoggerInterface $logger, EntityManagerInterface $em)
+    public function __construct(string $name = null, string $elasticHost, string $elasticDvfIndexName, GeoApiFr $geoApiFr, LoggerInterface $logger, EntityManagerInterface $em)
     {
         parent::__construct($name);
         $this->elasticHost = $elasticHost;
@@ -201,7 +201,7 @@ class ImportDvfCommand extends Command
 
             $postalCode = strlen($data[16]) === 4 ? '0'.$data[16] : $data[16];
 
-            $address = AddressUtils::inlineFormat(
+            $address = AddressUtils::inlineFormatFromDvfEntry(
                 number: $data[11],
                 btq: $data[12],
                 type: $data[13],

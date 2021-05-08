@@ -40,6 +40,8 @@ menu:
       user: User
 project:
   title: Project
+  show:
+    title: 'Project : "%address%"'
 dashboard:
   title: Dashboard
   project:

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\AddressRepository;
+use App\Utils\AddressUtils;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -150,5 +151,15 @@ class Address
         $this->inseeCode = $inseeCode;
 
         return $this;
+    }
+
+    public function getInlineAddress(): string
+    {
+        return AddressUtils::inlineFormatFromEntity(
+            $this->addressLine1,
+            $this->addressLine2,
+            $this->postalCode,
+            $this->city
+        );
     }
 }

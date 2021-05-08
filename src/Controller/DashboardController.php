@@ -7,11 +7,14 @@ namespace App\Controller;
 use App\Api\GeoApiFr\GeoApiFr;
 use App\Api\GeoPortailUrbanisme\GeoPortailUrbanisme;
 use App\Elasticsearch\ElasticsearchUtils;
+use App\Elasticsearch\Repository\DvfRepository;
 use App\Entity\Address;
 use App\Entity\Project;
 use App\Entity\UrbanDocument;
 use App\Entity\UrbanFile;
 use App\Entity\User;
+use App\Factory\AddressFactory;
+use App\Factory\UrbanDocumentFactory;
 use App\Form\AddressMoreInformationType;
 use App\Form\ProjectFromPreviewType;
 use App\Utils\AddressUtils;
@@ -52,7 +55,7 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/', name: 'dashboard_index')]
-    public function index(Request $request, PaginatorInterface $paginator): Response
+    public function index(Request $request, PaginatorInterface $paginator, DvfRepository $dvfRepository): Response
     {
         $searchBarForm = $this->createForm(type: AddressMoreInformationType::class, options: [
             'method' => Request::METHOD_GET,
@@ -64,7 +67,7 @@ class DashboardController extends AbstractController
             $addressData = $this->getMoreAddressInfo($searchBarForm->get('address')->getData());
             if ($addressData !== null) {
                 $urbanDocuments = $this->getUrbanDocuments($addressData['inseeCode']);
-                $proximitySales = $this->getProximitySales($addressData['latitude'], $addressData['longitude']);
+                $proximitySales = $dvfRepository->getProximitySales($addressData['latitude'], $addressData['longitude']);
                 if ($proximitySales) {
                     $proximitySalesPagination = $paginator->paginate(
                         $proximitySales,
@@ -120,101 +123,31 @@ class DashboardController extends AbstractController
             ->setCompany($user->getCompany())
         ;
 
-        $address = (new Address())
-            ->setAddressLine1($addressData['address']['name'])
-            ->setCity($addressData['address']['city'])
-            ->setPostalCode($addressData['address']['postCode'])
-            ->setLatitude($addressData['latitude'])
-            ->setLongitude($addressData['longitude'])
-            ->setInseeCode($addressData['inseeCode'])
-        ;
-
-        $project->setAddress($address);
+        $project->setAddress(AddressFactory::create(
+            $addressData['address']['name'],
+            $addressData['address']['city'],
+            $addressData['address']['postCode'],
+            $addressData['inseeCode'],
+            $addressData['latitude'],
+            $addressData['longitude']
+        ));
 
         foreach ($urbanDocumentsData as $urbanDocumentsDatum) {
-            $urbanDocument = (new UrbanDocument())
-                ->setApiUpdatedAt(new \DateTime($urbanDocumentsDatum['apiUpdatedAt']))
-                ->setUploadedAt(new \DateTime($urbanDocumentsDatum['uploadedAt']))
-                ->setArchiveLink($urbanDocumentsDatum['archiveLink'])
-                ->setName($urbanDocumentsDatum['name'])
-                ->setStatus($urbanDocumentsDatum['status'])
-                ->setType($urbanDocumentsDatum['type'])
-                ->setUrbanPortalId($urbanDocumentsDatum['id'])
-            ;
+            $urbanDocument = UrbanDocumentFactory::create(
+                $urbanDocumentsDatum['name'],
+                $urbanDocumentsDatum['archiveLink'],
+                $urbanDocumentsDatum['status'],
+                $urbanDocumentsDatum['type'],
+                $urbanDocumentsDatum['id'],
+                new \DateTime($urbanDocumentsDatum['apiUpdatedAt']),
+                new \DateTime($urbanDocumentsDatum['uploadedAt'])
+            );
 
-            foreach ($urbanDocumentsDatum['files'] as $file) {
-                $urbanFile = (new UrbanFile())
-                    ->setName($file['name'])
-                    ->setLink($file['link'])
-                ;
-
-                $urbanDocument->addUrbanFile($urbanFile);
-            }
-
+            $urbanDocument = UrbanDocumentFactory::addUrbanFilesFromFilesMetaData($urbanDocument, $urbanDocumentsDatum['files']);
             $project->addUrbanDocument($urbanDocument);
         }
 
         return $project;
-    }
-
-    private function getProximitySales(float $latitude, float $longitude, int $distance = 5): array | null
-    {
-        $client = ClientBuilder::create()
-            ->setHosts([$this->getParameter('elastic.host')])
-            ->build()
-        ;
-
-        $params = [
-            'index' => $this->getParameter('elastic.index.name.dvf'),
-            'body' => [
-                'sort' => [
-                    [
-                        '_geo_distance' => [
-                            'location' => [$latitude, $longitude],
-                            'order' => 'asc',
-                            'unit' => 'km',
-                            'mode' => 'min',
-                            'ignore_unmapped' => true,
-                        ],
-                    ],
-                ],
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            'match_all' => new \stdClass(),
-                        ],
-                        'filter' => [
-                            'geo_distance' => [
-                                'distance' => $distance.'km',
-                                'location' => [$latitude, $longitude],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-        $result = $client->search($params);
-        if (isset($result['took'], $result['hits'])) {
-            $elasticResponse = ElasticsearchUtils::denormalizeResult($result);
-            if ($elasticResponse->hits->total->value === 0) {
-                return null;
-            }
-            $proximitySales = [];
-            foreach ($elasticResponse->hits->hits as $hit) {
-                $currentSource = $hit['_source'];
-                $proximitySales[] = [
-                    'address' => AddressUtils::inlineFormatAddressFromAddressDvfEntries($currentSource['address']),
-                    'salePrice' => $currentSource['land_value'],
-                    'saleDate' => new \DateTime($currentSource['mutation_date']),
-                ];
-            }
-
-            return $proximitySales;
-        }
-
-        $this->logger->error('[ELASTICSEARCH] An error occured when retrieve proximity sales', $result);
-
-        return null;
     }
 
     private function getMoreAddressInfo(string $address): array | null
