@@ -11,9 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @author Maud @mihani <maud.remoriquet@gmail.com>
+ * @author mihani <maud.remoriquet@gmail.com>
  *
  * @ORM\Entity(repositoryClass=ProjectRepository::class)
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=false)
@@ -22,6 +23,15 @@ class Project
 {
     use TimestampableEntity;
     use SoftDeleteableEntity;
+
+    private const STATUS_DRAFT = 'draft';
+    private const STATUS_TO_DUG_UP = 'to_dug_up';
+    private const STATUS_SELLER_CONTACTED = 'seller_contacted';
+    private const STATUS_TO_RELAUNCH = 'to_relauch';
+    private const STATUS_SCHEDULED_VISIT = 'scheduled_visit';
+    private const STATUS_OFFER_SEND = 'offer_send';
+    private const STATUS_SIGNED_OFFER = 'signed_offer';
+    private const STATUS_ARCHIVED = 'archived';
 
     /**
      * @ORM\Id
@@ -65,6 +75,7 @@ class Project
 
     public function __construct()
     {
+        $this->state = self::STATUS_DRAFT;
         $this->urbanDocuments = new ArrayCollection();
     }
 
@@ -109,12 +120,12 @@ class Project
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(?UserInterface $user): self
     {
         $this->user = $user;
 

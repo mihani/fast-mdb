@@ -10,7 +10,7 @@ use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordRequestInterface;
 use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordRequestTrait;
 
 /**
- * @author Maud @mihani <maud.remoriquet@gmail.com>
+ * @author mihani <maud.remoriquet@gmail.com>
  *
  * @ORM\Entity(repositoryClass=ResetPasswordRequestRepository::class)
  */

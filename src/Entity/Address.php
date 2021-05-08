@@ -11,7 +11,7 @@ use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
- * @author Maud @mihani <maud.remoriquet@gmail.com>
+ * @author mihani <maud.remoriquet@gmail.com>
  *
  * @ORM\Entity(repositoryClass=AddressRepository::class)
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=false)
@@ -57,6 +57,11 @@ class Address
      * @ORM\Column(type="float", nullable=true)
      */
     private $longitude;
+
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private $inseeCode;
 
     public function getId(): ?int
     {
@@ -131,6 +136,18 @@ class Address
     public function setLongitude(?float $longitude): self
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function getInseeCode(): ?string
+    {
+        return $this->inseeCode;
+    }
+
+    public function setInseeCode($inseeCode): self
+    {
+        $this->inseeCode = $inseeCode;
 
         return $this;
     }

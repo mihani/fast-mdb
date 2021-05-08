@@ -7,12 +7,20 @@ namespace App\Controller;
 use App\Api\GeoApiFr\GeoApiFr;
 use App\Api\GeoPortailUrbanisme\GeoPortailUrbanisme;
 use App\Elasticsearch\ElasticsearchUtils;
+use App\Entity\Address;
+use App\Entity\Project;
+use App\Entity\UrbanDocument;
+use App\Entity\UrbanFile;
+use App\Entity\User;
 use App\Form\AddressMoreInformationType;
+use App\Form\ProjectFromPreviewType;
 use App\Utils\AddressUtils;
+use Doctrine\ORM\EntityManagerInterface;
 use Elasticsearch\ClientBuilder;
 use Knp\Component\Pager\PaginatorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,19 +33,22 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class DashboardController extends AbstractController
 {
     public const MENU_ITEM = 'dashboard';
+
     public const ITEM_PER_PAGE = 5;
 
     private GeoApiFr $geoApiFr;
     private TranslatorInterface $translator;
     private LoggerInterface $logger;
     private GeoPortailUrbanisme $geoPortailUrbanisme;
+    private EntityManagerInterface $em;
 
-    public function __construct(GeoApiFr $geoApiFr, TranslatorInterface $translator, LoggerInterface $logger, GeoPortailUrbanisme $geoPortailUrbanisme)
+    public function __construct(GeoApiFr $geoApiFr, TranslatorInterface $translator, LoggerInterface $logger, GeoPortailUrbanisme $geoPortailUrbanisme, EntityManagerInterface $em)
     {
         $this->geoApiFr = $geoApiFr;
         $this->translator = $translator;
         $this->logger = $logger;
         $this->geoPortailUrbanisme = $geoPortailUrbanisme;
+        $this->em = $em;
     }
 
     #[Route('/', name: 'dashboard_index')]
@@ -48,7 +59,7 @@ class DashboardController extends AbstractController
         ]);
         $searchBarForm->handleRequest($request);
 
-        $addressData = $urbanDocuments = $proximitySalesPagination = null;
+        $addressData = $urbanDocuments = $proximitySalesPagination = $projectFromPreviewForm = null;
         if ($searchBarForm->isSubmitted() && $searchBarForm->isValid()) {
             $addressData = $this->getMoreAddressInfo($searchBarForm->get('address')->getData());
             if ($addressData !== null) {
@@ -61,6 +72,10 @@ class DashboardController extends AbstractController
                         self::ITEM_PER_PAGE
                     );
                 }
+                $project = $this->generateProjectFromData($addressData, $urbanDocuments);
+                $projectFromPreviewForm = $this->createForm(ProjectFromPreviewType::class, $project, [
+                    'action' => $this->generateUrl('dashboard_create_project'),
+                ]);
             }
         }
 
@@ -69,7 +84,77 @@ class DashboardController extends AbstractController
             'addressData' => $addressData,
             'urbanDocuments' => empty($urbanDocuments) ? null : $urbanDocuments,
             'proximitySalesPagination' => $proximitySalesPagination,
+            'projectFromPreviewForm' => $projectFromPreviewForm ? $projectFromPreviewForm->createView() : null,
         ]);
+    }
+
+    #[Route('/create-project', name: 'dashboard_create_project')]
+    public function createProject(Request $request): RedirectResponse
+    {
+        $projectFromPreviewForm = $this->createForm(ProjectFromPreviewType::class);
+        $projectFromPreviewForm->handleRequest($request);
+
+        if ($projectFromPreviewForm->isSubmitted() && $projectFromPreviewForm->isValid()) {
+            /** @var Project $project */
+            $project = $projectFromPreviewForm->getData();
+            $project->setUser($this->getUser())
+                ->setCompany($this->getUser()->getCompany())
+            ;
+            $this->em->persist($project);
+            $this->em->flush();
+
+            return $this->redirectToRoute('project_show', [
+                'id' => $project->getId(),
+            ]);
+        }
+
+        return $this->redirectToRoute('dashboard_index');
+    }
+
+    private function generateProjectFromData(array $addressData, array $urbanDocumentsData): Project
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $project = (new Project())
+            ->setUser($user)
+            ->setCompany($user->getCompany())
+        ;
+
+        $address = (new Address())
+            ->setAddressLine1($addressData['address']['name'])
+            ->setCity($addressData['address']['city'])
+            ->setPostalCode($addressData['address']['postCode'])
+            ->setLatitude($addressData['latitude'])
+            ->setLongitude($addressData['longitude'])
+            ->setInseeCode($addressData['inseeCode'])
+        ;
+
+        $project->setAddress($address);
+
+        foreach ($urbanDocumentsData as $urbanDocumentsDatum) {
+            $urbanDocument = (new UrbanDocument())
+                ->setApiUpdatedAt(new \DateTime($urbanDocumentsDatum['apiUpdatedAt']))
+                ->setUploadedAt(new \DateTime($urbanDocumentsDatum['uploadedAt']))
+                ->setArchiveLink($urbanDocumentsDatum['archiveLink'])
+                ->setName($urbanDocumentsDatum['name'])
+                ->setStatus($urbanDocumentsDatum['status'])
+                ->setType($urbanDocumentsDatum['type'])
+                ->setUrbanPortalId($urbanDocumentsDatum['id'])
+            ;
+
+            foreach ($urbanDocumentsDatum['files'] as $file) {
+                $urbanFile = (new UrbanFile())
+                    ->setName($file['name'])
+                    ->setLink($file['link'])
+                ;
+
+                $urbanDocument->addUrbanFile($urbanFile);
+            }
+
+            $project->addUrbanDocument($urbanDocument);
+        }
+
+        return $project;
     }
 
     private function getProximitySales(float $latitude, float $longitude, int $distance = 5): array | null
@@ -220,7 +305,7 @@ class DashboardController extends AbstractController
                 'id' => $details['id'],
                 'type' => $details['type'],
                 'uploadedAt' => $details['uploadDate'],
-                'apiUpdatedAt' => $details['uploadDate'],
+                'apiUpdatedAt' => $details['updateDate'],
                 'name' => $details['name'],
                 'archiveLink' => $details['archiveUrl'],
                 'status' => $details['status'],
