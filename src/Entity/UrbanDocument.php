@@ -72,7 +72,7 @@ class UrbanDocument
     private $status;
 
     /**
-     * @ORM\OneToMany(targetEntity=UrbanFile::class, mappedBy="urbanDocument", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=UrbanFile::class, mappedBy="urbanDocument", orphanRemoval=true, cascade={"persist"})
      */
     private $urbanFiles;
 

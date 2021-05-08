@@ -21,6 +21,7 @@ class ProjectFromPreviewType extends AbstractType
             ->add('address', AddressWithGeoPointType::class)
             ->add('urbanDocuments', CollectionType::class, [
                 'entry_type' => UrbanDocumentType::class,
+                'allow_add' => true
             ])
         ;
     }

@@ -30,6 +30,7 @@ class UrbanDocumentType extends AbstractType
             ->add('status', TextType::class)
             ->add('urbanFiles', CollectionType::class, [
                 'entry_type' => UrbanFileType::class,
+                'allow_add' => true
             ])
         ;
     }
