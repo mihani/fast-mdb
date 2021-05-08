@@ -38,6 +38,8 @@ menu:
     items:
       company: Société
       user: User
+project:
+  title: Project
 dashboard:
   title: Dashboard
   project:
@@ -74,8 +76,11 @@ dashboard:
           sales_price: Prix de vente
           date: Date
       form_field:
-        search_bar: Rechercher une adresse...
-        submit: Go !
+        search:
+          bar: Rechercher une adresse...
+          submit: Go !
+        create_project:
+          submit: Créer le projet
       error:
         geo_api:
           retrieve_more_info: Un problème est survenu à la récupération des données de l'adresse

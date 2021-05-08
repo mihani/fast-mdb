@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="page-heading">
+    <h3>{{ 'project.title'|trans }}</h3>
+</div>
+{% for flashError in app.flashes('error') %}
+    <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+{% endfor %}
+<div class="page-content">
+Coming Soon
+</div>
+{% endblock %}

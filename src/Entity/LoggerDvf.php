@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
- * @author Maud Remoriquet <maud.remoriquet@gmail.com>
+ * @author mihani <maud.remoriquet@gmail.com>
  *
  * @ORM\Entity(repositoryClass=LoggerDvfRepository::class)
  */

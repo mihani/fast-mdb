@@ -31,7 +31,7 @@
                                         <i class="bi bi-search"></i>
                                     </span>
                                     {{ form_widget(searchBarForm.address, {'attr':{'class':'form-control dashboard-new-project-search-bar','aria-describedby':'search-address-button'}}) }}
-                                    <button class="btn btn-primary" type="submit" id="search-address-button">{{'dashboard.project.preview.form_field.submit'|trans}}</button>
+                                    <button class="btn btn-primary" type="submit" id="search-address-button">{{'dashboard.project.preview.form_field.search.submit'|trans}}</button>
                                 </div>
                                 <div id="search-bar__list-group" class="list-group search-bar__list-group">
 
@@ -107,9 +107,9 @@
                                         <p>{{ 'dashboard.project.preview.map.no_street_view_exist'|trans }}</p>
                                     </div>
                                 </div>
-                                <div class="mt-3 col-12">
-                                    <p>{{ 'dashboard.project.preview.square_metre_price'|trans({'%price%': 500}) }}</p>
-                                </div>
+{#                                <div class="mt-3 col-12">#}
+{#                                    <p>{{ 'dashboard.project.preview.square_metre_price'|trans({'%price%': 500}) }}</p>#}
+{#                                </div>#}
                             </div>
                             {# Sales in address area #}
                             <div class="row">
@@ -142,6 +142,17 @@
                                     {% else %}
                                         <p>{{ 'dashboard.project.preview.no_proximity_sale'|trans }}</p>
                                     {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-12 justify-content-center d-flex">
+                                    {{ form_start(projectFromPreviewForm) }}
+                                    {{ form_widget(projectFromPreviewForm.urbanDocuments, {'attr': {'class' : 'visually-hidden'}}) }}
+                                    {{ form_widget(projectFromPreviewForm.address, {'attr': {'class' : 'visually-hidden'}}) }}
+                                    <button class="btn btn-primary" type="submit" id="create-project-button">{{'dashboard.project.preview.form_field.create_project.submit'|trans}}</button>
+                                    {{ form_end(projectFromPreviewForm) }}
                                 </div>
                             </div>
                         </div>
