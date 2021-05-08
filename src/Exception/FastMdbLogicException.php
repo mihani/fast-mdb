@@ -7,6 +7,6 @@ namespace App\Exception;
 /**
  * @author mihani <maud.remoriquet@gmail.com>
  */
-class FastMdbHttpResponseException extends \Exception
+class FastMdbLogicException extends \LogicException
 {
 }

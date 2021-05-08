@@ -1,6 +1,7 @@
 "use strict";
 
 import  L from 'leaflet';
+import mapMarkerIcon from 'leaflet/dist/images/marker-icon.png'
 
 document.addEventListener('DOMContentLoaded', (event) => {
     let divMapData = document.querySelector('#aerial-map').dataset;
@@ -39,4 +40,10 @@ function aerialMapGeneration(longitude, latitude){
             maxZoom: 19,
         },
     ).addTo(aerialMap);
+
+    L.marker([latitude, longitude], {
+        'icon': L.icon({
+            iconUrl: mapMarkerIcon
+        })
+    }).addTo(aerialMap);
 }

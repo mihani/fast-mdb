@@ -11,7 +11,7 @@ class AddressUtils
 {
     public static function inlineFormatAddressFromAddressDvfEntries(array $address): string
     {
-        return self::inlineFormat(
+        return self::inlineFormatFromDvfEntry(
             $address['lane']['number'],
             $address['lane']['btq'],
             $address['lane']['type'],
@@ -21,7 +21,7 @@ class AddressUtils
         );
     }
 
-    public static function inlineFormat(string $number, string $btq, string $type, string $name, string $postalCode, string $city): string
+    public static function inlineFormatFromDvfEntry(string $number, string $btq, string $type, string $name, string $postalCode, string $city): string
     {
         $inlineAddress = sprintf(
             '%s%s %s %s %s %s',
@@ -31,6 +31,19 @@ class AddressUtils
             ucfirst(strtolower($name)),
             $postalCode,
             ucfirst(strtolower($city))
+        );
+
+        return preg_replace('/\s+/', ' ', trim($inlineAddress));
+    }
+
+    public static function inlineFormatFromEntity(string $addressLine1, ?string $addressLine2, string $postalCode, string $city): string
+    {
+        $inlineAddress = sprintf(
+            '%s %s %s %s',
+            $addressLine1,
+            $addressLine2,
+            $postalCode,
+            $city
         );
 
         return preg_replace('/\s+/', ' ', trim($inlineAddress));
