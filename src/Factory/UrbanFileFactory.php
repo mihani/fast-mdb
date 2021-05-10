@@ -15,6 +15,7 @@ class UrbanFileFactory
     {
         return (new UrbanFile())
             ->setName($name)
-            ->setLink($link);
+            ->setLink($link)
+        ;
     }
 }

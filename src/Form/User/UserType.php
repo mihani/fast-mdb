@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Form;
+declare(strict_types=1);
+
+namespace App\Form\User;
 
 use App\Entity\Company;
 use App\Entity\User;

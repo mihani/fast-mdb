@@ -19,6 +19,7 @@ class AddressFactory
             ->setPostalCode($postalCode)
             ->setInseeCode($inseeCode)
             ->setLatitude($latitude)
-            ->setLongitude($longitude);
+            ->setLongitude($longitude)
+        ;
     }
 }

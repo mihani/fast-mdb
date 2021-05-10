@@ -36,7 +36,7 @@ class ProjectController extends AbstractController
 
         return $this->render('project/show.html.twig', [
             'project' => $project,
-            'proximitySalesPagination' => $proximitySalesPagination
+            'proximitySalesPagination' => $proximitySalesPagination,
         ]);
     }
 }
