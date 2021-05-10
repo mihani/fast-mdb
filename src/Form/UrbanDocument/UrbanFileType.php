@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Form;
+namespace App\Form\UrbanDocument;
 
 use App\Entity\UrbanFile;
 use Symfony\Component\Form\AbstractType;

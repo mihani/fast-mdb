@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Form;
+namespace App\Form\Address;
 
 use App\Entity\Address;
 use Symfony\Component\Form\AbstractType;

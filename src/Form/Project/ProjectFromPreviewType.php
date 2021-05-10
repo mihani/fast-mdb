@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Form;
+namespace App\Form\Project;
 
 use App\Entity\Project;
+use App\Form\Address\AddressWithGeoPointType;
+use App\Form\UrbanDocument\UrbanDocumentType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,7 +23,7 @@ class ProjectFromPreviewType extends AbstractType
             ->add('address', AddressWithGeoPointType::class)
             ->add('urbanDocuments', CollectionType::class, [
                 'entry_type' => UrbanDocumentType::class,
-                'allow_add' => true
+                'allow_add' => true,
             ])
         ;
     }

@@ -73,6 +73,11 @@ class Project
      */
     private $urbanDocuments;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=GoodsType::class, inversedBy="projects")
+     */
+    private $goodsType;
+
     public function __construct()
     {
         $this->state = self::STATUS_DRAFT;
@@ -170,6 +175,18 @@ class Project
                 $urbanDocument->setProject(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getGoodsType(): ?GoodsType
+    {
+        return $this->goodsType;
+    }
+
+    public function setGoodsType(?GoodsType $goodsType): self
+    {
+        $this->goodsType = $goodsType;
 
         return $this;
     }

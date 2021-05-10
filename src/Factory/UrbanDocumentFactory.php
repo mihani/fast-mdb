@@ -20,7 +20,8 @@ class UrbanDocumentFactory
             ->setType($type)
             ->setArchiveLink($archiveLink)
             ->setApiUpdatedAt($apiUpdatedAt)
-            ->setUploadedAt($uploadedAt);
+            ->setUploadedAt($uploadedAt)
+        ;
     }
 
     public static function addUrbanFilesFromFilesMetaData(UrbanDocument $urbanDocument, array $files): UrbanDocument

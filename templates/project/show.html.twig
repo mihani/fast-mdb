@@ -15,10 +15,16 @@
             <div class="card">
                 <div class="card-content">
                     <div class="card-body">
-{#                        <div class="row">#}
-{#                            <div class="col-6">status form</div>#}
-{#                            <div class="col-6">type form</div>#}
-{#                        </div>#}
+                        {{ form_start(projectForm, {'attr': {'class':'form-group d-flex flex-column flex-lg-row'}}) }}
+                            {{ form_errors(projectForm) }}
+                            <div class="me-3">
+                                {{ form_label(projectForm.goodsType, null, {'label_attr': {'class': 'col-form-label'}}) }}
+                            </div>
+                            <div class="me-3">
+                                {{ form_widget(projectForm.goodsType, {'attr': {'class':'form-select'}}) }}
+                            </div>
+                            <button class="btn btn-primary" type="submit">{{'project.form_field.submit'|trans}}</button>
+                        {{ form_end(projectForm) }}
 {#                        <div class="d-flex mb-2 flex-column bd-highlight">#}
 {#                            <div>contact 1</div>#}
 {#                            <div>contact 1</div>#}
@@ -26,7 +32,7 @@
 {#                        </div>#}
                         {# Address and urban documents part#}
                         <div class="row">
-                            <div class="col-12 col-md-5">
+                            <div class="col-12 col-lg-5">
                                 <h6>{{ 'dashboard.project.preview.more_information_address'|trans }}</h6>
                                 <p>
                                     {{ project.address.addressLine1 }}
@@ -44,7 +50,7 @@
                                     {{ 'dashboard.project.preview.gps_coordinates.longitude'|trans }} : {{ project.address.longitude }}
                                 </p>
                             </div>
-                            <div class="col-12 col-md-7">
+                            <div class="col-12 col-lg-7">
                                 <h6>{{ 'dashboard.project.preview.urban_document.document_available'|trans }}</h6>
                                 {% if project.urbanDocuments is empty %}
                                     <p>{{ 'dashboard.project.preview.urban_document.no_documents_exist'|trans }}</p>
@@ -68,7 +74,7 @@
                         </div>
                         {# Maps part#}
                         <div class="row">
-                            <div class="col-12 col-md-6">
+                            <div class="col-12 col-lg-6">
                                 <h6>{{ 'dashboard.project.preview.map.aerial_view_with_casdastral_cut'|trans }}</h6>
                                 <div
                                         id="aerial-map"
@@ -77,7 +83,7 @@
                                 >
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6">
+                            <div class="col-12 col-lg-6">
                                 <h6>Vue dynamique</h6>
                                 <div
                                         id="street-view-map-pano"

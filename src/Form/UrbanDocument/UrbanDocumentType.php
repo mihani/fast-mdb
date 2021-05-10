@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Form;
+namespace App\Form\UrbanDocument;
 
 use App\Entity\UrbanDocument;
 use Symfony\Component\Form\AbstractType;
@@ -30,7 +30,7 @@ class UrbanDocumentType extends AbstractType
             ->add('status', TextType::class)
             ->add('urbanFiles', CollectionType::class, [
                 'entry_type' => UrbanFileType::class,
-                'allow_add' => true
+                'allow_add' => true,
             ])
         ;
     }
