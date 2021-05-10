@@ -24,7 +24,7 @@
                     <div class="card-body">
                         <h4 class="cart-title">{{ 'dashboard.project.preview.title'|trans }}</h4>
                         <div class="row">
-                            <div class="col-12 col-md-12">
+                            <div class="col-12">
                                 {{ form_start(searchBarForm, {'attr': {'class':'search-bar'}}) }}
                                 <div class="input-group search-bar__input-group">
                                     <span class="input-group-text" id="search-address-button">
@@ -49,31 +49,31 @@
                             {# Address and urban documents part#}
                             <div class="row">
                                 <div class="col-12 col-md-5">
-                                    <h6>{{ 'dashboard.project.preview.more_information_address'|trans }}</h6>
+                                    <h6>{{ 'project.card.more_information_address'|trans }}</h6>
                                     <p>
                                         {{ addressData.address.name }}
                                         <br>
                                         {{ addressData.address.postCode }} {{ addressData.address.city }}
                                     </p>
-                                    <h6>{{ 'dashboard.project.preview.insee_code'|trans }}</h6>
+                                    <h6>{{ 'project.card.insee_code'|trans }}</h6>
                                     <p>{{ addressData.inseeCode }}</p>
-                                    <h6>{{ 'dashboard.project.preview.gps_coordinates.title'|trans }}</h6>
+                                    <h6>{{ 'project.card.gps_coordinates.title'|trans }}</h6>
                                     <p>
-                                        {{ 'dashboard.project.preview.gps_coordinates.latitude'|trans }} : {{ addressData.latitude }}
+                                        {{ 'project.card.gps_coordinates.latitude'|trans }} : {{ addressData.latitude }}
                                         <br>
-                                        {{ 'dashboard.project.preview.gps_coordinates.longitude'|trans }} : {{ addressData.longitude }}
+                                        {{ 'project.card.gps_coordinates.longitude'|trans }} : {{ addressData.longitude }}
                                     </p>
                                 </div>
                                 <div class="col-12 col-md-7">
-                                    <h6>{{ 'dashboard.project.preview.urban_document.document_available'|trans }}</h6>
+                                    <h6>{{ 'project.card.urban_document.document_available'|trans }}</h6>
                                     {% if urbanDocuments is null %}
-                                        <p>{{ 'dashboard.project.preview.urban_document.no_documents_exist'|trans }}</p>
+                                        <p>{{ 'project.card.urban_document.no_documents_exist'|trans }}</p>
                                     {% else %}
                                         <ul>
                                             {% for urbanDocument in urbanDocuments %}
                                                 <li>{{ urbanDocument.name }} -
                                                     <a href="{{ urbanDocument.archiveLink }}">
-                                                        <small>{{ 'dashboard.project.preview.urban_document.download_archive'|trans }}</small>
+                                                        <small>{{ 'project.card.urban_document.download_archive'|trans }}</small>
                                                     </a>
                                                 </li>
                                                 <ul>
@@ -89,7 +89,7 @@
                             {# Maps part#}
                             <div class="row">
                                 <div class="col-12 col-md-6">
-                                    <h6>{{ 'dashboard.project.preview.map.aerial_view_with_casdastral_cut'|trans }}</h6>
+                                    <h6>{{ 'project.card.map.aerial_view_with_casdastral_cut'|trans }}</h6>
                                     <div
                                         id="aerial-map"
                                         data-longitude="{{ addressData.longitude }}"
@@ -98,13 +98,13 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <h6>Vue dynamique</h6>
+                                    <h6>{{ 'project.card.map.dynamic_street_view'|trans }}</h6>
                                     <div
                                         id="street-view-map-pano"
                                         data-longitude="{{ addressData.longitude }}"
                                         data-latitude="{{ addressData.latitude }}"
                                     >
-                                        <p>{{ 'dashboard.project.preview.map.no_street_view_exist'|trans }}</p>
+                                        <p>{{ 'project.card.map.no_street_view_exist'|trans }}</p>
                                     </div>
                                 </div>
 {#                                <div class="mt-3 col-12">#}
@@ -114,15 +114,15 @@
                             {# Sales in address area #}
                             <div class="row">
                                 <div class="col-12">
-                                    <h6>{{ 'dashboard.project.preview.sales_in_delimited_area.title'|trans({'%km%':5}) }}</h6>
+                                    <h6>{{ 'project.card.sales_in_delimited_area.title'|trans({'%km%':5}) }}</h6>
                                     {% if proximitySalesPagination is not null %}
                                         <div class="table-responsive">
                                             <table class="table table-striped table-bordered">
                                                 <thead>
                                                     <tr>
-                                                        <th>{{ 'dashboard.project.preview.sales_in_delimited_area.table.header.address'|trans }}</th>
-                                                        <th>{{ 'dashboard.project.preview.sales_in_delimited_area.table.header.price'|trans }}</th>
-                                                        <th>{{ 'dashboard.project.preview.sales_in_delimited_area.table.header.date'|trans }}</th>
+                                                        <th>{{ 'project.card.sales_in_delimited_area.table.header.address'|trans }}</th>
+                                                        <th>{{ 'project.card.sales_in_delimited_area.table.header.price'|trans }}</th>
+                                                        <th>{{ 'project.card.sales_in_delimited_area.table.header.date'|trans }}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -140,7 +140,7 @@
                                             {{ knp_pagination_render(proximitySalesPagination) }}
                                         </nav>
                                     {% else %}
-                                        <p>{{ 'dashboard.project.preview.no_proximity_sale'|trans }}</p>
+                                        <p>{{ 'project.card.no_proximity_sale'|trans }}</p>
                                     {% endif %}
                                 </div>
                             </div>

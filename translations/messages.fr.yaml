@@ -42,6 +42,36 @@ project:
   title: Project
   show:
     title: 'Project : "%address%"'
+  card:
+    contact: Contacts
+    more_information_address: Infos précise de l'adresse
+    urban_document:
+      document_available: Document d'urbanisme disponible
+      download_archive: Télécharger l'archive
+      no_documents_exist: Aucun document n'existe pour cette adresse
+    gps_coordinates:
+      title: Coordonnées GPS
+      latitude: Latitude
+      longitude: Longitude
+    insee_code: Code insee
+    map:
+      aerial_view_with_casdastral_cut: Vue aérienne avec découpe cadastrale
+      dynamic_street_view: StreetView dynamique
+      no_street_view_exist: Il n'existe pas de street map pour cette adresse
+    square_metre_price: "Prix au mètre carré de la commune : %price%€/m"
+    no_proximity_sale: "Pas de ventes réalisé depuis 2016 dans ce rayon."
+    sales_in_delimited_area:
+      title: "Ventes réalisées dans un rayon de %km% km (par proximité)"
+      table:
+        header:
+          address: Adresse
+          price: Prix de vente
+          date: Date
+    table:
+      head:
+        address: Adresse
+        sales_price: Prix de vente
+        date: Date
   form_field:
     good_type:
       label: Type de bien
@@ -66,34 +96,6 @@ dashboard:
       title: Liste des projets
     preview:
       title: Créer un projet
-      more_information_address: Infos précise de l'adresse
-      urban_document:
-        document_available: Document d'urbanisme disponible
-        download_archive: Télécharger l'archive
-        no_documents_exist: Aucun document n'existe pour cette adresse
-      gps_coordinates:
-        title: Coordonnées GPS
-        latitude: Latitude
-        longitude: Longitude
-      insee_code: Code insee
-      map:
-        aerial_view_with_casdastral_cut: Vue aérienne avec découpe cadastrale
-        dynamic_street_view: StreetView dynamique
-        no_street_view_exist: Il n'existe pas de street map pour cette adresse
-      square_metre_price: "Prix au mètre carré de la commune : %price%€/m"
-      no_proximity_sale: "Pas de ventes réalisé depuis 2016 dans ce rayon."
-      sales_in_delimited_area:
-        title: "Ventes réalisées dans un rayon de %km% km (par proximité)"
-        table:
-          header:
-            address: Adresse
-            price: Prix de vente
-            date: Date
-      table:
-        head:
-          address: Adresse
-          sales_price: Prix de vente
-          date: Date
       form_field:
         search:
           bar: Rechercher une adresse...
