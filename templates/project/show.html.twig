@@ -15,8 +15,14 @@
             <div class="card">
                 <div class="card-content">
                     <div class="card-body">
-                        {{ form_start(projectForm, {'attr': {'class':'form-group d-flex flex-column flex-lg-row'}}) }}
+                        {{ form_start(projectForm, {'attr': {'class':'form-group d-flex justify-content-between'}}) }}
                             {{ form_errors(projectForm) }}
+                            <div class="me-3">
+                                {{ form_label(projectForm.state, null, {'label_attr': {'class': 'col-form-label'}}) }}
+                            </div>
+                            <div class="me-3">
+                                {{ form_widget(projectForm.state, {'attr': {'class':'form-select'}}) }}
+                            </div>
                             <div class="me-3">
                                 {{ form_label(projectForm.goodsType, null, {'label_attr': {'class': 'col-form-label'}}) }}
                             </div>

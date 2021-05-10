@@ -47,6 +47,18 @@ project:
       label: Type de bien
       placeholder: Choisir un type de bien
     submit: Valider
+    state:
+      label: Etat
+  state:
+    value:
+      draft: Brouillon
+      to_dug_up: A creuser
+      seller_contacted: Vendeur contacté
+      to_relauch: À relancer
+      scheduled_visit: Visite programmé
+      offer_send: Offre d’achat envoyé
+      signed_offer: Offre signée
+      archived: Archivé
 dashboard:
   title: Dashboard
   project:

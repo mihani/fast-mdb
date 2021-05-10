@@ -190,4 +190,18 @@ class Project
 
         return $this;
     }
+
+    public static function getStatesFormChoice(): array
+    {
+        return [
+            self::STATUS_DRAFT => self::STATUS_DRAFT,
+            self::STATUS_TO_DUG_UP => self::STATUS_TO_DUG_UP,
+            self::STATUS_SELLER_CONTACTED => self::STATUS_SELLER_CONTACTED,
+            self::STATUS_TO_RELAUNCH => self::STATUS_TO_RELAUNCH,
+            self::STATUS_SCHEDULED_VISIT => self::STATUS_SCHEDULED_VISIT,
+            self::STATUS_OFFER_SEND => self::STATUS_OFFER_SEND,
+            self::STATUS_SIGNED_OFFER => self::STATUS_SIGNED_OFFER,
+            self::STATUS_ARCHIVED => self::STATUS_ARCHIVED,
+        ];
+    }
 }
