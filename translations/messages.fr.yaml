@@ -42,6 +42,11 @@ project:
   title: Project
   show:
     title: 'Project : "%address%"'
+  form_field:
+    good_type:
+      label: Type de bien
+      placeholder: Choisir un type de bien
+    submit: Valider
 dashboard:
   title: Dashboard
   project:

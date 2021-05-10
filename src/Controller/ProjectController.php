@@ -6,6 +6,8 @@ namespace App\Controller;
 
 use App\Elasticsearch\Repository\DvfRepository;
 use App\Entity\Project;
+use App\Form\Project\ProjectType;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,10 +18,18 @@ class ProjectController extends AbstractController
 {
     public const ITEM_PER_PAGE = 5;
 
-    #[Route('/{id}', name: 'project_show', methods: ['GET'])]
-    public function show(Project $project, DvfRepository $dvfRepository, Request $request, PaginatorInterface $paginator)
+    #[Route('/{id}', name: 'project_show', methods: ['GET', 'POST'])]
+    public function show(Project $project, DvfRepository $dvfRepository, Request $request, PaginatorInterface $paginator, EntityManagerInterface $em)
     {
         $proximitySalesPagination = null;
+
+        $projectForm = $this->createForm(ProjectType::class, $project);
+        $projectForm->handleRequest($request);
+
+        if ($projectForm->isSubmitted() && $projectForm->isValid()) {
+            $em->flush();
+        }
+
         $address = $project->getAddress();
         $proximitySales = $dvfRepository->getProximitySales(
             $address->getLatitude(),
@@ -37,6 +47,7 @@ class ProjectController extends AbstractController
         return $this->render('project/show.html.twig', [
             'project' => $project,
             'proximitySalesPagination' => $proximitySalesPagination,
+            'projectForm' => $projectForm->createView(),
         ]);
     }
 }
