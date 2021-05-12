@@ -17,7 +17,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  * @ORM\Entity(repositoryClass=ContactRepository::class)
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"notary" = "Notary", "seller" = "Seller", "estate_agent" = "EstateAgent", "contact" = "Contact"})
+ * @ORM\DiscriminatorMap({"notary": "Notary", "seller": "Seller", "estate_agent": "EstateAgent", "contact": "Contact"})
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=false)
  */
 class Contact

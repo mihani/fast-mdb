@@ -9,9 +9,22 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @author mihani <maud.remoriquet@gmail.com>
  *
- * @ORM\Entity()
+ * @ORM\Entity
  */
 class EstateAgent extends Contact
 {
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $estateAgencyName;
 
+    public function getEstateAgencyName()
+    {
+        return $this->estateAgencyName;
+    }
+
+    public function setEstateAgencyName($estateAgencyName): void
+    {
+        $this->estateAgencyName = $estateAgencyName;
+    }
 }

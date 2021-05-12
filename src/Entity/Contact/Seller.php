@@ -9,9 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @author mihani <maud.remoriquet@gmail.com>
  *
- * @ORM\Entity()
+ * @ORM\Entity
  */
 class Seller extends Contact
 {
-
 }

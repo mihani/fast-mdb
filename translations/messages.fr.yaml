@@ -42,8 +42,32 @@ project:
   title: Project
   show:
     title: 'Project : "%address%"'
+    contact:
+      title: Contacts
+      type:
+        seller: Vendeur
+        notary: Notaire
+        estate_agent: Agent Immobilier
+      create:
+        form_field:
+          submit: Ajouter
+          firstname: Prénom
+          lastname: Nom
+          email: Email
+          mobile_number: Portable
+          estate_agency_name: Nom de l'agence
+          address:
+            address_line_1: Adresse
+            address_line_2: Complément d'adresse
+            postal_code: Code Postal
+            city: Ville
+      button:
+        close: Fermer
+      modal_title:
+        seller: Ajout d'un vendeur
+        estate_agent: Ajout d'un agent immobilier
+        notary: Ajout d'un notaire
   card:
-    contact: Contacts
     more_information_address: Infos précise de l'adresse
     urban_document:
       document_available: Document d'urbanisme disponible
