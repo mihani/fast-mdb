@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Contact\Contact;
 use App\Entity\Contact\Notary;
 use App\Entity\Contact\Seller;
 use App\Form\Contact\ContactType;
@@ -11,8 +12,10 @@ use App\Form\Contact\EstateAgentType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/contact')]
@@ -46,6 +49,17 @@ class ContactController extends AbstractController
         return $this->handleContactForm($estateAgentForm, $request, $entityManager);
     }
 
+    #[Route('/search/{contactType}', name: 'contact_search', methods: ['GET'])]
+    public function searchContact(Request $request, string $contactType = Contact::TYPE_CONTACT)
+    {
+        if (!$request->isXmlHttpRequest()){
+            return new JsonResponse([], Response::HTTP_FORBIDDEN);
+        }
+
+        $request->get('query');
+        dump($request, $contactType);
+    }
+
     private function handleContactForm(FormInterface $form, Request $request, EntityManagerInterface $entityManager): RedirectResponse
     {
         $form->handleRequest($request);
@@ -58,7 +72,7 @@ class ContactController extends AbstractController
             if ($projectId = $request->get('projectId')) {
                 return $this->redirectToRoute('project_add_contact', [
                     'id' => $projectId,
-                    'contactId' => $contact->getId(),
+                    'contact' => $contact->getId(),
                 ]);
             }
         }

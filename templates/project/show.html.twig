@@ -6,9 +6,7 @@
 <div class="page-heading">
     <h3>{{ 'project.show.title'|trans({ '%address%': project.address.getInlineAddress() }) }}</h3>
 </div>
-{% for flashError in app.flashes('error') %}
-    <div class="alert alert-danger" role="alert">{{ flashError }}</div>
-{% endfor %}
+{{ include('_partials/_flash_message.html.twig') }}
 <div class="page-content">
     <section class="row">
         <div class="col-12 col-lg-7">
@@ -33,34 +31,73 @@
                         {{ form_end(projectForm) }}
                         <div class="d-flex mb-2 flex-column">
                             <h6>{{ 'project.show.contact.title'|trans }}</h6>
-                            <div class="mb-2">{{ 'project.show.contact.type.seller'|trans }} :
+                            <div class="mb-2">{{ 'contact.type.seller'|trans }} :
                                 {% if project.seller is null %}
                                     {% set modalId = 'add-contact-seller' %}
+                                    {% set modalAction = 'add' %}
+                                    {% set modalTitle = 'project.show.contact.modal_title.add.seller'|trans %}
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-plus-circle-fill"></i></a>
-                                    {% include 'project/modal/contact-modal.html.twig' with {'modalId': modalId, 'contactForm':sellerContactForm, 'modalTitle': ('project.show.contact.modal_title.seller'|trans)} only %}
                                 {% else %}
+                                    {% set modalId = 'show-contact-seller' %}
+                                    {% set modalAction = 'show' %}
+                                    {% set modalTitle = 'project.show.contact.modal_title.edit.seller'|trans({'%lastname%':project.seller.lastname, '%firstname%':project.seller.firstname}) %}
                                     {{ project.seller.firstname }} {{ project.seller.lastname }}
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-search"></i></a>
                                 {% endif %}
+                                {% include 'project/modal/contact_edit.html.twig' with {
+                                    'modalId': modalId,
+                                    'contactForm': sellerContactForm,
+                                    'modalTitle': modalTitle,
+                                    'searchForm': searchForms['seller'],
+                                    'modalAction': modalAction,
+                                    'contactType': constant('App\\Entity\\Contact\\Contact::TYPE_SELLER')
+                                } only %}
                             </div>
                             <div class="mb-2">
-                                {{ 'project.show.contact.type.estate_agent'|trans }} :
+                                {{ 'contact.type.estate_agent'|trans }} :
                                 {% if project.estateAgent is null %}
                                     {% set modalId = 'add-contact-estate-agent' %}
+                                    {% set modalAction = 'add' %}
+                                    {% set modalTitle = 'project.show.contact.modal_title.add.estate_agent'|trans %}
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-plus-circle-fill"></i></a>
-                                    {% include 'project/modal/contact-modal.html.twig' with {'modalId': modalId, 'contactForm':estateAgentContactForm, 'modalTitle': ('project.show.contact.modal_title.estate_agent'|trans)} only %}
                                 {% else %}
+                                    {% set modalId = 'edit-contact-estate-agent' %}
+                                    {% set modalAction = 'show' %}
+                                    {% set modalTitle = 'project.show.contact.modal_title.edit.estate_agent'|trans({'%lastname%':project.seller.lastname, '%firstname%':project.seller.firstname}) %}
                                     {{ project.estateAgent.firstname }} {{ project.estateAgent.lastname }}
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-search"></i></a>
                                 {% endif %}
+                                {% include 'project/modal/contact_edit.html.twig' with {
+                                    'modalId': modalId,
+                                    'contactForm':estateAgentContactForm,
+                                    'modalTitle': modalTitle,
+                                    'searchForm': searchForms['estate-agent'],
+                                    'modalAction': modalAction,
+                                    'contactType': constant('App\\Entity\\Contact\\Contact::TYPE_ESTATE_AGENT')
+                                } only %}
                             </div>
                             <div class="mb-2">
-                                {{ 'project.show.contact.type.notary'|trans }} :
+                                {{ 'contact.type.notary'|trans }} :
                                 {% if project.notary is null %}
                                     {% set modalId = 'add-contact-notary' %}
+                                    {% set modalAction = 'add' %}
+                                    {% set modalTitle = 'project.show.contact.modal_title.add.notary'|trans %}
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-plus-circle-fill"></i></a>
-                                    {% include 'project/modal/contact-modal.html.twig' with {'modalId': modalId, 'contactForm':notaryContactForm, 'modalTitle': ('project.show.contact.modal_title.notary'|trans)} only %}
                                 {% else %}
+                                    {% set modalId = 'show-contact-notary' %}
+                                    {% set modalAction = 'show' %}
+                                    {% set modalTitle = 'project.show.contact.modal_title.edit.notary'|trans({'%lastname%':project.notary.lastname, '%firstname%':project.notary.firstname}) %}
                                     {{ project.notary.firstname }} {{ project.notary.lastname }}
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-search"></i></a>
                                 {% endif %}
+                                {% include 'project/modal/contact_edit.html.twig' with {
+                                    'modalId': modalId,
+                                    'contactForm':notaryContactForm,
+                                    'modalTitle': modalTitle,
+                                    'searchForm': searchForms['notary'],
+                                    'modalAction': modalAction,
+                                    'contactType': constant('App\\Entity\\Contact\\Contact::TYPE_NOTARY')
+                                } only %}
                             </div>
                         </div>
                         {# Address and urban documents part#}
@@ -194,4 +231,5 @@
     {{ parent() }}
     {{ encore_entry_script_tags('streetViewMap') }}
     {{ encore_entry_script_tags('aerialViewMap') }}
+    {{ encore_entry_script_tags('contactSearchBar') }}
 {% endblock %}

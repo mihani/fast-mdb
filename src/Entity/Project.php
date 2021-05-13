@@ -77,7 +77,7 @@ class Project
     private $urbanDocuments;
 
     /**
-     * @ORM\ManyToOne(targetEntity=GoodsType::class, inversedBy="projects")
+     * @ORM\ManyToOne(targetEntity=GoodsType::class)
      */
     private $goodsType;
 

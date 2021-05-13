@@ -3,9 +3,7 @@
 <div class="page-heading">
     <h3>{{ 'dashboard.title'|trans }}</h3>
 </div>
-{% for flashError in app.flashes('error') %}
-    <div class="alert alert-danger" role="alert">{{ flashError }}</div>
-{% endfor %}
+{{ include('_partials/_flash_message.html.twig') }}
 <div class="page-content">
     <section class="row">
         <div class="col-12 col-lg-6">

@@ -180,7 +180,7 @@ class DashboardController extends AbstractController
 
         $this->addFlash(
             'error',
-            $this->translator->trans('dashboard.project.preview.error.geo_api.retrieve_more_info')
+            $this->translator->trans('dashboard.project.preview.flashbag.error.geo_api.retrieve_more_info')
         );
 
         return null;
@@ -215,7 +215,7 @@ class DashboardController extends AbstractController
 
         $this->addFlash(
             'error',
-            $this->translator->trans('dashboard.project.preview.error.urban_portal.retrieve_urban_docs')
+            $this->translator->trans('dashboard.project.preview.flashbag.error.urban_portal.retrieve_urban_docs')
         );
 
         return null;
@@ -259,7 +259,7 @@ class DashboardController extends AbstractController
 
         $this->addFlash(
             'error',
-            $this->translator->trans('dashboard.project.preview.error.urban_portal.retrieve_urban_docs_details', ['%name%' => $documentName])
+            $this->translator->trans('dashboard.project.preview.flashbag.error.urban_portal.retrieve_urban_docs_details', ['%name%' => $documentName])
         );
 
         return null;

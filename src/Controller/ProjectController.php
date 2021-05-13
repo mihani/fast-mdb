@@ -13,12 +13,15 @@ use App\Entity\Project;
 use App\Exception\FastMdbLogicException;
 use App\Form\Contact\ContactType;
 use App\Form\Contact\EstateAgentType;
+use App\Form\Contact\SearchExistingContactType;
 use App\Form\Project\ProjectType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/project')]
 class ProjectController extends AbstractController
@@ -51,20 +54,35 @@ class ProjectController extends AbstractController
             );
         }
 
-        $sellerContactForm = $this->createForm(type: ContactType::class, options:[
+        if (!$seller = $project->getSeller()){
+            $seller = new Seller();
+        }
+        $sellerContactForm = $this->createForm( ContactType::class, $seller, [
             'data_class' => Seller::class,
             'action' => $this->generateUrl('contact_create_seller', [
                 'projectId' => $project->getId(),
             ]),
         ]);
 
-        $estateAgentContactForm = $this->createForm(type:EstateAgentType::class, options:[
+        $searchForms = [
+            'seller' => $this->createForm(SearchExistingContactType::class)->createView(),
+            'estate-agent' => $this->createForm(SearchExistingContactType::class)->createView(),
+            'notary' => $this->createForm(SearchExistingContactType::class)->createView(),
+        ];
+
+        if (!$estateAgent = $project->getEstateAgent()){
+            $estateAgent = new EstateAgent();
+        }
+        $estateAgentContactForm = $this->createForm(EstateAgentType::class, $estateAgent, [
             'action' => $this->generateUrl('contact_create_estate_agent', [
                 'projectId' => $project->getId(),
             ]),
         ]);
 
-        $notaryContactForm = $this->createForm(type:ContactType::class, options:[
+        if (!$notary = $project->getNotary()){
+            $notary = new Notary();
+        }
+        $notaryContactForm = $this->createForm(ContactType::class, $notary, [
             'action' => $this->generateUrl('contact_create_notary', [
                 'data_class' => Notary::class,
                 'projectId' => $project->getId(),
@@ -78,31 +96,43 @@ class ProjectController extends AbstractController
             'sellerContactForm' => $sellerContactForm->createView(),
             'estateAgentContactForm' => $estateAgentContactForm->createView(),
             'notaryContactForm' => $notaryContactForm->createView(),
+            'searchForms' => $searchForms
         ]);
     }
 
-    #[Route('/{id}/contact/{contactId}', name: 'project_add_contact', methods: ['GET'])]
-    public function addContact(Project $project, Contact $contact, EntityManagerInterface $entityManager)
+    #[Route('/{id}/contact/{contact}', name: 'project_add_contact', methods: ['GET'])]
+    public function addContact(Project $project, Contact $contact, EntityManagerInterface $entityManager, TranslatorInterface $translator)
     {
         $isTypedContact = false;
+        $contactType = $translator->trans('contact.type.contact');
 
         if ($contact instanceof Seller) {
             $project->setSeller($contact);
+            $contactType = $translator->trans('contact.type.seller');
             $isTypedContact = true;
         }
 
         if ($contact instanceof EstateAgent) {
             $project->setEstateAgent($contact);
+            $contactType = $translator->trans('contact.type.estate_agent');
             $isTypedContact = true;
         }
 
         if ($contact instanceof Notary) {
             $project->setNotary($contact);
+            $contactType = $translator->trans('contact.type.notary');
             $isTypedContact = true;
         }
 
         if ($isTypedContact) {
             $entityManager->flush();
+
+            $this->addFlash(
+                'notice',
+                $translator->trans('project.show.contact.flashbag.notice.contact_has_been_created', [
+                    '%contact%' => $contactType
+                ])
+            );
 
             return $this->redirectToRoute('project_show', [
                 'id' => $project->getId(),

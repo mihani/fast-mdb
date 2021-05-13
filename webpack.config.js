@@ -26,7 +26,8 @@ Encore
     .addEntry('app', './assets/app.js')
     .addEntry('auth', './assets/auth.js')
     .addEntry('main', './assets/js/main.js')
-    .addEntry('addressSearchBar', './assets/js/addressSearchBar.js')
+    .addEntry('addressSearchBar', './assets/js/search/addressSearchBar.js')
+    .addEntry('contactSearchBar', './assets/js/search/contactSearchBar.js')
     .addEntry('streetViewMap', './assets/js/map/streetViewMap.js')
     .addEntry('aerialViewMap', './assets/js/map/aerialViewMap.js')
 

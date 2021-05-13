@@ -25,6 +25,11 @@ class Contact
     use TimestampableEntity;
     use SoftDeleteableEntity;
 
+    public const TYPE_CONTACT = 'contact';
+    public const TYPE_SELLER = 'seller';
+    public const TYPE_ESTATE_AGENT = 'estate_agent';
+    public const TYPE_NOTARY = 'notary';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

@@ -44,10 +44,10 @@ project:
     title: 'Project : "%address%"'
     contact:
       title: Contacts
-      type:
-        seller: Vendeur
-        notary: Notaire
-        estate_agent: Agent Immobilier
+      replace_by_existing_contact: Remplacer par un contact existant
+      add_by_existing_contact: Ajouter un contact existant
+      edit_the_current_contact: ou modifier le contact existant
+      add_new_contact: ou ajouter un nouveau contact
       create:
         form_field:
           submit: Ajouter
@@ -64,9 +64,17 @@ project:
       button:
         close: Fermer
       modal_title:
-        seller: Ajout d'un vendeur
-        estate_agent: Ajout d'un agent immobilier
-        notary: Ajout d'un notaire
+        add:
+          seller: Ajout d'un vendeur
+          estate_agent: Ajout d'un agent immobilier
+          notary: Ajout d'un notaire
+        edit:
+          seller: Vendeur %lastname% %firstname%
+          estate_agent: Agent immobilier %lastname% %firstname%
+          notary: Notaire %lastname% %firstname%
+      flashbag:
+        notice:
+          contact_has_been_created: "Le %contact% à correctement été ajouté au projet"
   card:
     more_information_address: Infos précise de l'adresse
     urban_document:
@@ -113,6 +121,12 @@ project:
       offer_send: Offre d’achat envoyé
       signed_offer: Offre signée
       archived: Archivé
+contact:
+  type:
+    contact: Contact
+    seller: Vendeur
+    notary: Notaire
+    estate_agent: Agent Immobilier
 dashboard:
   title: Dashboard
   project:
@@ -126,12 +140,13 @@ dashboard:
           submit: Go !
         create_project:
           submit: Créer le projet
-      error:
-        geo_api:
-          retrieve_more_info: Un problème est survenu à la récupération des données de l'adresse
-        urban_portal:
-          retrieve_urban_docs: Un problème est survenue lors de la récupération des documents d'urbanisme
-          retrieve_urban_docs_details: Un problème est survenue lors de la récupération des détails du document %name%
+      flashbag:
+        error:
+          geo_api:
+            retrieve_more_info: Un problème est survenu à la récupération des données de l'adresse
+          urban_portal:
+            retrieve_urban_docs: Un problème est survenue lors de la récupération des documents d'urbanisme
+            retrieve_urban_docs_details: Un problème est survenue lors de la récupération des détails du document %name%
 admin:
   company:
     edit:
@@ -181,3 +196,6 @@ admin:
     role:
       admin: Admin
       user: User
+modal:
+  button:
+    close: Fermer
