@@ -75,7 +75,9 @@
                 <i class="bx bx-x d-block d-sm-none"></i>
                 <span class="d-none d-sm-block">{{ 'project.show.contact.button.close'|trans }}</span>
             </button>
-            <button type="submit" class="btn btn-primary">{{ 'project.show.contact.create.form_field.submit'|trans }}</button>
+            <button type="submit" class="btn btn-primary">
+                {% if modalAction == 'add' %}{{ 'project.show.contact.create.form_field.submit'|trans }}{% else %}{{ 'project.show.contact.create.form_field.edit'|trans }}{% endif %}
+            </button>
         {{ form_end(contactForm) }}
     </div>
 {% endblock %}

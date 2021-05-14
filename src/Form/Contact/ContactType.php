@@ -22,7 +22,6 @@ class ContactType extends AbstractType
     {
         $builder
             ->add('firstname', TextType::class, [
-                'required' => false,
                 'label' => 'project.show.contact.create.form_field.firstname',
             ])
             ->add('lastname', TextType::class, [

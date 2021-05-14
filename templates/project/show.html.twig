@@ -31,18 +31,21 @@
                         {{ form_end(projectForm) }}
                         <div class="d-flex mb-2 flex-column">
                             <h6>{{ 'project.show.contact.title'|trans }}</h6>
-                            <div class="mb-2">{{ 'contact.type.seller'|trans }} :
+                            <div class="mb-2">{{ 'contact.type.seller'|trans|capitalize }} :
                                 {% if project.seller is null %}
                                     {% set modalId = 'add-contact-seller' %}
                                     {% set modalAction = 'add' %}
                                     {% set modalTitle = 'project.show.contact.modal_title.add.seller'|trans %}
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-plus-circle-fill"></i></a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-person-plus-fill"></i></a>
                                 {% else %}
                                     {% set modalId = 'show-contact-seller' %}
                                     {% set modalAction = 'show' %}
                                     {% set modalTitle = 'project.show.contact.modal_title.edit.seller'|trans({'%lastname%':project.seller.lastname, '%firstname%':project.seller.firstname}) %}
                                     {{ project.seller.firstname }} {{ project.seller.lastname }}
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-search"></i></a>
+                                    <a href="{{ path('project_remove_contact', {'id':project.id, 'contact':project.seller.id}) }}" onclick="return confirm('Vous allez supprimer le contact du projet. Voulez-vous continuer ?');">
+                                        <i class="bi bi-person-dash-fill"></i>
+                                    </a>
                                 {% endif %}
                                 {% include 'project/modal/contact_edit.html.twig' with {
                                     'modalId': modalId,
@@ -50,22 +53,25 @@
                                     'modalTitle': modalTitle,
                                     'searchForm': searchForms['seller'],
                                     'modalAction': modalAction,
-                                    'contactType': constant('App\\Entity\\Contact\\Contact::TYPE_SELLER')
+                                    'contactType': constant('App\\Entity\\Contact\\Seller::TYPE')
                                 } only %}
                             </div>
                             <div class="mb-2">
-                                {{ 'contact.type.estate_agent'|trans }} :
+                                {{ 'contact.type.estate_agent'|trans|capitalize }} :
                                 {% if project.estateAgent is null %}
                                     {% set modalId = 'add-contact-estate-agent' %}
                                     {% set modalAction = 'add' %}
                                     {% set modalTitle = 'project.show.contact.modal_title.add.estate_agent'|trans %}
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-plus-circle-fill"></i></a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-person-plus-fill"></i></a>
                                 {% else %}
                                     {% set modalId = 'edit-contact-estate-agent' %}
                                     {% set modalAction = 'show' %}
                                     {% set modalTitle = 'project.show.contact.modal_title.edit.estate_agent'|trans({'%lastname%':project.seller.lastname, '%firstname%':project.seller.firstname}) %}
                                     {{ project.estateAgent.firstname }} {{ project.estateAgent.lastname }}
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-search"></i></a>
+                                    <a href="{{ path('project_remove_contact', {'id':project.id, 'contact':project.estateAgent.id}) }}" onclick="return confirm('Vous allez supprimer le contact du projet. Voulez-vous continuer ?');">
+                                        <i class="bi bi-person-dash-fill"></i>
+                                    </a>
                                 {% endif %}
                                 {% include 'project/modal/contact_edit.html.twig' with {
                                     'modalId': modalId,
@@ -73,22 +79,25 @@
                                     'modalTitle': modalTitle,
                                     'searchForm': searchForms['estate-agent'],
                                     'modalAction': modalAction,
-                                    'contactType': constant('App\\Entity\\Contact\\Contact::TYPE_ESTATE_AGENT')
+                                    'contactType': constant('App\\Entity\\Contact\\EstateAgent::TYPE')
                                 } only %}
                             </div>
                             <div class="mb-2">
-                                {{ 'contact.type.notary'|trans }} :
+                                {{ 'contact.type.notary'|trans|capitalize }} :
                                 {% if project.notary is null %}
                                     {% set modalId = 'add-contact-notary' %}
                                     {% set modalAction = 'add' %}
                                     {% set modalTitle = 'project.show.contact.modal_title.add.notary'|trans %}
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-plus-circle-fill"></i></a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-person-plus-fill"></i></a>
                                 {% else %}
                                     {% set modalId = 'show-contact-notary' %}
                                     {% set modalAction = 'show' %}
                                     {% set modalTitle = 'project.show.contact.modal_title.edit.notary'|trans({'%lastname%':project.notary.lastname, '%firstname%':project.notary.firstname}) %}
                                     {{ project.notary.firstname }} {{ project.notary.lastname }}
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-search"></i></a>
+                                    <a href="{{ path('project_remove_contact', {'id':project.id, 'contact':project.notary.id}) }}" onclick="return confirm('Vous allez supprimer le contact du projet. Voulez-vous continuer ?');">
+                                        <i class="bi bi-person-dash-fill"></i>
+                                    </a>
                                 {% endif %}
                                 {% include 'project/modal/contact_edit.html.twig' with {
                                     'modalId': modalId,
@@ -96,7 +105,7 @@
                                     'modalTitle': modalTitle,
                                     'searchForm': searchForms['notary'],
                                     'modalAction': modalAction,
-                                    'contactType': constant('App\\Entity\\Contact\\Contact::TYPE_NOTARY')
+                                    'contactType': constant('App\\Entity\\Contact\\Notary::TYPE')
                                 } only %}
                             </div>
                         </div>

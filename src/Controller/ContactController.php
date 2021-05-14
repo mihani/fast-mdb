@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Contact\Contact;
+use App\Entity\Contact\EstateAgent;
 use App\Entity\Contact\Notary;
 use App\Entity\Contact\Seller;
 use App\Form\Contact\ContactType;
 use App\Form\Contact\EstateAgentType;
 use Doctrine\ORM\EntityManagerInterface;
+use Elasticsearch\ClientBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,38 +23,78 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/contact')]
 class ContactController extends AbstractController
 {
+    private string $elasticHost;
+    private string $elasticContactIndexName;
+
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(string $elasticHost, string $elasticContactIndexName, EntityManagerInterface $entityManager)
+    {
+        $this->elasticHost = $elasticHost;
+        $this->elasticContactIndexName = $elasticContactIndexName;
+        $this->entityManager = $entityManager;
+    }
+
     #[Route('/create/seller', name: 'contact_create_seller', methods: ['POST'])]
-    public function createSeller(Request $request, EntityManagerInterface $entityManager): RedirectResponse
+    public function createSeller(Request $request): RedirectResponse
     {
         $sellerForm = $this->createForm(type: ContactType::class, options: [
             'data_class' => Seller::class,
         ]);
 
-        return $this->handleContactForm($sellerForm, $request, $entityManager);
+        return $this->handleContactForm($sellerForm, $request);
+    }
+
+    #[Route('/edit/seller/{id}', name: 'contact_edit_seller', methods: ['POST'])]
+    public function editSeller(Seller $seller, Request $request): RedirectResponse
+    {
+        $sellerForm = $this->createForm(ContactType::class, $seller, [
+            'data_class' => Seller::class,
+        ]);
+
+        return $this->handleContactForm($sellerForm, $request);
     }
 
     #[Route('/create/notary', name: 'contact_create_notary', methods: ['POST'])]
-    public function createNotary(Request $request, EntityManagerInterface $entityManager): RedirectResponse
+    public function createNotary(Request $request): RedirectResponse
     {
         $notaryForm = $this->createForm(type: ContactType::class, options: [
             'data_class' => Notary::class,
         ]);
 
-        return $this->handleContactForm($notaryForm, $request, $entityManager);
+        return $this->handleContactForm($notaryForm, $request);
+    }
+
+    #[Route('/edit/notary/{id}', name: 'contact_edit_notary', methods: ['POST'])]
+    public function editNotary(Notary $notary, Request $request): RedirectResponse
+    {
+        $notaryForm = $this->createForm(ContactType::class, $notary, [
+            'data_class' => Seller::class,
+        ]);
+
+        return $this->handleContactForm($notaryForm, $request);
     }
 
     #[Route('/create/estate-agent', name: 'contact_create_estate_agent', methods: ['POST'])]
-    public function createEstateAgent(Request $request, EntityManagerInterface $entityManager): RedirectResponse
+    public function createEstateAgent(Request $request): RedirectResponse
     {
         $estateAgentForm = $this->createForm(EstateAgentType::class);
 
-        return $this->handleContactForm($estateAgentForm, $request, $entityManager);
+        return $this->handleContactForm($estateAgentForm, $request);
+    }
+
+    #[Route('/edit/estate-agent/{id}', name: 'contact_edit_estate_agent', methods: ['POST'])]
+    public function editEstateAgent(EstateAgent $estateAgent, Request $request): RedirectResponse
+    {
+        $estateAgentForm = $this->createForm(EstateAgentType::class, $estateAgent);
+
+        return $this->handleContactForm($estateAgentForm, $request);
     }
 
     #[Route('/search/{contactType}', name: 'contact_search', methods: ['GET'])]
-    public function searchContact(Request $request, string $contactType = Contact::TYPE_CONTACT)
+    public function searchContact(Request $request, string $contactType = Contact::TYPE)
     {
-        if (!$request->isXmlHttpRequest()){
+        if (!$request->isXmlHttpRequest()) {
             return new JsonResponse([], Response::HTTP_FORBIDDEN);
         }
 
@@ -60,14 +102,19 @@ class ContactController extends AbstractController
         dump($request, $contactType);
     }
 
-    private function handleContactForm(FormInterface $form, Request $request, EntityManagerInterface $entityManager): RedirectResponse
+    private function handleContactForm(FormInterface $form, Request $request): RedirectResponse
     {
         $form->handleRequest($request);
 
-        if ($form->isValid() && $form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Contact $contact */
             $contact = $form->getData();
-            $entityManager->persist($contact);
-            $entityManager->flush();
+
+            if (!$contact->getId()) {
+                $this->entityManager->persist($contact);
+            }
+
+            $this->entityManager->flush();
 
             if ($projectId = $request->get('projectId')) {
                 return $this->redirectToRoute('project_add_contact', [
@@ -78,5 +125,41 @@ class ContactController extends AbstractController
         }
 
         return $this->redirectToRoute('dashboard_index');
+    }
+
+    private function createContactDocument(Contact $contact)
+    {
+        $client = ClientBuilder::create()
+            ->setHosts([$this->elasticHost])
+            ->build()
+        ;
+
+        $params = [
+            'index' => $this->elasticContactIndexName,
+            'id' => $contact->getId(),
+            'body' => [
+                'contact_metadata' => [
+                    'created_at' => (new \DateTime())->getTimestamp(),
+                    'updated_at' => (new \DateTime())->getTimestamp(),
+                    'type' => $contact::TYPE,
+                ],
+                'fullname' => $contact->getFullname(),
+                'lastname' => $contact->getLastname(),
+                'firstname' => $contact->getFirstname(),
+                'address' => $contact->getAddress()->getInlineAddress(),
+                'mobile_number' => $contact->getMobileNumber(),
+                'email' => $contact->getEmail(),
+            ],
+        ];
+
+        if ($contact::TYPE === EstateAgent::TYPE) {
+            $params['body']['estate_agency'] = $contact->getEstateAgencyName();
+        }
+
+        $client->index($params);
+    }
+
+    private function updateContactDocument(Contact $contact)
+    {
     }
 }

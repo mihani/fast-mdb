@@ -25,10 +25,7 @@ class Contact
     use TimestampableEntity;
     use SoftDeleteableEntity;
 
-    public const TYPE_CONTACT = 'contact';
-    public const TYPE_SELLER = 'seller';
-    public const TYPE_ESTATE_AGENT = 'estate_agent';
-    public const TYPE_NOTARY = 'notary';
+    public const TYPE = 'contact';
 
     /**
      * @ORM\Id
@@ -38,12 +35,12 @@ class Contact
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=50)
      */
     private $firstname;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=100)
      */
     private $lastname;
 
@@ -103,7 +100,7 @@ class Contact
         return $this;
     }
 
-    public function getMobileNumber()
+    public function getMobileNumber(): string
     {
         return $this->mobileNumber;
     }
@@ -123,5 +120,10 @@ class Contact
         $this->address = $address;
 
         return $this;
+    }
+
+    public function getFullname(): string
+    {
+        return trim($this->getFirstname().' '.$this->getLastname());
     }
 }

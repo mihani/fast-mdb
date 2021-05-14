@@ -5,13 +5,9 @@ declare(strict_types=1);
 namespace App\Form\Contact;
 
 use App\Entity\Contact\Contact;
-use App\Form\Address\AddressType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
-use Symfony\Component\Form\Extension\Core\Type\TelType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -25,14 +21,14 @@ class SearchExistingContactType extends AbstractType
         $builder
             ->add('search', SearchType::class, [
                 'attr' => [
-                    'class' => 'search-existing-contact__search-bar'
-                ]
+                    'class' => 'search-existing-contact__search-bar',
+                ],
             ])
             ->add('contactType', HiddenType::class, [
                 'attr' => [
-                    'class' => 'search-existing-contact__contact-type'
+                    'class' => 'search-existing-contact__contact-type',
                 ],
-                'data' => Contact::TYPE_CONTACT
+                'data' => Contact::TYPE,
             ])
         ;
     }

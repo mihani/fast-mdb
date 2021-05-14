@@ -13,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EstateAgent extends Contact
 {
+    public const TYPE = 'estate_agent';
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */

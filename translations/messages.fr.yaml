@@ -51,6 +51,7 @@ project:
       create:
         form_field:
           submit: Ajouter
+          edit: Modifier
           firstname: Prénom
           lastname: Nom
           email: Email
@@ -74,7 +75,8 @@ project:
           notary: Notaire %lastname% %firstname%
       flashbag:
         notice:
-          contact_has_been_created: "Le %contact% à correctement été ajouté au projet"
+          contact_has_been_add: "Le %contact% à correctement été ajouté au projet"
+          contact_has_been_remove: "Le %contact% à correctement été supprimé du projet"
   card:
     more_information_address: Infos précise de l'adresse
     urban_document:
@@ -123,10 +125,10 @@ project:
       archived: Archivé
 contact:
   type:
-    contact: Contact
-    seller: Vendeur
-    notary: Notaire
-    estate_agent: Agent Immobilier
+    contact: contact
+    seller: vendeur
+    notary: notaire
+    estate_agent: agent immobilier
 dashboard:
   title: Dashboard
   project:

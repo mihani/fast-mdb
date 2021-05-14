@@ -10,6 +10,7 @@ $(document).ready(function() {
         .on('click', '.result-item', function (){
             $('.dashboard-new-project-search-bar').val($(this).children('div').text());
         })
+    ;
 
     $('.dashboard-new-project-search-bar').keyup(function (){
         let addressSearched = $(this).val();
