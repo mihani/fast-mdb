@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Elasticsearch\Mapping;
 
 /**
- * @author Maud Remoriquet <maud.remoriquet@gmail.com>
+ * @author mihani <maud.remoriquet@gmail.com>
  */
 class DvfDocumentMapping
 {
