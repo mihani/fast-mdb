@@ -5,7 +5,7 @@ import * as $ from 'jquery';
 $(document).ready(function() {
     $('body')
         .click(function() {
-            $('#search-bar__list-group').css('display','none');
+            $('#address-search-bar__list-group').css('display','none');
         })
         .on('click', '.result-item', function (){
             $('.dashboard-new-project-search-bar').val($(this).children('div').text());
@@ -17,7 +17,7 @@ $(document).ready(function() {
         if (addressSearched === ''){
             return;
         }
-        let elementWhichShowResult = $('#search-bar__list-group');
+        let elementWhichShowResult = $('#address-search-bar__list-group');
 
         $.ajax({
             url: "https://api-adresse.data.gouv.fr/search/?q="+addressSearched.replace(/\s/g,'+')+"&limit=5&type=housenumber&autocomplete=1",

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Elasticsearch\Repository\ContactRepository;
 use App\Entity\Contact\Contact;
 use App\Entity\Contact\EstateAgent;
 use App\Entity\Contact\Notary;
@@ -92,14 +93,38 @@ class ContactController extends AbstractController
     }
 
     #[Route('/search/{contactType}', name: 'contact_search', methods: ['GET'])]
-    public function searchContact(Request $request, string $contactType = Contact::TYPE)
+    public function searchContact(Request $request, ContactRepository $contactElasticRepository, string $contactType = Contact::TYPE)
     {
         if (!$request->isXmlHttpRequest()) {
             return new JsonResponse([], Response::HTTP_FORBIDDEN);
         }
 
-        $request->get('query');
-        dump($request, $contactType);
+        $contactDocuments = $contactElasticRepository->searchContact($request->get('query'), $contactType);
+
+        if (is_null($contactDocuments)) {
+            $resultTemplate = $this->renderView('contact/contact_result.html.twig', ['contacts' => null]);
+
+            return new JsonResponse($resultTemplate, Response::HTTP_NOT_FOUND);
+        }
+
+        $contacts = [];
+        foreach ($contactDocuments as $contactDocument) {
+            $current = $contactDocument['_source'];
+            $contacts[] = [
+                'id' => $contactDocument['_id'],
+                'fullname' => $current['fullname'],
+                'mobileNumber' => $current['mobile_number'],
+                'email' => $current['email'],
+            ];
+
+            if (isset($current['estate_agency'])) {
+                $contacts['estateAgency'] = $current['estate_agency'];
+            }
+        }
+
+        $resultTemplate = $this->renderView('contact/contact_result.html.twig', ['contacts' => $contacts]);
+
+        return new JsonResponse($resultTemplate, Response::HTTP_OK);
     }
 
     private function handleContactForm(FormInterface $form, Request $request): RedirectResponse
@@ -156,7 +181,7 @@ class ContactController extends AbstractController
             ],
         ];
 
-        if ($action === 'create'){
+        if ($action === 'create') {
             $params['body']['contact_metadata']['created_at'] = $date;
         }
 
@@ -164,9 +189,9 @@ class ContactController extends AbstractController
             $params['body']['estate_agency'] = $contact->getEstateAgencyName();
         }
 
-        if ($action === 'create'){
+        if ($action === 'create') {
             $client->index($params);
-        }else{
+        } else {
             $client->update($params);
         }
     }

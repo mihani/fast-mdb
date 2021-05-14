@@ -24,17 +24,25 @@ class ContactRepository extends AbstractElasticsearchRepository
         $params = [
             'index' => $this->elasticContactIndexName,
             'body' => [
+                'from' => 0,
+                'size' => 10,
                 'query' => [
-                    'multi_match' => [
-                        'query' => $query,
-                        'type' => 'best_fields',
-                        'fields' => ['lastname^6', 'firstname', 'fullname^24', 'email^12', 'mobile_number^12', 'estate_agency^12'],
-                    ],
-                ],
-                'filter' => [
-                    [
-                        'terms' => [
-                            'contact_metadata.type' => $contactType,
+                    'bool' => [
+                        'must' => [
+                            [
+                                'multi_match' => [
+                                    'query' => $query,
+                                    'type' => 'best_fields',
+                                    'fields' => ['lastname^6', 'firstname', 'fullname^24', 'email^12', 'mobile_number^12', 'estate_agency^12'],
+                                ],
+                            ],
+                        ],
+                        'filter' => [
+                            [
+                                'term' => [
+                                    'contact_metadata.type' => $contactType,
+                                ],
+                            ],
                         ],
                     ],
                 ],

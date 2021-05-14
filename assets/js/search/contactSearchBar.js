@@ -7,9 +7,11 @@ $(document).ready(function() {
         .click(function() {
             $('#search-existing-contact__list-group').css('display','none');
         })
-        // .on('click', '.result-item', function (){
-        //     $('.dashboard-new-project-search-bar').val($(this).children('div').text());
-        // })
+        .on('click', '.result-item', function (){
+            let data = $(this).children('div').data();
+            $('.search-existing-contact__search-bar').val(data.fullname);
+            $('.search-existing-contact__contact-id').val(data.id);
+        })
         .find('.search-existing-contact__search-bar').keyup(function (){
             let contactSearched = $(this).val();
             if (contactSearched === ''){
@@ -24,26 +26,15 @@ $(document).ready(function() {
                 data: {
                     'query' : contactSearched
                 },
-                type: 'GET'
+                type: 'GET',
+                statusCode:{
+                    404: function (data){
+                        return elementWhichShowResult.css('display','flex').html(data.responseJSON);
+                    }
+                }
             }).done(function (data){
-                let resultLines = '';
-                (data.features).forEach(function (object) {
-                    resultLines += fillTemplateWithData(object.properties.label, object.properties.context)
-                });
-
-                return elementWhichShowResult.css('display','flex').html(resultLines);
+                return elementWhichShowResult.css('display','flex').html(data);
             })
         })
     ;
 });
-
-function fillTemplateWithData(address, context) {
-    return '<a href="#" class="list-group-item list-group-item-action result-item">'+
-        '<div class="d-flex w-100 justify-content-between">' +
-        '<h6 class="mb-1">' + address + '</h6>' +
-        '</div>' +
-        '<p class="mb-1">' +
-        '<small>'+context+'</small>' +
-        '</p>' +
-        '</a>'
-}

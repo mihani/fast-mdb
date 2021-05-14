@@ -17,7 +17,6 @@ use App\Form\Contact\SearchExistingContactType;
 use App\Form\Project\ProjectType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -66,9 +65,21 @@ class ProjectController extends AbstractController
         }
 
         $searchForms = [
-            'seller' => $this->createForm(SearchExistingContactType::class)->createView(),
-            'estate-agent' => $this->createForm(SearchExistingContactType::class)->createView(),
-            'notary' => $this->createForm(SearchExistingContactType::class)->createView(),
+            'seller' => $this->createForm(type: SearchExistingContactType::class, options: [
+                'action' => $this->generateUrl('project_add_existing_contact', [
+                    'id' => $project->getId(),
+                ]),
+            ])->createView(),
+            'estate-agent' => $this->createForm(type: SearchExistingContactType::class, options: [
+                'action' => $this->generateUrl('project_add_existing_contact', [
+                    'id' => $project->getId(),
+                ]),
+            ])->createView(),
+            'notary' => $this->createForm(type: SearchExistingContactType::class, options: [
+                'action' => $this->generateUrl('project_add_existing_contact', [
+                    'id' => $project->getId(),
+                ]),
+            ])->createView(),
         ];
 
         return $this->render('project/show.html.twig', [
@@ -86,6 +97,31 @@ class ProjectController extends AbstractController
     public function removeContact(Project $project, Contact $contact): RedirectResponse
     {
         return $this->projectContactHandler($project, $contact, 'remove');
+    }
+
+    #[Route('/{id}/contact/add/{contact}', name: 'project_add_contact', methods: ['GET'])]
+    public function addContact(Project $project, Contact $contact): RedirectResponse
+    {
+        return $this->projectContactHandler($project, $contact, 'add');
+    }
+
+    #[Route('/{id}/existing-contact/add', name: 'project_add_existing_contact', methods: ['POST'])]
+    public function addExistingContact(Project $project, Request $request): RedirectResponse
+    {
+        $searchForm = $this->createForm(SearchExistingContactType::class);
+        $searchForm->handleRequest($request);
+
+        if ($searchForm->isSubmitted() && $searchForm->isValid()) {
+            $contact = $this->entityManager->getRepository(Contact::class)->find($searchForm->getData()['contactId']);
+
+            return $this->projectContactHandler($project, $contact, 'add');
+        }
+
+        $this->addFlash('error', 'project.show.flashbag.error.contact_has_not_been_added');
+
+        return $this->redirectToRoute('project_show', [
+            'id' => $project->getId(),
+        ]);
     }
 
     private function projectContactHandler(Project $project, Contact $contact, string $action): RedirectResponse
@@ -114,12 +150,12 @@ class ProjectController extends AbstractController
         if ($isTypedContact) {
             $this->entityManager->flush();
 
-            if ($action === 'add'){
-                $message = $this->translator->trans('project.show.contact.flashbag.notice.contact_has_been_add', [
+            if ($action === 'add') {
+                $message = $this->translator->trans('project.show.flashbag.notice.contact_has_been_added', [
                     '%contact%' => $contactType,
                 ]);
-            }else{
-                $message = $this->translator->trans('project.show.contact.flashbag.notice.contact_has_been_remove', [
+            } else {
+                $message = $this->translator->trans('project.show.flashbag.notice.contact_has_been_removed', [
                     '%contact%' => $contactType,
                 ]);
             }
@@ -132,12 +168,6 @@ class ProjectController extends AbstractController
         }
 
         throw new FastMdbLogicException('[ADD PROJECT CONTACT] Contact is not a instance of Seller, EstateAgent or Notary');
-    }
-
-    #[Route('/{id}/contact/add/{contact}', name: 'project_add_contact', methods: ['GET'])]
-    public function addContact(Project $project, Contact $contact): RedirectResponse
-    {
-        return $this->projectContactHandler($project, $contact, 'add');
     }
 
     private function createSellerContactForm(Project $project): FormInterface

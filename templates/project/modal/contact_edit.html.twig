@@ -14,14 +14,14 @@
             {% endif %}
         </p>
         {{ form_start(searchForm, {'attr': {'class': 'search-existing-contact'}}) }}
-            {{ form_widget(searchForm.contactType, {'attr': {'value': contactType}}) }}
-            <div id="search-existing-contact__input-group" class="input-group">
+            <div id="search-existing-contact__input-group" class="search-existing-contact__input-group input-group">
                 {{ form_widget(searchForm.search, {'attr': { 'class':'form-control search-existing-contact__search-bar', 'aria-describedby':'button-add-existing-'~contactType, 'data-url':url('contact_search', {'contactType':contactType} ) }}) }}
                 <button class="btn btn-primary" type="submit" id="button-add-existing-{{ contactType }}">{{'project.show.contact.create.form_field.submit'|trans}}</button>
             </div>
-            <div id="search-existing-contact__list-group" class="list-group">
+            <div id="search-existing-contact__list-group" class="list-group search-existing-contact__list-group">
 
             </div>
+            {{ form_widget(searchForm.contactType, {'attr': {'value': contactType}}) }}
         {{ form_end(searchForm) }}
         <div class="divider divider-left">
             <div class="divider-text">

@@ -62,6 +62,8 @@ project:
             address_line_2: Complément d'adresse
             postal_code: Code Postal
             city: Ville
+      search_bar:
+        no_result_found: Aucun résultat trouvé
       button:
         close: Fermer
       modal_title:
@@ -73,10 +75,12 @@ project:
           seller: Vendeur %lastname% %firstname%
           estate_agent: Agent immobilier %lastname% %firstname%
           notary: Notaire %lastname% %firstname%
-      flashbag:
-        notice:
-          contact_has_been_add: "Le %contact% à correctement été ajouté au projet"
-          contact_has_been_remove: "Le %contact% à correctement été supprimé du projet"
+    flashbag:
+      notice:
+        contact_has_been_added: "Le %contact% à correctement été ajouté au projet"
+        contact_has_been_removed: "Le %contact% à correctement été supprimé du projet"
+      error:
+        contact_has_not_been_added: "Une erreur s'est produite lors de l'ajout du contact au projet"
   card:
     more_information_address: Infos précise de l'adresse
     urban_document:

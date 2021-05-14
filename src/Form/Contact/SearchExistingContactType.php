@@ -22,6 +22,7 @@ class SearchExistingContactType extends AbstractType
             ->add('search', SearchType::class, [
                 'attr' => [
                     'class' => 'search-existing-contact__search-bar',
+                    'autocomplete' => 'off',
                 ],
             ])
             ->add('contactType', HiddenType::class, [
@@ -29,6 +30,11 @@ class SearchExistingContactType extends AbstractType
                     'class' => 'search-existing-contact__contact-type',
                 ],
                 'data' => Contact::TYPE,
+            ])
+            ->add('contactId', HiddenType::class, [
+                'attr' => [
+                    'class' => 'search-existing-contact__contact-id',
+                ],
             ])
         ;
     }

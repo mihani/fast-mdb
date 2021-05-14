@@ -23,15 +23,15 @@
                         <h4 class="cart-title">{{ 'dashboard.project.preview.title'|trans }}</h4>
                         <div class="row">
                             <div class="col-12">
-                                {{ form_start(searchBarForm, {'attr': {'class':'search-bar'}}) }}
-                                <div class="input-group search-bar__input-group">
+                                {{ form_start(searchBarForm, {'attr': {'class':'address-search-bar'}}) }}
+                                <div class="input-group address-search-bar__input-group">
                                     <span class="input-group-text" id="search-address-button">
                                         <i class="bi bi-search"></i>
                                     </span>
                                     {{ form_widget(searchBarForm.address, {'attr':{'class':'form-control dashboard-new-project-search-bar','aria-describedby':'search-address-button'}}) }}
                                     <button class="btn btn-primary" type="submit" id="search-address-button">{{'dashboard.project.preview.form_field.search.submit'|trans}}</button>
                                 </div>
-                                <div id="search-bar__list-group" class="list-group search-bar__list-group">
+                                <div id="address-search-bar__list-group" class="list-group address-search-bar__list-group">
 
                                 </div>
                                 {{ form_end(searchBarForm) }}
