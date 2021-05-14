@@ -110,11 +110,15 @@ class ContactController extends AbstractController
             /** @var Contact $contact */
             $contact = $form->getData();
 
+            $action = 'update';
             if (!$contact->getId()) {
                 $this->entityManager->persist($contact);
+                $action = 'create';
             }
 
             $this->entityManager->flush();
+
+            $this->createOrUpdateContactDocument($contact, $action);
 
             if ($projectId = $request->get('projectId')) {
                 return $this->redirectToRoute('project_add_contact', [
@@ -127,20 +131,20 @@ class ContactController extends AbstractController
         return $this->redirectToRoute('dashboard_index');
     }
 
-    private function createContactDocument(Contact $contact)
+    private function createOrUpdateContactDocument(Contact $contact, string $action)
     {
         $client = ClientBuilder::create()
             ->setHosts([$this->elasticHost])
             ->build()
         ;
 
+        $date = (new \DateTime())->getTimestamp();
         $params = [
             'index' => $this->elasticContactIndexName,
             'id' => $contact->getId(),
             'body' => [
                 'contact_metadata' => [
-                    'created_at' => (new \DateTime())->getTimestamp(),
-                    'updated_at' => (new \DateTime())->getTimestamp(),
+                    'updated_at' => $date,
                     'type' => $contact::TYPE,
                 ],
                 'fullname' => $contact->getFullname(),
@@ -152,14 +156,18 @@ class ContactController extends AbstractController
             ],
         ];
 
+        if ($action === 'create'){
+            $params['body']['contact_metadata']['created_at'] = $date;
+        }
+
         if ($contact::TYPE === EstateAgent::TYPE) {
             $params['body']['estate_agency'] = $contact->getEstateAgencyName();
         }
 
-        $client->index($params);
-    }
-
-    private function updateContactDocument(Contact $contact)
-    {
+        if ($action === 'create'){
+            $client->index($params);
+        }else{
+            $client->update($params);
+        }
     }
 }
