@@ -21,8 +21,8 @@ class SearchExistingContactType extends AbstractType
         $builder
             ->add('search', SearchType::class, [
                 'attr' => [
-                    'class' => 'search-existing-contact__search-bar',
                     'autocomplete' => 'off',
+                    'placeholder' => 'contact.search_form.fields.search.placeholder'
                 ],
             ])
             ->add('contactType', HiddenType::class, [

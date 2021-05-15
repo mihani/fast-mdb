@@ -13,6 +13,7 @@ use App\Factory\AddressFactory;
 use App\Factory\UrbanDocumentFactory;
 use App\Form\Address\AddressMoreInformationType;
 use App\Form\Project\ProjectFromPreviewType;
+use App\Form\Project\SearchProjectType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Psr\Log\LoggerInterface;
@@ -37,19 +38,19 @@ class DashboardController extends AbstractController
     private TranslatorInterface $translator;
     private LoggerInterface $logger;
     private GeoPortailUrbanisme $geoPortailUrbanisme;
-    private EntityManagerInterface $em;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(GeoApiFr $geoApiFr, TranslatorInterface $translator, LoggerInterface $logger, GeoPortailUrbanisme $geoPortailUrbanisme, EntityManagerInterface $em)
+    public function __construct(GeoApiFr $geoApiFr, TranslatorInterface $translator, LoggerInterface $logger, GeoPortailUrbanisme $geoPortailUrbanisme, EntityManagerInterface $entityManager)
     {
         $this->geoApiFr = $geoApiFr;
         $this->translator = $translator;
         $this->logger = $logger;
         $this->geoPortailUrbanisme = $geoPortailUrbanisme;
-        $this->em = $em;
+        $this->entityManager = $entityManager;
     }
 
     #[Route('/', name: 'dashboard_index')]
-    public function index(Request $request, PaginatorInterface $paginator, DvfRepository $dvfRepository): Response
+    public function index(Request $request, PaginatorInterface $paginator, DvfRepository $dvfElasticRepository): Response
     {
         $searchBarForm = $this->createForm(type: AddressMoreInformationType::class, options: [
             'method' => Request::METHOD_GET,
@@ -61,13 +62,16 @@ class DashboardController extends AbstractController
             $addressData = $this->getMoreAddressInfo($searchBarForm->get('address')->getData());
             if ($addressData !== null) {
                 $urbanDocuments = $this->getUrbanDocuments($addressData['inseeCode']);
-                $proximitySales = $dvfRepository->getProximitySales($addressData['latitude'], $addressData['longitude']);
+                $proximitySales = $dvfElasticRepository->getProximitySales($addressData['latitude'], $addressData['longitude']);
                 if ($proximitySales) {
                     $proximitySalesPagination = $paginator->paginate(
                         $proximitySales,
-                        $request->query->getInt('page', 1),
+                        $request->query->getInt('proximitySalesPage', 1),
                         self::ITEM_PER_PAGE
                     );
+                    $proximitySalesPagination->setCustomParameters([
+                        'pageParameterName ' => 'proximitySalesPage',
+                    ]);
                 }
                 $project = $this->generateProjectFromData($addressData, $urbanDocuments);
                 $projectFromPreviewForm = $this->createForm(ProjectFromPreviewType::class, $project, [
@@ -76,12 +80,40 @@ class DashboardController extends AbstractController
             }
         }
 
+        $searchProjectForm = $this->createForm(type: SearchProjectType::class);
+        $searchProjectForm->handleRequest($request);
+
+        $searchProjectsQuery = null;
+        if ($searchProjectForm->isSubmitted() && $searchProjectForm->isValid()) {
+            $searchProjectFormData = $searchProjectForm->getData();
+            $searchProjectsQuery = $this->entityManager
+                ->getRepository(Project::class)
+                ->searchProjectsQuery(
+                    $this->getUser(),
+                    $searchProjectFormData['states'],
+                    $searchProjectFormData['cityOrPostalCode'],
+                    $searchProjectFormData['contactSearch']['contactId']
+                );
+        }
+
+        $projectsPagination = $paginator->paginate(
+            is_null($searchProjectsQuery)?$this->getUser()->getProjects():$searchProjectsQuery,
+            $request->query->getInt('projectPage', 1),
+            self::ITEM_PER_PAGE
+        );
+
+        $projectsPagination->setCustomParameters([
+            'pageParameterName' => 'projectPage',
+        ]);
+
         return $this->render('dashboard/index.html.twig', [
             'searchBarForm' => $searchBarForm->createView(),
             'addressData' => $addressData,
             'urbanDocuments' => empty($urbanDocuments) ? null : $urbanDocuments,
             'proximitySalesPagination' => $proximitySalesPagination,
             'projectFromPreviewForm' => $projectFromPreviewForm ? $projectFromPreviewForm->createView() : null,
+            'projectsPagination' => $projectsPagination,
+            'searchProjectForm' => $searchProjectForm->createView()
         ]);
     }
 
@@ -97,8 +129,8 @@ class DashboardController extends AbstractController
             $project->setUser($this->getUser())
                 ->setCompany($this->getUser()->getCompany())
             ;
-            $this->em->persist($project);
-            $this->em->flush();
+            $this->entityManager->persist($project);
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('project_show', [
                 'id' => $project->getId(),

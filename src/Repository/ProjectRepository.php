@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Project;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
+use function Doctrine\ORM\QueryBuilder;
 
 /**
  * @method null|Project find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +24,44 @@ class ProjectRepository extends ServiceEntityRepository
         parent::__construct($registry, Project::class);
     }
 
-    // /**
-    //  * @return Project[] Returns an array of Project objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function searchProjectsQuery(UserInterface $user, array $states = [], ?string $cityOrPostalCode = null, ?string $contactId = null): Query
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $projectQueryBuilder = $this
+            ->createQueryBuilder('project')
+            ->where('project.user = :user')
+            ->setParameter('user', $user);
 
-    /*
-    public function findOneBySomeField($value): ?Project
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        if (!is_null($cityOrPostalCode)){
+            $projectQueryBuilder->innerJoin('project.address','address')
+                ->andWhere(
+                    $projectQueryBuilder->expr()->orX(
+                        'address.city = :cityOrPostalCode',
+                        'address.postalCode = :cityOrPostalCode'
+                    )
+                )
+                ->setParameter('cityOrPostalCode', $cityOrPostalCode)
+            ;
+        }
+
+        if (!is_null($contactId)){
+            $projectQueryBuilder
+                ->andWhere(
+                    $projectQueryBuilder->expr()->orX(
+                        'project.estateAgent = :contactId',
+                        'project.notary = :contactId',
+                        'project.seller = :contactId',
+                    )
+                )
+                ->setParameter('contactId', $contactId)
+            ;
+        }
+
+        if (!empty($states)){
+            $projectQueryBuilder = $projectQueryBuilder
+                ->andWhere('project.state IN (:states)')
+                ->setParameter('states', $states);
+        }
+
+        return $projectQueryBuilder->getQuery();
     }
-    */
 }

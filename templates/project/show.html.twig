@@ -66,7 +66,7 @@
                                 {% else %}
                                     {% set modalId = 'edit-contact-estate-agent' %}
                                     {% set modalAction = 'show' %}
-                                    {% set modalTitle = 'project.show.contact.modal_title.edit.estate_agent'|trans({'%lastname%':project.seller.lastname, '%firstname%':project.seller.firstname}) %}
+                                    {% set modalTitle = 'project.show.contact.modal_title.edit.estate_agent'|trans({'%lastname%':project.estateAgent.lastname, '%firstname%':project.estateAgent.firstname}) %}
                                     {{ project.estateAgent.firstname }} {{ project.estateAgent.lastname }}
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-search"></i></a>
                                     <a href="{{ path('project_remove_contact', {'id':project.id, 'contact':project.estateAgent.id}) }}" onclick="return confirm('Vous allez supprimer le contact du projet. Voulez-vous continuer ?');">

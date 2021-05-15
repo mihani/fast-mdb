@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Elasticsearch\Repository;
 
+use App\Entity\Contact\Contact;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -19,7 +20,7 @@ class ContactRepository extends AbstractElasticsearchRepository
         $this->elasticContactIndexName = $elasticContactIndexName;
     }
 
-    public function searchContact(string $query, string $contactType): array | null
+    public function searchContact(string $query, string $contactType = Contact::TYPE): array | null
     {
         $params = [
             'index' => $this->elasticContactIndexName,
@@ -37,17 +38,20 @@ class ContactRepository extends AbstractElasticsearchRepository
                                 ],
                             ],
                         ],
-                        'filter' => [
-                            [
-                                'term' => [
-                                    'contact_metadata.type' => $contactType,
-                                ],
-                            ],
-                        ],
                     ],
                 ],
             ],
         ];
+
+        if ($contactType !== Contact::TYPE){
+            $params['body']['query']['bool']['filter'] = [
+                [
+                    'term' => [
+                        'contact_metadata.type' => $contactType,
+                    ],
+                ],
+            ];
+        }
 
         $contactHits = $this->search($params);
 

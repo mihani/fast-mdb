@@ -1,6 +1,7 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/bootstrap.scss';
+import "choices.js/src/styles/choices.scss";
 import './styles/app.scss';
-import 'leaflet/dist/leaflet.css'
+import 'leaflet/dist/leaflet.css';
+import 'bootstrap';
 
-require('bootstrap');

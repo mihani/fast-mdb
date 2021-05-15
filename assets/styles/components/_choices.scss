@@ -1,0 +1,21 @@
+.choices {
+    &__inner {
+        padding-top: 1px;
+        padding-bottom: 1px;
+        min-height: 0;
+    }
+
+    &__list--multiple {
+        .choices__item{
+            &.is-highlighted{
+                background-color: #5A8DEE;
+                border: none;
+            }
+            border-radius: 2px;
+            background-color: #5A8DEE;
+            box-shadow: 0 2px 5px rgba(2, 158, 255, .1);
+            border: none;
+            margin-bottom: 0;
+        }
+    }
+}

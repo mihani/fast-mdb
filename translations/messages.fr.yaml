@@ -40,6 +40,10 @@ menu:
       user: User
 project:
   title: Project
+  goods_type_not_defined: Type de bien non définit
+  fields:
+    state: etat
+    estate_agent: Agent Immobilier
   show:
     title: 'Project : "%address%"'
     contact:
@@ -133,11 +137,23 @@ contact:
     seller: vendeur
     notary: notaire
     estate_agent: agent immobilier
+  search_form:
+    fields:
+      search:
+        placeholder: Contact à rechercher
 dashboard:
   title: Dashboard
   project:
     list:
       title: Liste des projets
+      form_field:
+        search:
+          city_or_postal_code:
+            label: Ville / Code postal
+            placeholder: Ville ou code postal
+          contact:
+            label: Contact
+          submit: Filtrer
     preview:
       title: Créer un projet
       form_field:

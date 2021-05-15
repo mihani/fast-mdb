@@ -11,11 +11,83 @@
                 <div class="card-content">
                     <div class="card-body">
                         <h4 class="cart-title">{{ 'dashboard.project.list.title'|trans }}</h4>
-                        <p class="card-text">Coming soon</p>
+                        {{ form_start(searchProjectForm) }}
+                        {{ form_errors(searchProjectForm) }}
+                        <div class="row align-items-center form-group">
+                            <div class="col-lg-3">
+                                {{ form_label(searchProjectForm.states,null, {'label_attr':{'class':'col-form-label'}}) }}
+                            </div>
+                            <div class="col-lg">
+                                {{ form_widget(searchProjectForm.states,{'attr':{'class':'choices form-select multiple-remove'}}) }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-3">
+                                {{ form_label(searchProjectForm.cityOrPostalCode, null, {'label_attr':{'class':'col-form-label'}}) }}
+                            </div>
+                            <div class="col-lg-6">
+                                {{ form_widget(searchProjectForm.cityOrPostalCode, {'attr':{'class':'form-control'}}) }}
+                            </div>
+                        </div>
+                        <div class="d-flex row justify-content-between form-group">
+                            <div class="col-lg-3">
+                                {{ form_label(searchProjectForm.contactSearch, null, {'label_attr':{'class':'col-form-label'}}) }}
+                            </div>
+                            <div class="col-lg-6 search-existing-contact">
+                                <div id="search-existing-contact__input-group" class="search-existing-contact__input-group input-group">
+                                    {{ form_widget(searchProjectForm.contactSearch.search, {'attr':{'class':'form-control search-existing-contact__search-bar','data-url':url('contact_search', {'contactType':'contact'})}}) }}
+                                </div>
+                                <div class="list-group search-existing-contact__list-group">
+
+                                </div>
+                            </div>
+                            <div class="col-lg">
+                                <button class="btn btn-primary w-100" type="submit">{{'dashboard.project.list.form_field.search.submit'|trans}}</button>
+                            </div>
+                        </div>
+                        {{ form_rest(searchProjectForm.contactSearch) }}
+                        {{ form_end(searchProjectForm) }}
                     </div>
                 </div>
             </div>
+            <div id="list-projects" class="list-projects">
+                {# @var project \App\Entity\Project #}
+                {% for project in projectsPagination %}
+                <a href="{{ path('project_show', {'id': project.id}) }}">
+                    <div class="card px-3 py-2 flex-row mb-3">
+                        <div class="w-25 cart-content me-3">
+                            <div class="cart-body">
+                                <h6>{% if project.goodsType is not null %}
+                                        {{ project.goodsType.name }}
+                                    {% else %}
+                                        {{ 'project.goods_type_not_defined'|trans }}
+                                    {% endif %}</h6>
+                                <p class="list-projects__p">
+                                    {{ project.address.inlineAddress }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="cart-content">
+                            <div class="cart-body">
+                                <p class="list-projects__p">
+                                    {{ 'project.fields.state'|trans|capitalize }} : {{ ('project.state.value.'~project.state)|trans }}
+                                    <br>
+                                    {{ 'project.fields.estate_agent'|trans|capitalize }} :
+                                    {% if project.estateAgent is not null %}
+                                        {% set estateAgent = project.estateAgent %}{{ estateAgent.fullname }} {% if estateAgent.estateAgencyName is not null %}({{ estateAgent.estateAgencyName }}){% endif %}
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+                <nav id="list-projects-pagination">
+                    {{ knp_pagination_render(projectsPagination) }}
+                </nav>
+            </div>
         </div>
+        {# Creation project part #}
         <div class="col-12 col-lg-6">
             <div class="card">
                 <div class="card-content">
@@ -166,4 +238,6 @@
     {{ encore_entry_script_tags('addressSearchBar') }}
     {{ encore_entry_script_tags('streetViewMap') }}
     {{ encore_entry_script_tags('aerialViewMap') }}
+    {{ encore_entry_script_tags('choices') }}
+    {{ encore_entry_script_tags('contactSearchBar') }}
 {% endblock %}
