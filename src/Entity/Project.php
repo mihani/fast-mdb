@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Contact\EstateAgent;
+use App\Entity\Contact\Notary;
+use App\Entity\Contact\Seller;
 use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -74,9 +77,24 @@ class Project
     private $urbanDocuments;
 
     /**
-     * @ORM\ManyToOne(targetEntity=GoodsType::class, inversedBy="projects")
+     * @ORM\ManyToOne(targetEntity=GoodsType::class)
      */
     private $goodsType;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Notary::class)
+     */
+    private $notary;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=EstateAgent::class)
+     */
+    private $estateAgent;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Seller::class)
+     */
+    private $seller;
 
     public function __construct()
     {
@@ -203,5 +221,41 @@ class Project
             self::STATUS_SIGNED_OFFER => self::STATUS_SIGNED_OFFER,
             self::STATUS_ARCHIVED => self::STATUS_ARCHIVED,
         ];
+    }
+
+    public function getNotary(): ?Notary
+    {
+        return $this->notary;
+    }
+
+    public function setNotary(?Notary $notary): self
+    {
+        $this->notary = $notary;
+
+        return $this;
+    }
+
+    public function getEstateAgent(): ?EstateAgent
+    {
+        return $this->estateAgent;
+    }
+
+    public function setEstateAgent(?EstateAgent $estateAgent): self
+    {
+        $this->estateAgent = $estateAgent;
+
+        return $this;
+    }
+
+    public function getSeller(): ?Seller
+    {
+        return $this->seller;
+    }
+
+    public function setSeller(?Seller $seller): self
+    {
+        $this->seller = $seller;
+
+        return $this;
     }
 }

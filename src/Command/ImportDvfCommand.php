@@ -10,7 +10,6 @@ use App\Entity\LoggerDvf;
 use App\Exception\FastMdbHttpResponseException;
 use App\Utils\AddressUtils;
 use Doctrine\ORM\EntityManagerInterface;
-use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Psr\Log\LoggerInterface;
@@ -76,7 +75,6 @@ class ImportDvfCommand extends Command
     {
         $dvfYear = $input->getArgument('year');
 
-        /** @var Client $client */
         $client = ClientBuilder::create()
             ->setHosts([$this->elasticHost])
             ->build()
@@ -93,7 +91,7 @@ class ImportDvfCommand extends Command
                 '<fg=black;bg=yellow>Delete begin...</>',
                 '',
             ]);
-            $skipDeleteMessage = false;
+
             $removeParams = [
                 'index' => $this->elasticDvfIndexName,
                 'body' => [
@@ -107,17 +105,13 @@ class ImportDvfCommand extends Command
 
             try {
                 $result = $client->deleteByQuery($removeParams);
-            } catch (Missing404Exception $missing404Exception) {
-                $skipDeleteMessage = true;
-                $output->writeln([
-                    '<fg=black;bg=yellow>Index Not found</>',
-                    '',
-                ]);
-            }
-
-            if (!$skipDeleteMessage) {
                 $output->writeln([
                     sprintf('<fg=black;bg=yellow>%s/%s documents deleted</>', $result['deleted'], $result['total']),
+                    '',
+                ]);
+            } catch (Missing404Exception $missing404Exception) {
+                $output->writeln([
+                    '<fg=black;bg=yellow>Index Not found</>',
                     '',
                 ]);
             }

@@ -1,0 +1,22 @@
+{% if contacts is null %}
+    <a href="#" class="list-group-item list-group-item-action no-result-item">
+        <p>{{ 'project.show.contact.search_bar.no_result_found'|trans }}</p>
+    </a>
+{% else %}
+    {% for contact in contacts %}
+        <a href="#" class="list-group-item list-group-item-action result-item">
+            <div class="d-flex w-100" data-fullname="{{ contact['fullname'] }}" data-id="{{ contact['id'] }}">
+                <h6>{{ contact['fullname'] }}</h6>
+            </div>
+            <p>
+                <small><i class="bi bi-telephone"></i> {{ contact['mobileNumber'] }}</small>
+                {% if contact['email'] is not empty %}
+                    <small><i class="bi bi-at"></i> {{ contact['email'] }}</small>
+                {% endif %}
+                {% if contact['estateAgency'] is defined and not empty %}
+                    <small><i class="bi bi-building"></i> {{ contact['estateAgency'] }}</small>
+                {% endif %}
+            </p>
+        </a>
+    {% endfor %}
+{% endif %}

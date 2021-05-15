@@ -1,0 +1,83 @@
+{% extends '_partials/_modal/_modal_form.html.twig' %}
+
+{% set modalId = modalId %}
+
+{% block modal_form_title %}{{ modalTitle }}{% endblock %}
+
+{% block modal_form_body %}
+    <div class="modal-body">
+        <p>
+            {% if modalAction == 'show' %}
+                {{ 'project.show.contact.replace_by_existing_contact'|trans }}
+            {% else %}
+                {{ 'project.show.contact.add_by_existing_contact'|trans }}
+            {% endif %}
+        </p>
+        {{ form_start(searchForm, {'attr': {'class': 'search-existing-contact'}}) }}
+            <div id="search-existing-contact__input-group" class="search-existing-contact__input-group input-group">
+                {{ form_widget(searchForm.search, {'attr': { 'class':'form-control search-existing-contact__search-bar', 'aria-describedby':'button-add-existing-'~contactType, 'data-url':url('contact_search', {'contactType':contactType} ) }}) }}
+                <button class="btn btn-primary" type="submit" id="button-add-existing-{{ contactType }}">{{'project.show.contact.create.form_field.submit'|trans}}</button>
+            </div>
+            <div id="search-existing-contact__list-group" class="list-group search-existing-contact__list-group">
+
+            </div>
+            {{ form_widget(searchForm.contactType, {'attr': {'value': contactType}}) }}
+        {{ form_end(searchForm) }}
+        <div class="divider divider-left">
+            <div class="divider-text">
+                {% if modalAction == 'show' %}
+                    {{ 'project.show.contact.edit_the_current_contact'|trans }}
+                {% else %}
+                    {{ 'project.show.contact.add_new_contact'|trans }}
+                {% endif %}
+            </div>
+        </div>
+        {{ form_start(contactForm) }}
+            {% if contactForm.estateAgencyName is defined %}
+                <div class="form-group">
+                    {{ form_label(contactForm.estateAgencyName) }}
+                    {{ form_widget(contactForm.estateAgencyName, {'attr':{'class':'form-control'}}) }}
+                </div>
+            {% endif %}
+            <div class="form-group">
+                {{ form_label(contactForm.firstname) }}
+                {{ form_widget(contactForm.firstname, {'attr':{'class':'form-control'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(contactForm.lastname) }}
+                {{ form_widget(contactForm.lastname, {'attr':{'class':'form-control'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(contactForm.email) }}
+                {{ form_widget(contactForm.email, {'attr':{'class':'form-control mb-1'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(contactForm.mobileNumber) }}
+                {{ form_widget(contactForm.mobileNumber, {'attr':{'class':'form-control'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(contactForm.address.addressLine1) }}
+                {{ form_widget(contactForm.address.addressLine1, {'attr':{'class':'form-control'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(contactForm.address.addressLine2) }}
+                {{ form_widget(contactForm.address.addressLine2, {'attr':{'class':'form-control'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(contactForm.address.postalCode) }}
+                {{ form_widget(contactForm.address.postalCode, {'attr':{'class':'form-control'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(contactForm.address.city) }}
+                {{ form_widget(contactForm.address.city, {'attr':{'class':'form-control'}}) }}
+            </div>
+            <button type="button" class="btn" data-bs-dismiss="modal">
+                <i class="bx bx-x d-block d-sm-none"></i>
+                <span class="d-none d-sm-block">{{ 'project.show.contact.button.close'|trans }}</span>
+            </button>
+            <button type="submit" class="btn btn-primary">
+                {% if modalAction == 'add' %}{{ 'project.show.contact.create.form_field.submit'|trans }}{% else %}{{ 'project.show.contact.create.form_field.edit'|trans }}{% endif %}
+            </button>
+        {{ form_end(contactForm) }}
+    </div>
+{% endblock %}

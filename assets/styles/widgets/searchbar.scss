@@ -1,9 +1,36 @@
-.search-bar{
+.address-search-bar {
     position: relative;
 
     &__input-group{
-        span.input-group-text, button.btn{
+        span.input-group-text{
             border-bottom-left-radius: 0;
+        }
+        button.btn {
+            border-bottom-right-radius: 0;
+        }
+    }
+
+    &__list-group{
+        display: none;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        left: 0;
+        position: absolute;
+        padding: inherit;
+        width: 100%;
+        z-index: 100;
+    }
+}
+
+.search-existing-contact{
+    position: relative;
+
+    &__input-group{
+        input {
+            border-bottom-left-radius: 0;
+        }
+
+        button.btn {
             border-bottom-right-radius: 0;
         }
     }
