@@ -38,6 +38,9 @@ menu:
     items:
       company: Société
       user: User
+vertical_nav:
+  dropdown:
+    logout: Déconnexion
 project:
   title: Project
   goods_type_not_defined: Type de bien non définit
