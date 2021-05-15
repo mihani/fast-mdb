@@ -229,3 +229,16 @@ user:
 modal:
   button:
     close: Fermer
+error_page:
+  404:
+    title: 404 - Not found
+    message: La page que vous cherchez n'existe pas
+    return_home: Retour au dashboard
+  403:
+    title: 403 - Access Forbidden
+    message: Vous n'avez pas les droits pour cette page
+    return_home: Retour au dashboard
+  other:
+    message: Oups ! Une erreur est survenue
+    return_home: Retour au dashboard
+
