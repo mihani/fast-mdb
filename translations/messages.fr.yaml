@@ -207,17 +207,22 @@ admin:
       delete: "Supprimer"
       update: "Mettre à jour"
       back_to_list: Retour à la liste
-    field:
-      email: Email
-      roles: Roles
-      firstname: Prénom
-      lastname: Nom
-      created_at: Date de création
-      updated_at: Dernière mise à jour
     no_record: Aucun utilisateur trouvé
-    role:
-      admin: Admin
-      user: User
+user:
+  form_fields:
+    company:
+      placeholder: Choisir une société
+  fields:
+    email: Email
+    roles: Roles
+    firstname: Prénom
+    lastname: Nom
+    created_at: Date de création
+    updated_at: Dernière mise à jour
+    company: Société
+  roles:
+    admin: Admin
+    user: User
 modal:
   button:
     close: Fermer

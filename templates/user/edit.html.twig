@@ -28,3 +28,7 @@
     <a class="btn icon icon-left btn-outline-primary" href="{{ path('user_index') }}"><i class="bi bi-chevron-left"></i><span>{{ 'admin.company.button.back_to_list'|trans }}</span></a>
 </div>
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('choices') }}
+{% endblock %}
