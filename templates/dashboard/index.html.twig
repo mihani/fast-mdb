@@ -11,11 +11,47 @@
                 <div class="card-content">
                     <div class="card-body">
                         <h4 class="cart-title">{{ 'dashboard.project.list.title'|trans }}</h4>
-                        <p class="card-text">Coming soon</p>
                     </div>
                 </div>
             </div>
+            <div id="list-projects" class="list-projects">
+                {# @var project \App\Entity\Project #}
+                {% for project in projectsPagination %}
+                <a href="{{ path('project_show', {'id': project.id}) }}">
+                    <div class="card px-3 py-2 flex-row mb-3">
+                        <div class="w-25 cart-content me-3">
+                            <div class="cart-body">
+                                <h6>{% if project.goodsType is not null %}
+                                        {{ project.goodsType.name }}
+                                    {% else %}
+                                        {{ 'project.goods_type_not_defined'|trans }}
+                                    {% endif %}</h6>
+                                <p class="list-projects__p">
+                                    {{ project.address.inlineAddress }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="cart-content">
+                            <div class="cart-body">
+                                <p class="list-projects__p">
+                                    {{ 'project.fields.state'|trans|capitalize }} : {{ ('project.state.value.'~project.state)|trans }}
+                                    <br>
+                                    {{ 'project.fields.estate_agent'|trans|capitalize }} :
+                                    {% if project.estateAgent is not null %}
+                                        {% set estateAgent = project.estateAgent %}{{ estateAgent.fullname }} {% if estateAgent.estateAgencyName is not null %}({{ estateAgent.estateAgencyName }}){% endif %}
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+                <nav id="list-projects-pagination">
+                    {{ knp_pagination_render(projectsPagination) }}
+                </nav>
+            </div>
         </div>
+        {# Creation project part #}
         <div class="col-12 col-lg-6">
             <div class="card">
                 <div class="card-content">

@@ -1,0 +1,20 @@
+.list-projects{
+    &__p {
+        margin-bottom: 0;
+    }
+
+    a {
+        &:hover{
+            .card {
+                box-shadow: 2px 2px 10px $blue-300;
+            }
+        }
+
+        p:nth-child(n){
+            pointer-events: none;
+            cursor: default;
+            text-decoration: none;
+            color: $body-color;
+        }
+    }
+}

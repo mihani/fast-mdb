@@ -40,6 +40,10 @@ menu:
       user: User
 project:
   title: Project
+  goods_type_not_defined: Type de bien non définit
+  fields:
+    state: etat
+    estate_agent: Agent Immobilier
   show:
     title: 'Project : "%address%"'
     contact:
