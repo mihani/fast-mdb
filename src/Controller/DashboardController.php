@@ -13,6 +13,7 @@ use App\Factory\AddressFactory;
 use App\Factory\UrbanDocumentFactory;
 use App\Form\Address\AddressMoreInformationType;
 use App\Form\Project\ProjectFromPreviewType;
+use App\Form\Project\SearchProjectType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Psr\Log\LoggerInterface;
@@ -79,8 +80,24 @@ class DashboardController extends AbstractController
             }
         }
 
+        $searchProjectForm = $this->createForm(type: SearchProjectType::class);
+        $searchProjectForm->handleRequest($request);
+
+        $searchProjectsQuery = null;
+        if ($searchProjectForm->isSubmitted() && $searchProjectForm->isValid()) {
+            $searchProjectFormData = $searchProjectForm->getData();
+            $searchProjectsQuery = $this->entityManager
+                ->getRepository(Project::class)
+                ->searchProjectsQuery(
+                    $this->getUser(),
+                    $searchProjectFormData['states'],
+                    $searchProjectFormData['cityOrPostalCode'],
+                    $searchProjectFormData['contactSearch']['contactId']
+                );
+        }
+
         $projectsPagination = $paginator->paginate(
-            $this->getUser()->getProjects(),
+            is_null($searchProjectsQuery)?$this->getUser()->getProjects():$searchProjectsQuery,
             $request->query->getInt('projectPage', 1),
             self::ITEM_PER_PAGE
         );
@@ -96,6 +113,7 @@ class DashboardController extends AbstractController
             'proximitySalesPagination' => $proximitySalesPagination,
             'projectFromPreviewForm' => $projectFromPreviewForm ? $projectFromPreviewForm->createView() : null,
             'projectsPagination' => $projectsPagination,
+            'searchProjectForm' => $searchProjectForm->createView()
         ]);
     }
 

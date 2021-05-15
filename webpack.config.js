@@ -30,6 +30,7 @@ Encore
     .addEntry('contactSearchBar', './assets/js/search/contactSearchBar.js')
     .addEntry('streetViewMap', './assets/js/map/streetViewMap.js')
     .addEntry('aerialViewMap', './assets/js/map/aerialViewMap.js')
+    .addEntry('choices', './assets/js/choices.js')
 
     // enables the Symfony UX Stimulus bridge (used in image/bootstrap.js)
     // .enableStimulusBridge('./image/controllers.json')

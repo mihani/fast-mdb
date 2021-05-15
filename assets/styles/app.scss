@@ -101,6 +101,9 @@
 @import "./layouts/main.scss";
 @import "./utilities";
 
+// Personnal components
+@import "./components/choices";
+
 // Personal
 @import "./widgets/searchbar.scss";
 @import "./widgets/map.scss";

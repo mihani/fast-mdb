@@ -7,12 +7,12 @@ $(document).ready(function() {
         .click(function() {
             $('.search-existing-contact__list-group').css('display','none');
         })
-        .on('click', '.result-item', function (){
+        .on('click', '.contact-search-result-item', function (){
             let data = $(this).children('div').data();
             $('.search-existing-contact__search-bar').val(data.fullname);
             $('.search-existing-contact__contact-id').val(data.id);
         })
-        .on('click', '.no-result-item', function (){
+        .on('click', '.contact-search-no-result-item', function (){
             $(this).css('display','none');
         })
         .find('.search-existing-contact__search-bar').keyup(function (){
