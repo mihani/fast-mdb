@@ -43,7 +43,9 @@ function aerialMapGeneration(longitude, latitude){
 
     L.marker([latitude, longitude], {
         'icon': L.icon({
-            iconUrl: mapMarkerIcon
+            iconUrl: mapMarkerIcon,
+            iconSize: [25,41],
+            iconAnchor: [12, 35]
         })
     }).addTo(aerialMap);
 }
