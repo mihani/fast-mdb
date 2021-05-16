@@ -76,9 +76,15 @@ class User implements UserInterface
      */
     private $projects;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
+        $this->active = false;
     }
 
     public function getId(): ?int
@@ -231,5 +237,15 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): void
+    {
+        $this->active = $active;
     }
 }
