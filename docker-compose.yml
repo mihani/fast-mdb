@@ -69,6 +69,9 @@ services:
     depends_on:
       - elastic
 
+  maildev:
+    image: djfarrelly/maildev
+
 volumes:
   mysql: ~
   elastic: ~
