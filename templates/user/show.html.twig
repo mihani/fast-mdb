@@ -21,27 +21,27 @@
                         <table class="table table-lg">
                             <tbody>
                                 <tr>
-                                    <th>{{ 'admin.user.field.lastname'|trans }}</th>
+                                    <th>{{ 'user.fields.lastname'|trans }}</th>
                                     <td>{{ user.lastname }}</td>
                                 </tr>
                                 <tr>
-                                    <th>{{ 'admin.user.field.firstname'|trans }}</th>
+                                    <th>{{ 'user.fields.firstname'|trans }}</th>
                                     <td>{{ user.firstname }}</td>
                                 </tr>
                                 <tr>
-                                    <th>{{ 'admin.user.field.email'|trans }}</th>
+                                    <th>{{ 'user.fields.email'|trans }}</th>
                                     <td>{{ user.email }}</td>
                                 </tr>
                                 <tr>
-                                    <th>{{ 'admin.user.field.roles'|trans }}</th>
+                                    <th>{{ 'user.fields.roles'|trans }}</th>
                                     <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
                                 </tr>
                                 <tr>
-                                    <th>{{ 'admin.user.field.created_at'|trans }}</th>
+                                    <th>{{ 'user.fields.created_at'|trans }}</th>
                                     <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                                 </tr>
                                 <tr>
-                                    <th>{{ 'admin.user.field.updated_at'|trans }}</th>
+                                    <th>{{ 'user.fields.updated_at'|trans }}</th>
                                     <td>{{ user.updatedAt ? user.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                                 </tr>
                             </tbody>

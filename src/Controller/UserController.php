@@ -7,14 +7,27 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\User\UserType;
 use App\Repository\UserRepository;
+use App\Service\Mailer;
+use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 #[Route('/admin/user')]
 class UserController extends AbstractController
 {
+    private UserPasswordEncoderInterface $passwordEncoder;
+    private Mailer $mailer;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder, Mailer $mailer)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+        $this->mailer = $mailer;
+    }
+
     #[Route('', name: 'user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
@@ -31,7 +44,9 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword(uniqid());
+            $user->setPassword(
+                $this->passwordEncoder->encodePassword($user, Uuid::uuid4()->toString())
+            );
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
