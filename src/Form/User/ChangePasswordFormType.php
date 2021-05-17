@@ -14,15 +14,11 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @author mihani <maud.remoriquet@gmail.com>
+ */
 class ChangePasswordFormType extends AbstractType
 {
-    private TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -31,16 +27,16 @@ class ChangePasswordFormType extends AbstractType
                 'first_options' => [
                     'constraints' => [
                         new NotBlank([
-                            'message' => $this->translator->trans('reset_password.constraints.password.not_blank'),
+                            'message' => 'reset_password.password.not_blank',
                         ]),
                         new Length([
                             'min' => 8,
-                            'minMessage' => $this->translator->trans('reset_password.constraints.password.length.min'),
+                            'minMessage' => 'reset_password.password.length.min',
                             // max length allowed by Symfony for security reasons
                             'max' => 4096,
                         ]),
                         new NotCompromisedPassword([
-                            'message' => $this->translator->trans('reset_password.constraints.password.strong_password'),
+                            'message' => 'reset_password.password.strong_password',
                         ]),
                     ],
                     'attr' => [
@@ -52,7 +48,7 @@ class ChangePasswordFormType extends AbstractType
                         'placeholder' => 'reset_password.form_field.repeat_password',
                     ],
                 ],
-                'invalid_message' => $this->translator->trans('reset_password.constraints.password.fields_must_match'),
+                'invalid_message' => 'reset_password.password.fields_must_match',
                 // Instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,

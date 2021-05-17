@@ -44,6 +44,16 @@
                                     <th>{{ 'user.fields.updated_at'|trans }}</th>
                                     <td>{{ user.updatedAt ? user.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                                 </tr>
+                                <tr>
+                                    <th>{{ 'user.fields.active'|trans }}</th>
+                                    <td>
+                                        {% if user.active %}
+                                            <span class="badge bg-success">{{ 'user.active.active'|trans }}</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">{{ 'user.active.deactive'|trans }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

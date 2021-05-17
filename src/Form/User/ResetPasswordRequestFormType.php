@@ -13,13 +13,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ResetPasswordRequestFormType extends AbstractType
 {
-    private TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -29,7 +22,7 @@ class ResetPasswordRequestFormType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans('request_reset_password.constraints.email.not_blank'),
+                        'message' => 'request_reset_password.email.not_blank',
                     ]),
                 ],
             ])

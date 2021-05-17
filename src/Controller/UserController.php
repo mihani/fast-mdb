@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Form\User\UserType;
 use App\Repository\UserRepository;
 use App\Service\EmailSender;
+use Doctrine\ORM\EntityManagerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,11 +21,13 @@ class UserController extends AbstractController
 {
     private UserPasswordEncoderInterface $passwordEncoder;
     private EmailSender $emailSender;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder, EmailSender $emailSender)
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder, EmailSender $emailSender, EntityManagerInterface $entityManager)
     {
         $this->passwordEncoder = $passwordEncoder;
         $this->emailSender = $emailSender;
+        $this->entityManager = $entityManager;
     }
 
     #[Route('', name: 'user_index', methods: ['GET'])]
@@ -38,6 +41,7 @@ class UserController extends AbstractController
     #[Route('/new', name: 'user_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {
+        $this->entityManager->getFilters()->disable('softdeleteable');
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -46,9 +50,8 @@ class UserController extends AbstractController
             $user->setPassword(
                 $this->passwordEncoder->encodePassword($user, Uuid::uuid4()->toString())
             );
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
 
             $this->emailSender->sendAccountCreatedEmail($user->getEmail());
 
@@ -72,11 +75,12 @@ class UserController extends AbstractController
     #[Route('/{id}/edit', name: 'user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user): Response
     {
+        $this->entityManager->getFilters()->disable('softdeleteable');
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('user_index');
         }
@@ -92,9 +96,8 @@ class UserController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             $user->setActive(false);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($user);
-            $entityManager->flush();
+            $this->entityManager->remove($user);
+            $this->entityManager->flush();
         }
 
         return $this->redirectToRoute('user_index');

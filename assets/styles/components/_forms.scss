@@ -1,6 +1,10 @@
 .form-group {
     margin-bottom: .7rem;
     label {
+        &.required::after {
+            content: ' *';
+            color: $danger;
+        }
         color: rgba(35, 28, 99, .7);
         font-weight: 600;
     }
@@ -172,7 +176,12 @@
 }
 
 .form-error {
+    margin: 0;
+    padding: 0;
+
     ul {
+        margin: 0;
+        padding: 0;
         list-style: none;
         color : $danger;
     }
