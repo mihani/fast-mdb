@@ -1,4 +1,4 @@
-DOCKER_COMPOSE = docker-compose
+DC = docker-compose
 
 ##
 ## Env Dev
@@ -6,7 +6,11 @@ DOCKER_COMPOSE = docker-compose
 install:
 	touch docker/data/history
 	cp .env .env.local
-	$(DOCKER_COMPOSE) up -d
+	$(DC) up -d
+	$(DC) exec php composer install
+	$(DC) exec php sf doctrine:migrations:migrate
+	$(DC) exec node npm install
+	$(DC) exec node yarn encore dev
 
 .PHONY : clean
 
@@ -14,6 +18,6 @@ install:
 ## Quality assurance
 ## -----------------
 phpcs-fixer:
-	$(DOCKER_COMPOSE) exec php vendor/bin/php-cs-fixer fix --verbose
+	$(DC) exec php vendor/bin/php-cs-fixer fix --verbose
 
 .PHONY : clean

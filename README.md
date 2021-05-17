@@ -1,6 +1,6 @@
 # Fast MDB
 
-## Version Stack
+## Stack
 
 * PHP : 8.0.3
 * Composer : 2.0.8
@@ -9,23 +9,12 @@
 * Nginx 1.20.0
 * Mysql : 8.0
 
+## Install
 
-## Mysql:8.0
+Before `make install` you need a docker hostmanager (e.g dkarlovi/docker-hostmanager)
 
-Since Mysql 8.0 a new default authentification plugin used but there are few problem with.
-The solution is config your mysql and ALTER or CREATE user with old authentification plugin.
+`sudo docker run -d --name docker-hostmanager --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v /etc/hosts:/hosts dkarlovi/docker-hostmanager`
 
-1. Change the default plugin in `my.cnf`
+## User Manual
 
-```
-[mysqld]
-default_authentication_plugin=mysql_native_password
-```
-
-2. CREATE or ALTER user
-
-*Here create version used*
-
-```sql
-CREATE USER 'nativeuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
-```
+To create the first admin account need to create user in db and use forgot password process.
