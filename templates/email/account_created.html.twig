@@ -1,8 +1,9 @@
 {% extends 'base_email.html.twig' %}
 
 {% block content %}
-    <h1>{{ 'emails.reset_password_link.hi'|trans }}</h1>
-    <p>{{ 'emails.reset_password_link.to_reset_your_password'|trans }}</p>
+    <h1>{{ 'email.account_create.content.header'|trans }}</h1>
+    <p>{{ 'email.account_create.content.your_account_has_been_created_with_email'|trans({'%email%':userEmail}) }}</p>
+    <p>{{ 'email.account_create.content.before_your_first_connection_reset_password'|trans }}</p>
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
         <tbody>
         <tr>
@@ -11,7 +12,7 @@
                     <tbody>
                     <tr>
                         <td>
-                            <a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ 'emails.reset_password_link.reset_password_link'|trans }}</a>
+                            <a href="{{ url('app_forgot_password_request') }}">{{ 'email.account_create.content.request_reset_password_link'|trans }}</a>
                         </td>
                     </tr>
                     </tbody>
@@ -20,6 +21,5 @@
         </tr>
         </tbody>
     </table>
-    <p>{{ 'emails.reset_password_link.link_will_expire_in'|trans({'%expireTime%': resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle')}) }}</p>
-    <p>{{ 'emails.reset_password_link.thanks'|trans }}</p>
+    <p>{{ 'email.account_create.content.thanks'|trans }}</p>
 {% endblock %}

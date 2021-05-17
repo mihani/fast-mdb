@@ -14,13 +14,16 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @author mihani <maud.remoriquet@gmail.com>
+ */
 class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('email', EmailType::class, [
-                'label' => 'user.fields.email'
+                'label' => 'user.fields.email',
             ])
             ->add('roles', ChoiceType::class, [
                 'multiple' => true,
@@ -31,10 +34,10 @@ class UserType extends AbstractType
                 ],
             ])
             ->add('firstname', TextType::class, [
-                'label' => 'user.fields.firstname'
+                'label' => 'user.fields.firstname',
             ])
             ->add('lastname', TextType::class, [
-                'label' => 'user.fields.lastname'
+                'label' => 'user.fields.lastname',
             ])
             ->add('company', EntityType::class, [
                 'class' => Company::class,

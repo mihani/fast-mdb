@@ -93,11 +93,12 @@ class DashboardController extends AbstractController
                     $searchProjectFormData['states'],
                     $searchProjectFormData['cityOrPostalCode'],
                     $searchProjectFormData['contactSearch']['contactId']
-                );
+                )
+            ;
         }
 
         $projectsPagination = $paginator->paginate(
-            is_null($searchProjectsQuery)?$this->getUser()->getProjects():$searchProjectsQuery,
+            is_null($searchProjectsQuery) ? $this->getUser()->getProjects() : $searchProjectsQuery,
             $request->query->getInt('projectPage', 1),
             self::ITEM_PER_PAGE
         );
@@ -113,7 +114,7 @@ class DashboardController extends AbstractController
             'proximitySalesPagination' => $proximitySalesPagination,
             'projectFromPreviewForm' => $projectFromPreviewForm ? $projectFromPreviewForm->createView() : null,
             'projectsPagination' => $projectsPagination,
-            'searchProjectForm' => $searchProjectForm->createView()
+            'searchProjectForm' => $searchProjectForm->createView(),
         ]);
     }
 

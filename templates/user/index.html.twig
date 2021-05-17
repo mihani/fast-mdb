@@ -28,6 +28,7 @@
                             <th>{{ 'user.fields.roles'|trans }}</th>
                             <th>{{ 'user.fields.created_at'|trans }}</th>
                             <th>{{ 'user.fields.updated_at'|trans }}</th>
+                            <th>{{ 'user.fields.active'|trans }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -40,6 +41,13 @@
                             <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
                             <td>{{ user.createdAt ? user.createdAt|date('d-m-Y H:i:s') : '' }}</td>
                             <td>{{ user.updatedAt ? user.updatedAt|date('d-m-Y H:i:s') : '' }}</td>
+                            <td>
+                                {% if user.active %}
+                                    <span class="badge bg-success">{{ 'user.active.active'|trans }}</span>
+                                {% else %}
+                                    <span class="badge bg-danger">{{ 'user.active.deactive'|trans }}</span>
+                                {% endif %}
+                            </td>
                             <td>
                                 <a class="btn btn-primary" href="{{ path('user_show', {'id': user.id}) }}">{{ 'admin.company.button.show'|trans }}</a>
                                 <a class="btn btn-outline-secondary" href="{{ path('user_edit', {'id': user.id}) }}">{{ 'admin.company.button.edit'|trans }}</a>

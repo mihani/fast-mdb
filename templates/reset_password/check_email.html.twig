@@ -1,4 +1,4 @@
-{% extends 'base-login.html.twig' %}
+{% extends 'base_login.html.twig' %}
 
 {% block title %}{{ 'check_email.title'|trans }}{% endblock %}
 
@@ -12,5 +12,8 @@
     </p>
     <p class="auth-subtitle mb-5">
         {{ 'check_email.if_do_not_receive_email'|trans }} <a href="{{ path('app_forgot_password_request') }}">{{ 'check_email.try_again'|trans }}</a>
+    </p>
+    <p class="auth-subtitle mb-5">
+        <a class="btn btn-lg btn-outline-primary mt-3" href="{{ path('app_login') }}">{{ 'check_email.return_login_page'|trans }}</a>
     </p>
 {% endblock %}

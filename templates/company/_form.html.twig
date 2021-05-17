@@ -4,6 +4,7 @@
         <div class="col-12">
             <div class="form-group">
                 {{ form_label(form.name) }}
+                <span class="form-error small">{{ form_errors(form.name) }}</span>
                 {{ form_widget(form.name, {'attr':{'class':'form-control'}}) }}
             </div>
         </div>

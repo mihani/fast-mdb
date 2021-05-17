@@ -9,7 +9,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
-use function Doctrine\ORM\QueryBuilder;
 
 /**
  * @method null|Project find($id, $lockMode = null, $lockVersion = null)
@@ -29,10 +28,11 @@ class ProjectRepository extends ServiceEntityRepository
         $projectQueryBuilder = $this
             ->createQueryBuilder('project')
             ->where('project.user = :user')
-            ->setParameter('user', $user);
+            ->setParameter('user', $user)
+        ;
 
-        if (!is_null($cityOrPostalCode)){
-            $projectQueryBuilder->innerJoin('project.address','address')
+        if (!is_null($cityOrPostalCode)) {
+            $projectQueryBuilder->innerJoin('project.address', 'address')
                 ->andWhere(
                     $projectQueryBuilder->expr()->orX(
                         'address.city = :cityOrPostalCode',
@@ -43,7 +43,7 @@ class ProjectRepository extends ServiceEntityRepository
             ;
         }
 
-        if (!is_null($contactId)){
+        if (!is_null($contactId)) {
             $projectQueryBuilder
                 ->andWhere(
                     $projectQueryBuilder->expr()->orX(
@@ -56,10 +56,11 @@ class ProjectRepository extends ServiceEntityRepository
             ;
         }
 
-        if (!empty($states)){
+        if (!empty($states)) {
             $projectQueryBuilder = $projectQueryBuilder
                 ->andWhere('project.state IN (:states)')
-                ->setParameter('states', $states);
+                ->setParameter('states', $states)
+            ;
         }
 
         return $projectQueryBuilder->getQuery();

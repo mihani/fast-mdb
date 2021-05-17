@@ -1,0 +1,16 @@
+{% extends 'base_error.html.twig' %}
+
+{% block title %}{{ 'error_page.403.title'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="error-page container">
+        <div class="col-md-8 col-12 offset-md-2">
+            <img class="img-error" src="{{ absolute_url(asset('build/images/errors/error-403.png')) }}" alt="Not Found">
+            <div class="text-center">
+                <h1 class="error-title">{{ 'error_page.403.title'|trans|upper }}</h1>
+                <p class='fs-5 text-gray-600'>{{ 'error_page.403.message'|trans }}</p>
+                <a href="{{ path('app_login') }}" class="btn btn-lg btn-outline-primary mt-3">{{ 'error_page.403.return_home'|trans }}</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

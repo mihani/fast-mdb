@@ -13,14 +13,13 @@ use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @author mihani <maud.remoriquet@gmail.com>
  *
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
- * @UniqueEntity(fields={"email"}, message="Un compte existe déjà avec cette email")
+ * @UniqueEntity(fields={"email"}, message="user.email.unique")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=false)
  */
 class User implements UserInterface
@@ -51,7 +50,6 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Assert\NotCompromisedPassword()
      */
     private $password;
 
@@ -76,9 +74,15 @@ class User implements UserInterface
      */
     private $projects;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
+        $this->active = false;
     }
 
     public function getId(): ?int
@@ -231,5 +235,15 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): void
+    {
+        $this->active = $active;
     }
 }

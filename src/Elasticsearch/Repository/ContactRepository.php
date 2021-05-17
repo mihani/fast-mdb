@@ -43,7 +43,7 @@ class ContactRepository extends AbstractElasticsearchRepository
             ],
         ];
 
-        if ($contactType !== Contact::TYPE){
+        if ($contactType !== Contact::TYPE) {
             $params['body']['query']['bool']['filter'] = [
                 [
                     'term' => [

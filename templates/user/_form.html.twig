@@ -4,30 +4,35 @@
         <div class="col-12">
             <div class="form-group">
                 {{ form_label(form.firstname) }}
+                <span class="form-error small">{{ form_errors(form.firstname) }}</span>
                 {{ form_widget(form.firstname, {'attr':{'class':'form-control'}}) }}
             </div>
         </div>
         <div class="col-12">
             <div class="form-group">
                 {{ form_label(form.lastname) }}
+                <span class="form-error small">{{ form_errors(form.lastname) }}</span>
                 {{ form_widget(form.lastname, {'attr':{'class':'form-control'}}) }}
             </div>
         </div>
         <div class="col-12">
             <div class="form-group">
                 {{ form_label(form.email) }}
+                <span class="form-error small">{{ form_errors(form.email) }}</span>
                 {{ form_widget(form.email, {'attr':{'class':'form-control'}}) }}
             </div>
         </div>
         <div class="col-12">
             <div class="form-group">
                 {{ form_label(form.company) }}
+                <span class="form-error small">{{ form_errors(form.company) }}</span>
                 {{ form_widget(form.company, {'attr':{'class':'form-select'}}) }}
             </div>
         </div>
         <div class="col-12">
             <div class="form-group">
                 {{ form_label(form.roles) }}
+                <span class="form-error small">{{ form_errors(form.roles) }}</span>
                 {{ form_widget(form.roles, {'attr':{'class':'choices form-select multiple-remove'}}) }}
             </div>
         </div>

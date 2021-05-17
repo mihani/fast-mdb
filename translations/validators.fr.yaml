@@ -1,0 +1,17 @@
+user:
+  email:
+    unique: Un compte existe déjà avec cette email
+reset_password:
+  password:
+    not_blank: Merci d'entrer votre mot de passe
+    length:
+      # Symfony error format for length constraint
+      min: Votre mot de passe doit contenir au minimum {{ limit }} caractères.
+    fields_must_match: Les mot de passe doivent être identiques
+    strong_password: Ce mot de passe a été divulgué suite à une fuite de données, il ne doit pas être utilisé. Pour la sécurité de votre compte veuillez, en choisir un autre.
+request_reset_password:
+  email:
+    not_blank: Merci de renseigner votre email
+company:
+  name:
+    unique: Cette société existe déjà

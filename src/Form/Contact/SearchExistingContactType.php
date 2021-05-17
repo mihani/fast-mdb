@@ -22,7 +22,7 @@ class SearchExistingContactType extends AbstractType
             ->add('search', SearchType::class, [
                 'attr' => [
                     'autocomplete' => 'off',
-                    'placeholder' => 'contact.search_form.fields.search.placeholder'
+                    'placeholder' => 'contact.search_form.fields.search.placeholder',
                 ],
             ])
             ->add('contactType', HiddenType::class, [
