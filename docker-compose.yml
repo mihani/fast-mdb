@@ -71,6 +71,7 @@ services:
 
   maildev:
     image: djfarrelly/maildev
+    command: bin/maildev --web 80 --smtp 25 --hide-extensions STARTTLS
 
 volumes:
   mysql: ~

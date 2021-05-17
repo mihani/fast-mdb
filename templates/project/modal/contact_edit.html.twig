@@ -71,13 +71,14 @@
                 {{ form_label(contactForm.address.city) }}
                 {{ form_widget(contactForm.address.city, {'attr':{'class':'form-control'}}) }}
             </div>
-            <button type="button" class="btn" data-bs-dismiss="modal">
-                <i class="bx bx-x d-block d-sm-none"></i>
-                <span class="d-none d-sm-block">{{ 'project.show.contact.button.close'|trans }}</span>
-            </button>
-            <button type="submit" class="btn btn-primary">
-                {% if modalAction == 'add' %}{{ 'project.show.contact.create.form_field.submit'|trans }}{% else %}{{ 'project.show.contact.create.form_field.edit'|trans }}{% endif %}
-            </button>
+            <div class="form-actions d-flex justify-content-end">
+                <button type="button" class="btn me-3" data-bs-dismiss="modal">
+                    {{ 'project.show.contact.button.close'|trans }}
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    {% if modalAction == 'add' %}{{ 'project.show.contact.create.form_field.submit'|trans }}{% else %}{{ 'project.show.contact.create.form_field.edit'|trans }}{% endif %}
+                </button>
+            </div>
         {{ form_end(contactForm) }}
     </div>
 {% endblock %}
