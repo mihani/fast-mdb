@@ -7,7 +7,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\User\ChangePasswordFormType;
 use App\Form\User\ResetPasswordRequestFormType;
-use App\Service\Mailer;
+use App\Service\EmailSender;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -29,13 +29,13 @@ class ResetPasswordController extends AbstractController
 
     private ResetPasswordHelperInterface $resetPasswordHelper;
     private TranslatorInterface $translator;
-    private Mailer $mailer;
+    private EmailSender $emailSender;
 
-    public function __construct(ResetPasswordHelperInterface $resetPasswordHelper, TranslatorInterface $translator, Mailer $mailer)
+    public function __construct(ResetPasswordHelperInterface $resetPasswordHelper, TranslatorInterface $translator, EmailSender $emailSender)
     {
         $this->resetPasswordHelper = $resetPasswordHelper;
         $this->translator = $translator;
-        $this->mailer = $mailer;
+        $this->emailSender = $emailSender;
     }
 
     /**
@@ -160,7 +160,7 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_check_email');
         }
 
-        $this->mailer->sendResetPasswordEmail($resetToken, $user->getEmail());
+        $this->emailSender->sendResetPasswordEmail($resetToken, $user->getEmail());
 
         // Store the token object in session for retrieval in check-email route.
         $this->setTokenObjectInSession($resetToken);

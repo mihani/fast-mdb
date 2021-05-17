@@ -9,7 +9,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordToken;
 
-class Mailer
+class EmailSender
 {
     private MailerInterface $mailer;
     private TranslatorInterface $translator;

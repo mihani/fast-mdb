@@ -7,7 +7,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\User\UserType;
 use App\Repository\UserRepository;
-use App\Service\Mailer;
+use App\Service\EmailSender;
 use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,12 +22,12 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends AbstractController
 {
     private UserPasswordEncoderInterface $passwordEncoder;
-    private Mailer $mailer;
+    private EmailSender $emailSender;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder, Mailer $mailer)
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder, EmailSender $emailSender)
     {
         $this->passwordEncoder = $passwordEncoder;
-        $this->mailer = $mailer;
+        $this->emailSender = $emailSender;
     }
 
     #[Route('', name: 'user_index', methods: ['GET'])]
@@ -53,7 +53,7 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->mailer->sendAccountCreatedEmail($user->getEmail());
+            $this->emailSender->sendAccountCreatedEmail($user->getEmail());
 
             return $this->redirectToRoute('user_index');
         }
