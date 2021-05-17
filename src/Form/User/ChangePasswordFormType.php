@@ -12,7 +12,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @author mihani <maud.remoriquet@gmail.com>

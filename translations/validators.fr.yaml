@@ -12,3 +12,6 @@ reset_password:
 request_reset_password:
   email:
     not_blank: Merci de renseigner votre email
+company:
+  name:
+    unique: Cette société existe déjà
