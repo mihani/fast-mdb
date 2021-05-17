@@ -5,6 +5,11 @@ reset_password:
     repeat_password: Confirmer le mot de passe
   button:
     reset_password: Réinitialiser
+  error:
+    problem_during_password_reset_request: "Une erreur s'est produite lors de votre demande de réinitialisation de mot de passe - %errorReason%"
+  constraints:
+    email:
+      not_blank: Merci de renseigner votre email
 request_reset_password:
   title: Mot de passe perdu
   form_field:
@@ -261,3 +266,7 @@ email:
       thanks: Merci
   reset_password:
     subject: Demande de reinitialisation de mot de passe
+#Reset password bundle message
+The link in your email is expired. Please try to reset your password again.: "Le lien présent de l'email est expiré. Merci de refaire une demande de réinitialisation de mot de passe."
+The reset password link is invalid. Please try to reset your password again.: "Le lien de réinitialisation est invalide. Merci de refaire une demande de réinitialisation de mot de passe."
+You have already requested a reset password email. Please check your email or try again soon.: "Vous avez déjà fait une demande de réinitialisation. Merci de vérifier votre boite email (spam) ou réessayez plus tard."
