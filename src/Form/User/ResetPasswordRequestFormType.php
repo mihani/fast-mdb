@@ -9,9 +9,17 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ResetPasswordRequestFormType extends AbstractType
 {
+    private TranslatorInterface $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -21,7 +29,7 @@ class ResetPasswordRequestFormType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'request_reset_password.constraints.email.not_blank',
+                        'message' => $this->translator->trans('request_reset_password.constraints.email.not_blank'),
                     ]),
                 ],
             ])
