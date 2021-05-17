@@ -97,10 +97,11 @@ class ResetPasswordController extends AbstractController
             /** @var User $user */
             $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
         } catch (ResetPasswordExceptionInterface $e) {
-            $this->addFlash('reset_password_error', sprintf(
-                'There was a problem validating your reset request - %s',
-                $e->getReason()
-            ));
+            $this->addFlash('reset_password_error',
+                $this->translator->trans('reset_password.error.problem_during_validation_reset_request', [
+                    '%errorReason%' => $this->translator->trans($e->getReason())
+                ])
+            );
 
             return $this->redirectToRoute('app_forgot_password_request');
         }
@@ -109,24 +110,26 @@ class ResetPasswordController extends AbstractController
         $form = $this->createForm(ChangePasswordFormType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // A password reset token should be used only once, remove it.
-            $this->resetPasswordHelper->removeResetRequest($token);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()){
+                // A password reset token should be used only once, remove it.
+                $this->resetPasswordHelper->removeResetRequest($token);
 
-            // Encode the plain password, and set it.
-            $encodedPassword = $passwordEncoder->encodePassword(
-                $user,
-                $form->get('plainPassword')->getData()
-            );
+                // Encode the plain password, and set it.
+                $encodedPassword = $passwordEncoder->encodePassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                );
 
-            $user->setActive(true);
-            $user->setPassword($encodedPassword);
-            $this->getDoctrine()->getManager()->flush();
+                $user->setActive(true);
+                $user->setPassword($encodedPassword);
+                $this->getDoctrine()->getManager()->flush();
 
-            // The session is cleaned up after the password has been changed.
-            $this->cleanSessionAfterReset();
+                // The session is cleaned up after the password has been changed.
+                $this->cleanSessionAfterReset();
 
-            return $this->redirectToRoute('app_login');
+                return $this->redirectToRoute('app_login');
+            }
         }
 
         return $this->render('reset_password/reset.html.twig', [
