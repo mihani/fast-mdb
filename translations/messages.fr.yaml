@@ -20,6 +20,7 @@ check_email:
   link_will_expire: "Ce lien expire dans %expireTime%"
   if_do_not_receive_email: "Si vous ne recevez pas l'email veuillez vérifier dans le dossier spam ou"
   try_again: Réessayez
+  return_login_page: Retourner à la page de login
 login:
   title: "Connexion"
   already_logged_with: "Vous êtes déjà connecté en tant que %email%"
@@ -28,6 +29,10 @@ login:
     paswword: "Mot de passe"
     submit: "Connexion"
   forgot_password: "Mot de passe oublié ?"
+  error:
+    your_account_no_longer_exists: Votre compte n'existe plus.
+    your_account_is_not_active: Votre compte n'est pas activé.
+    email_not_found: Votre email n'a pas été trouvé
 menu:
   main:
     title: "Menu"
