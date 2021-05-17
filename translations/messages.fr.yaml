@@ -250,3 +250,14 @@ emails:
     reset_password_link: Réinitialiser le mot de passe
     link_will_expire_in: Ce lien expirera dans %expireTime%
     thanks: Merci
+email:
+  account_create:
+    subject: Votre compte sur fast-mdb à été créé
+    content:
+      header: Creation de compte
+      your_account_has_been_created_with_email: "Votre compte fast-mdb à été créé avec l'email : %email%"
+      before_your_first_connection_reset_password: "Avant de pouvoir vous connecter veuillez faire une demande de mot de passe perdu en cliquant sur le lien ci dessous"
+      request_reset_password_link: Faire une demande de mot de passe perdu
+      thanks: Merci
+  reset_password:
+    subject: Demande de reinitialisation de mot de passe
