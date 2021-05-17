@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Entity\User;
-use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -22,11 +21,11 @@ class UserChecker implements UserCheckerInterface
 
     public function checkPreAuth(UserInterface $user)
     {
-        if (!$user instanceof User){
-            return ;
+        if (!$user instanceof User) {
+            return;
         }
 
-        if ($user->isDeleted()){
+        if ($user->isDeleted()) {
             throw new CustomUserMessageAccountStatusException($this->translator->trans('login.error.your_account_no_longer_exists'));
         }
     }
@@ -37,9 +36,8 @@ class UserChecker implements UserCheckerInterface
             return;
         }
 
-        if (!$user->isActive()){
+        if (!$user->isActive()) {
             throw new CustomUserMessageAccountStatusException($this->translator->trans('login.error.your_account_is_not_active'));
         }
     }
-
 }

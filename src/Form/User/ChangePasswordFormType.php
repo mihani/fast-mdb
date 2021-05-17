@@ -40,8 +40,8 @@ class ChangePasswordFormType extends AbstractType
                             'max' => 4096,
                         ]),
                         new NotCompromisedPassword([
-                            'message' => $this->translator->trans('reset_password.constraints.password.strong_password')
-                        ])
+                            'message' => $this->translator->trans('reset_password.constraints.password.strong_password'),
+                        ]),
                     ],
                     'attr' => [
                         'placeholder' => 'reset_password.form_field.password',

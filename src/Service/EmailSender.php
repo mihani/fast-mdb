@@ -16,7 +16,7 @@ class EmailSender
 
     public function __construct(MailerInterface $mailer, TranslatorInterface $translator)
     {
-        $this->mailer     = $mailer;
+        $this->mailer = $mailer;
         $this->translator = $translator;
     }
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Form\Project;
 
-use App\Entity\Contact\Contact;
 use App\Entity\Project;
 use App\Form\Contact\SearchExistingContactType;
 use Symfony\Component\Form\AbstractType;
@@ -40,8 +39,8 @@ class SearchProjectType extends AbstractType
                 'label' => 'dashboard.project.list.form_field.search.city_or_postal_code.label',
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'dashboard.project.list.form_field.search.city_or_postal_code.placeholder'
-                ]
+                    'placeholder' => 'dashboard.project.list.form_field.search.city_or_postal_code.placeholder',
+                ],
             ])
             ->add('contactSearch', SearchExistingContactType::class, [
                 'label' => 'dashboard.project.list.form_field.search.contact.label',

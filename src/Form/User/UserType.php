@@ -20,7 +20,7 @@ class UserType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'label' => 'user.fields.email'
+                'label' => 'user.fields.email',
             ])
             ->add('roles', ChoiceType::class, [
                 'multiple' => true,
@@ -31,10 +31,10 @@ class UserType extends AbstractType
                 ],
             ])
             ->add('firstname', TextType::class, [
-                'label' => 'user.fields.firstname'
+                'label' => 'user.fields.firstname',
             ])
             ->add('lastname', TextType::class, [
-                'label' => 'user.fields.lastname'
+                'label' => 'user.fields.lastname',
             ])
             ->add('company', EntityType::class, [
                 'class' => Company::class,

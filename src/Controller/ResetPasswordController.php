@@ -8,13 +8,10 @@ use App\Entity\User;
 use App\Form\User\ChangePasswordFormType;
 use App\Form\User\ResetPasswordRequestFormType;
 use App\Service\EmailSender;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -97,9 +94,10 @@ class ResetPasswordController extends AbstractController
             /** @var User $user */
             $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
         } catch (ResetPasswordExceptionInterface $e) {
-            $this->addFlash('reset_password_error',
+            $this->addFlash(
+                'reset_password_error',
                 $this->translator->trans('reset_password.error.problem_during_validation_reset_request', [
-                    '%errorReason%' => $this->translator->trans($e->getReason())
+                    '%errorReason%' => $this->translator->trans($e->getReason()),
                 ])
             );
 
@@ -111,7 +109,7 @@ class ResetPasswordController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            if ($form->isValid()){
+            if ($form->isValid()) {
                 // A password reset token should be used only once, remove it.
                 $this->resetPasswordHelper->removeResetRequest($token);
 
@@ -154,9 +152,10 @@ class ResetPasswordController extends AbstractController
             // If you want to tell the user why a reset email was not sent, uncomment
             // the lines below and change the redirect to 'app_forgot_password_request'.
             // Caution: This may reveal if a user is registered or not.
-            $this->addFlash('reset_password_error',
+            $this->addFlash(
+                'reset_password_error',
                 $this->translator->trans('reset_password.error.problem_during_password_reset_request', [
-                    '%errorReason%' => $this->translator->trans($e->getReason())
+                    '%errorReason%' => $this->translator->trans($e->getReason()),
                 ])
             );
 
