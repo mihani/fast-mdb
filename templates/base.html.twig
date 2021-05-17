@@ -9,7 +9,7 @@
     {% endblock %}
 </head>
 {# @var user \App\Entity\User #}
-{% set user = app.user %}
+{% set connectedUser = app.user %}
 <body>
     <div id="app">
         <div id="sidebar" class="active">
@@ -17,7 +17,7 @@
         </div>
         <div id="main" class='layout-navbar'>
             <header>
-                {% include "_partials/_vertical_nav.html.twig" with {'user': user } only %}
+                {% include "_partials/_vertical_nav.html.twig" with {'user': connectedUser } only %}
             </header>
             <div id="main-content">
                 {% block body %}{% endblock %}
