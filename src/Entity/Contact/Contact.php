@@ -100,7 +100,7 @@ class Contact
         return $this;
     }
 
-    public function getMobileNumber(): string
+    public function getMobileNumber(): ?string
     {
         return $this->mobileNumber;
     }

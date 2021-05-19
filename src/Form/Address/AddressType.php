@@ -16,17 +16,17 @@ class AddressType extends AbstractType
     {
         $builder
             ->add('addressLine1', TextType::class, [
-                'label' => 'project.show.contact.create.form_field.address.address_line_1',
+                'label' => 'contact.edit.form_field.address.address_line_1',
             ])
             ->add('addressLine2', TextType::class, [
                 'required' => false,
-                'label' => 'project.show.contact.create.form_field.address.address_line_2',
+                'label' => 'contact.edit.form_field.address.address_line_2',
             ])
             ->add('postalCode', TextType::class, [
-                'label' => 'project.show.contact.create.form_field.address.postal_code',
+                'label' => 'contact.edit.form_field.address.postal_code',
             ])
             ->add('city', TextType::class, [
-                'label' => 'project.show.contact.create.form_field.address.city',
+                'label' => 'contact.edit.form_field.address.city',
             ])
         ;
     }

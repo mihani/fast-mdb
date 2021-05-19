@@ -86,11 +86,11 @@ class DashboardController extends AbstractController
         $searchProjectsQuery = null;
         if ($searchProjectForm->isSubmitted() && $searchProjectForm->isValid()) {
             $searchProjectFormData = $searchProjectForm->getData();
-            if (is_null($searchProjectFormData['contactSearch']['search'])){
+            if (is_null($searchProjectFormData['contactSearch']['search'])) {
                 $searchProjectFormData['contactSearch']['contactId'] = null;
             }
 
-            if (!$searchProjectForm->isEmpty()){
+            if (!$searchProjectForm->isEmpty()) {
                 $searchProjectsQuery = $this->entityManager
                     ->getRepository(Project::class)
                     ->searchProjectsQuery(

@@ -63,21 +63,8 @@ project:
       add_by_existing_contact: Ajouter un contact existant
       edit_the_current_contact: ou modifier le contact existant
       add_new_contact: ou ajouter un nouveau contact
-      create:
-        form_field:
-          submit: Ajouter
-          edit: Modifier
-          firstname: Prénom
-          lastname: Nom
-          email: Email
-          mobile_number: Portable
-          estate_agency_name: Nom de l'agence
-          address:
-            address_line_1: Adresse
-            address_line_2: Complément d'adresse
-            postal_code: Code Postal
-            city: Ville
       search_bar:
+        submit: Ajouter
         no_result_found: Aucun résultat trouvé
       button:
         close: Fermer
@@ -148,6 +135,24 @@ contact:
     seller: vendeur
     notary: notaire
     estate_agent: agent immobilier
+  edit:
+    form_field:
+      submit: Ajouter
+      edit: Modifier
+      firstname: Prénom
+      lastname: Nom
+      email: Email
+      mobile_number: Portable
+      address:
+        address_line_1: Adresse
+        address_line_2: Complément d'adresse
+        postal_code: Code Postal
+        city: Ville
+      estate_agent:
+        estate_agency_name: Nom de l'agence
+      notary:
+        notary_office: Office notarial
+        website: Site web
   search_form:
     fields:
       search:

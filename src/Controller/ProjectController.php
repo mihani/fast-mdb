@@ -13,6 +13,7 @@ use App\Entity\Project;
 use App\Exception\FastMdbLogicException;
 use App\Form\Contact\ContactType;
 use App\Form\Contact\EstateAgentType;
+use App\Form\Contact\NotaryType;
 use App\Form\Contact\SearchExistingContactType;
 use App\Form\Project\ProjectType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -211,8 +212,7 @@ class ProjectController extends AbstractController
             $action = $this->generateUrl('contact_create_notary', ['projectId' => $project->getId()]);
         }
 
-        return $this->createForm(ContactType::class, $notary, [
-            'data_class' => Notary::class,
+        return $this->createForm(NotaryType::class, $notary, [
             'action' => is_null($action)
                 ? $this->generateUrl('contact_edit_notary', ['projectId' => $project->getId(), 'id' => $notary->getId()])
                 : $action,

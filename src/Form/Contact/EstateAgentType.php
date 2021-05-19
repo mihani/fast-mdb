@@ -22,26 +22,26 @@ class EstateAgentType extends AbstractType
     {
         $builder
             ->add('firstname', TextType::class, [
-                'label' => 'project.show.contact.create.form_field.firstname',
-                'required' => false
+                'label' => 'contact.edit.form_field.firstname',
+                'required' => false,
             ])
             ->add('lastname', TextType::class, [
-                'label' => 'project.show.contact.create.form_field.lastname',
+                'label' => 'contact.edit.form_field.lastname',
             ])
             ->add('estateAgencyName', TextType::class, [
-                'label' => 'project.show.contact.create.form_field.estate_agency_name',
+                'label' => 'contact.edit.form_field.estate_agent.estate_agency_name',
                 'required' => false,
             ])
             ->add('email', EmailType::class, [
                 'required' => false,
-                'label' => 'project.show.contact.create.form_field.email',
+                'label' => 'contact.edit.form_field.email',
             ])
             ->add('mobileNumber', TelType::class, [
-                'label' => 'project.show.contact.create.form_field.mobile_number',
-                'required' => false
+                'label' => 'contact.edit.form_field.mobile_number',
+                'required' => false,
             ])
             ->add('address', AddressType::class, [
-                'required' => false
+                'required' => false,
             ])
         ;
     }

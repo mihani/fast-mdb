@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\Contact;
 
-use App\Entity\Contact\Contact;
+use App\Entity\Contact\Notary;
 use App\Form\Address\AddressType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -16,7 +16,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * @author mihani <maud.remoriquet@gmail.com>
  */
-class ContactType extends AbstractType
+class NotaryType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -27,6 +27,14 @@ class ContactType extends AbstractType
             ])
             ->add('lastname', TextType::class, [
                 'label' => 'contact.edit.form_field.lastname',
+            ])
+            ->add('notaryOffice', TextType::class, [
+                'label' => 'contact.edit.form_field.notary.notary_office',
+                'required' => false,
+            ])
+            ->add('website', TextType::class, [
+                'label' => 'contact.edit.form_field.notary.website',
+                'required' => false,
             ])
             ->add('email', EmailType::class, [
                 'required' => false,
@@ -45,7 +53,7 @@ class ContactType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Contact::class,
+            'data_class' => Notary::class,
         ]);
     }
 }
