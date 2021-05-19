@@ -105,8 +105,11 @@ project:
       table:
         header:
           address: Adresse
-          price: Prix de vente
+          price: Prix de vente (en €)
           date: Date
+          local_type: Type de local
+          land_area: Surface terrain (en m²)
+          actual_build_area: Surface réelle bati (en m²)
     table:
       head:
         address: Adresse

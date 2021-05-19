@@ -111,6 +111,9 @@
                                                 <tr>
                                                     <th>{{ 'project.card.sales_in_delimited_area.table.header.address'|trans }}</th>
                                                     <th>{{ 'project.card.sales_in_delimited_area.table.header.price'|trans }}</th>
+                                                    <th>{{ 'project.card.sales_in_delimited_area.table.header.local_type'|trans }}</th>
+                                                    <th>{{ 'project.card.sales_in_delimited_area.table.header.land_area'|trans }}</th>
+                                                    <th>{{ 'project.card.sales_in_delimited_area.table.header.actual_build_area'|trans }}</th>
                                                     <th>{{ 'project.card.sales_in_delimited_area.table.header.date'|trans }}</th>
                                                 </tr>
                                                 </thead>
@@ -118,7 +121,10 @@
                                                 {% for proximitySale in proximitySalesPagination %}
                                                     <tr>
                                                         <td>{{ proximitySale.address }}</td>
-                                                        <td>{{ proximitySale.salePrice }} €</td>
+                                                        <td>{{ proximitySale.salePrice }}</td>
+                                                        <td>{{ proximitySale.localType }}</td>
+                                                        <td>{{ proximitySale.landArea }}</td>
+                                                        <td>{{ proximitySale.buildArea }}</td>
                                                         <td>{{ proximitySale.saleDate|date('d/m/Y') }}</td>
                                                     </tr>
                                                 {% endfor %}
