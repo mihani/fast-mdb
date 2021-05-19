@@ -155,41 +155,40 @@
                 <div class="card-content">
                     <div class="card-body">
                         <h4 class="cart-title">{{ 'dashboard.project.list.title'|trans }}</h4>
-                        {{ form_start(searchProjectForm) }}
-                        {{ form_errors(searchProjectForm) }}
-                        <div class="row align-items-center form-group">
-                            <div class="col-lg-3">
-                                {{ form_label(searchProjectForm.states,null, {'label_attr':{'class':'col-form-label'}}) }}
-                            </div>
-                            <div class="col-lg">
-                                {{ form_widget(searchProjectForm.states,{'attr':{'class':'choices form-select multiple-remove'}}) }}
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-lg-3">
-                                {{ form_label(searchProjectForm.cityOrPostalCode, null, {'label_attr':{'class':'col-form-label'}}) }}
-                            </div>
-                            <div class="col-lg-6">
-                                {{ form_widget(searchProjectForm.cityOrPostalCode, {'attr':{'class':'form-control'}}) }}
-                            </div>
-                        </div>
-                        <div class="d-flex row justify-content-between form-group">
-                            <div class="col-lg-3">
-                                {{ form_label(searchProjectForm.contactSearch, null, {'label_attr':{'class':'col-form-label'}}) }}
-                            </div>
-                            <div class="col-lg-6 search-existing-contact">
-                                <div id="search-existing-contact__input-group" class="search-existing-contact__input-group input-group">
-                                    {{ form_widget(searchProjectForm.contactSearch.search, {'attr':{'class':'form-control search-existing-contact__search-bar','data-url':url('contact_search', {'contactType':'contact'})}}) }}
+                        {{ form_start(searchProjectForm, {'attr':{'class':'d-flex flex-wrap'}}) }}
+                            <div class="row form-group form-group__multiple-select--row order-lg-0 col-lg-12">
+                                <div class="col-lg-3">
+                                    {{ form_label(searchProjectForm.states,null, {'label_attr':{'class':'col-form-label'}}) }}
                                 </div>
-                                <div class="list-group search-existing-contact__list-group">
+                                <div class="col-lg">
+                                    {{ form_widget(searchProjectForm.states,{'attr':{'class':'choices form-select multiple-remove'}}) }}
+                                </div>
+                            </div>
+                            <div class="row form-group order-lg-1 col-lg-12">
+                                <div class="col-lg-3">
+                                    {{ form_label(searchProjectForm.cityOrPostalCode, null, {'label_attr':{'class':'col-form-label'}}) }}
+                                </div>
+                                <div class="col-lg">
+                                    {{ form_widget(searchProjectForm.cityOrPostalCode, {'attr':{'class':'form-control'}}) }}
+                                </div>
+                            </div>
+                            <div class="row form-group order-lg-3 col-lg-9">
+                                <div class="col-lg-4">
+                                    {{ form_label(searchProjectForm.contactSearch, null, {'label_attr':{'class':'col-form-label'}}) }}
+                                </div>
+                                <div class="col-lg search-existing-contact">
+                                    <div id="search-existing-contact__input-group" class="search-existing-contact__input-group input-group">
+                                        {{ form_widget(searchProjectForm.contactSearch.search, {'attr':{'class':'form-control search-existing-contact__search-bar','data-url':url('contact_search', {'contactType':'contact'})}}) }}
+                                    </div>
+                                    <div class="list-group search-existing-contact__list-group">
 
+                                    </div>
                                 </div>
                             </div>
-                            <div class="mt-4 mt-lg-0 col-lg">
-                                <button class="btn btn-primary w-100" type="submit">{{'dashboard.project.list.form_field.search.submit'|trans}}</button>
+                            <div class="row form-group order-lg-4 col-lg-2 ms-lg-4 ms-0 col-12">
+                                <button class="btn btn-primary" type="submit">{{'dashboard.project.list.form_field.search.submit'|trans}}</button>
                             </div>
-                        </div>
-                        {{ form_rest(searchProjectForm.contactSearch) }}
+                            {{ form_rest(searchProjectForm.contactSearch) }}
                         {{ form_end(searchProjectForm) }}
                     </div>
                 </div>
