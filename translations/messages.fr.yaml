@@ -153,6 +153,8 @@ contact:
       notary:
         notary_office: Office notarial
         website: Site web
+      seller:
+        company_name: Société
   search_form:
     fields:
       search:

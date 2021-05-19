@@ -51,6 +51,12 @@
                     {{ form_widget(contactForm.website, {'attr':{'class':'form-control'}}) }}
                 </div>
             {% endif %}
+            {% if contactForm.companyName is defined %}
+                <div class="form-group">
+                    {{ form_label(contactForm.companyName) }}
+                    {{ form_widget(contactForm.companyName, {'attr':{'class':'form-control'}}) }}
+                </div>
+            {% endif %}
             <div class="form-group col-lg-6">
                 {{ form_label(contactForm.firstname) }}
                 {{ form_widget(contactForm.firstname, {'attr':{'class':'form-control'}}) }}

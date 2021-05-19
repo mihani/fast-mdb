@@ -9,11 +9,13 @@
                 <h6 class="mb-0">{{ contact['fullname'] }}</h6>
             </div>
             <p class="mb-0">
-                <small><i class="bi bi-telephone"></i> {{ contact['mobileNumber'] }}</small>
-                {% if contact['email'] is not empty %}
+                {% if (contact['mobileNumber'] is defined) and (contact['mobileNumber'] is not empty) %}
+                    <small><i class="bi bi-telephone"></i> {{ contact['mobileNumber'] }}</small>
+                {% endif %}
+                {% if (contact['email'] is defined) and (contact['email'] is not empty) %}
                     <small><i class="bi bi-at"></i> {{ contact['email'] }}</small>
                 {% endif %}
-                {% if contact['estateAgency'] is defined and not empty %}
+                {% if (contact['estateAgency'] is defined) and (contact['estateAgency'] is not empty) %}
                     <small><i class="bi bi-building"></i> {{ contact['estateAgency'] }}</small>
                 {% endif %}
             </p>
