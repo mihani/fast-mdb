@@ -16,7 +16,7 @@
         {{ form_start(searchForm, {'attr': {'class': 'search-existing-contact'}}) }}
             <div id="search-existing-contact__input-group" class="search-existing-contact__input-group input-group">
                 {{ form_widget(searchForm.search, {'attr': { 'class':'form-control search-existing-contact__search-bar', 'aria-describedby':'button-add-existing-'~contactType, 'data-url':url('contact_search', {'contactType':contactType} ) }}) }}
-                <button class="btn btn-primary" type="submit" id="button-add-existing-{{ contactType }}">{{'project.show.contact.create.form_field.submit'|trans}}</button>
+                <button class="btn btn-primary" type="submit" id="button-add-existing-{{ contactType }}">{{'project.show.contact.search_bar.submit'|trans}}</button>
             </div>
             <div class="list-group search-existing-contact__list-group">
 
@@ -32,26 +32,44 @@
                 {% endif %}
             </div>
         </div>
-        {{ form_start(contactForm) }}
+        {{ form_start(contactForm, {'attr':{'class':'row'}}) }}
             {% if contactForm.estateAgencyName is defined %}
                 <div class="form-group">
                     {{ form_label(contactForm.estateAgencyName) }}
                     {{ form_widget(contactForm.estateAgencyName, {'attr':{'class':'form-control'}}) }}
                 </div>
             {% endif %}
-            <div class="form-group">
+            {% if contactForm.notaryOffice is defined %}
+                <div class="form-group col-lg-6">
+                    {{ form_label(contactForm.notaryOffice) }}
+                    {{ form_widget(contactForm.notaryOffice, {'attr':{'class':'form-control'}}) }}
+                </div>
+            {% endif %}
+            {% if contactForm.website is defined %}
+                <div class="form-group col-lg-6">
+                    {{ form_label(contactForm.website) }}
+                    {{ form_widget(contactForm.website, {'attr':{'class':'form-control'}}) }}
+                </div>
+            {% endif %}
+            {% if contactForm.companyName is defined %}
+                <div class="form-group">
+                    {{ form_label(contactForm.companyName) }}
+                    {{ form_widget(contactForm.companyName, {'attr':{'class':'form-control'}}) }}
+                </div>
+            {% endif %}
+            <div class="form-group col-lg-6">
                 {{ form_label(contactForm.firstname) }}
                 {{ form_widget(contactForm.firstname, {'attr':{'class':'form-control'}}) }}
             </div>
-            <div class="form-group">
+            <div class="form-group col-lg-6">
                 {{ form_label(contactForm.lastname) }}
                 {{ form_widget(contactForm.lastname, {'attr':{'class':'form-control'}}) }}
             </div>
-            <div class="form-group">
+            <div class="form-group col-lg-6">
                 {{ form_label(contactForm.email) }}
                 {{ form_widget(contactForm.email, {'attr':{'class':'form-control mb-1'}}) }}
             </div>
-            <div class="form-group">
+            <div class="form-group col-lg-6">
                 {{ form_label(contactForm.mobileNumber) }}
                 {{ form_widget(contactForm.mobileNumber, {'attr':{'class':'form-control'}}) }}
             </div>
@@ -63,11 +81,11 @@
                 {{ form_label(contactForm.address.addressLine2) }}
                 {{ form_widget(contactForm.address.addressLine2, {'attr':{'class':'form-control'}}) }}
             </div>
-            <div class="form-group">
+            <div class="form-group col-lg-6">
                 {{ form_label(contactForm.address.postalCode) }}
                 {{ form_widget(contactForm.address.postalCode, {'attr':{'class':'form-control'}}) }}
             </div>
-            <div class="form-group">
+            <div class="form-group col-lg-6">
                 {{ form_label(contactForm.address.city) }}
                 {{ form_widget(contactForm.address.city, {'attr':{'class':'form-control'}}) }}
             </div>
@@ -76,7 +94,7 @@
                     {{ 'project.show.contact.button.close'|trans }}
                 </button>
                 <button type="submit" class="btn btn-primary">
-                    {% if modalAction == 'add' %}{{ 'project.show.contact.create.form_field.submit'|trans }}{% else %}{{ 'project.show.contact.create.form_field.edit'|trans }}{% endif %}
+                    {% if modalAction == 'add' %}{{ 'contact.edit.form_field.submit'|trans }}{% else %}{{ 'contact.edit.form_field.edit'|trans }}{% endif %}
                 </button>
             </div>
         {{ form_end(contactForm) }}

@@ -11,9 +11,10 @@ use App\Entity\Contact\Notary;
 use App\Entity\Contact\Seller;
 use App\Entity\Project;
 use App\Exception\FastMdbLogicException;
-use App\Form\Contact\ContactType;
 use App\Form\Contact\EstateAgentType;
+use App\Form\Contact\NotaryType;
 use App\Form\Contact\SearchExistingContactType;
+use App\Form\Contact\SellerType;
 use App\Form\Project\ProjectType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -180,8 +181,7 @@ class ProjectController extends AbstractController
             ]);
         }
 
-        return $this->createForm(ContactType::class, $seller, [
-            'data_class' => Seller::class,
+        return $this->createForm(SellerType::class, $seller, [
             'action' => is_null($action)
                 ? $this->generateUrl('contact_edit_seller', ['projectId' => $project->getId(), 'id' => $seller->getId()])
                 : $action,
@@ -211,8 +211,7 @@ class ProjectController extends AbstractController
             $action = $this->generateUrl('contact_create_notary', ['projectId' => $project->getId()]);
         }
 
-        return $this->createForm(ContactType::class, $notary, [
-            'data_class' => Notary::class,
+        return $this->createForm(NotaryType::class, $notary, [
             'action' => is_null($action)
                 ? $this->generateUrl('contact_edit_notary', ['projectId' => $project->getId(), 'id' => $notary->getId()])
                 : $action,

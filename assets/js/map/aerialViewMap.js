@@ -1,7 +1,8 @@
 "use strict";
 
-import  L from 'leaflet';
+import L from 'leaflet';
 import mapMarkerIcon from 'leaflet/dist/images/marker-icon.png'
+const IGN_API_KEY = process.env.IGN_API_KEY;
 
 document.addEventListener('DOMContentLoaded', (event) => {
     let divMapData = document.querySelector('#aerial-map').dataset;
@@ -16,17 +17,25 @@ function aerialMapGeneration(longitude, latitude){
     });
 
     L.tileLayer(
-        'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}',
+        'https://wxs.ign.fr/{apikey}/geoportail/wmts?' +
+        '&REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0' +
+        '&layer=ORTHOIMAGERY.ORTHOPHOTOS' +
+        '&STYLE=normal' +
+        '&FORMAT=image/jpeg' +
+        '&TILEMATRIXSET=PM' +
+        '&TileMatrix={z}' +
+        '&TileCol={x}' +
+        '&TileRow={y}',
         {
             titleSize: 512,
             maxZoom: 19,
-            accessToken: 'pk.eyJ1IjoibWloYW5pIiwiYSI6ImNrbzRheWNsMDEwazIyd2xwZXA1NWx3eDEifQ.SqL_3989XWZTS7uw4Zveeg',
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a> | IGN-F/Geoportail'
+            apikey: IGN_API_KEY,
+            attribution: '&copy; <a href="https://www.ign.fr">IGN-F/Geoportail</a>'
         },
     ).addTo(aerialMap);
 
     L.tileLayer(
-        'https://wxs.ign.fr/choisirgeoportail/geoportail/wmts?'+
+        'https://wxs.ign.fr/{apikey}/geoportail/wmts?' +
         '&REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0' +
         '&layer=CADASTRALPARCELS.PARCELLAIRE_EXPRESS' +
         '&STYLE=PCI vecteur' +
@@ -38,6 +47,7 @@ function aerialMapGeneration(longitude, latitude){
         {
             titleSize: 512,
             maxZoom: 19,
+            apikey: IGN_API_KEY
         },
     ).addTo(aerialMap);
 

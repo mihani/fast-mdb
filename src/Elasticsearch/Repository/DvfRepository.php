@@ -76,6 +76,9 @@ class DvfRepository
                 $proximitySales[] = [
                     'address' => AddressUtils::inlineFormatAddressFromAddressDvfEntries($currentSource['address']),
                     'salePrice' => $currentSource['land_value'],
+                    'localType' => $currentSource['premises']['type'],
+                    'landArea' => $currentSource['land_area'],
+                    'buildArea' => $currentSource['actual_build_area'],
                     'saleDate' => new \DateTime($currentSource['mutation_date']),
                 ];
             }

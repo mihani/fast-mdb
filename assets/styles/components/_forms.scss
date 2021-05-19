@@ -1,5 +1,6 @@
 .form-group {
     margin-bottom: .7rem;
+
     label {
         &.required::after {
             content: ' *';
@@ -30,6 +31,15 @@
                 border-left: 1px solid map-get($theme-colors, 'primary');
                 border-top: 1px solid map-get($theme-colors, 'primary');
                 border-right: 1px solid map-get($theme-colors, 'primary');
+            }
+        }
+    }
+
+    &__multiple-select {
+        &--row {
+            @media (max-width: 767px) {
+                width: -moz-available;
+                width: available;
             }
         }
     }

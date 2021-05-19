@@ -9,8 +9,9 @@ use App\Entity\Contact\Contact;
 use App\Entity\Contact\EstateAgent;
 use App\Entity\Contact\Notary;
 use App\Entity\Contact\Seller;
-use App\Form\Contact\ContactType;
 use App\Form\Contact\EstateAgentType;
+use App\Form\Contact\NotaryType;
+use App\Form\Contact\SellerType;
 use Doctrine\ORM\EntityManagerInterface;
 use Elasticsearch\ClientBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,9 +40,7 @@ class ContactController extends AbstractController
     #[Route('/create/seller', name: 'contact_create_seller', methods: ['POST'])]
     public function createSeller(Request $request): RedirectResponse
     {
-        $sellerForm = $this->createForm(type: ContactType::class, options: [
-            'data_class' => Seller::class,
-        ]);
+        $sellerForm = $this->createForm(type: SellerType::class);
 
         return $this->handleContactForm($sellerForm, $request);
     }
@@ -49,9 +48,7 @@ class ContactController extends AbstractController
     #[Route('/edit/seller/{id}', name: 'contact_edit_seller', methods: ['POST'])]
     public function editSeller(Seller $seller, Request $request): RedirectResponse
     {
-        $sellerForm = $this->createForm(ContactType::class, $seller, [
-            'data_class' => Seller::class,
-        ]);
+        $sellerForm = $this->createForm(SellerType::class, $seller);
 
         return $this->handleContactForm($sellerForm, $request);
     }
@@ -59,9 +56,7 @@ class ContactController extends AbstractController
     #[Route('/create/notary', name: 'contact_create_notary', methods: ['POST'])]
     public function createNotary(Request $request): RedirectResponse
     {
-        $notaryForm = $this->createForm(type: ContactType::class, options: [
-            'data_class' => Notary::class,
-        ]);
+        $notaryForm = $this->createForm(type: NotaryType::class);
 
         return $this->handleContactForm($notaryForm, $request);
     }
@@ -69,9 +64,7 @@ class ContactController extends AbstractController
     #[Route('/edit/notary/{id}', name: 'contact_edit_notary', methods: ['POST'])]
     public function editNotary(Notary $notary, Request $request): RedirectResponse
     {
-        $notaryForm = $this->createForm(ContactType::class, $notary, [
-            'data_class' => Seller::class,
-        ]);
+        $notaryForm = $this->createForm(NotaryType::class, $notary);
 
         return $this->handleContactForm($notaryForm, $request);
     }
@@ -113,6 +106,7 @@ class ContactController extends AbstractController
             $contacts[] = [
                 'id' => $contactDocument['_id'],
                 'fullname' => $current['fullname'],
+                'contactType' => $current['contact_metadata']['type'],
                 'mobileNumber' => $current['mobile_number'],
                 'email' => $current['email'],
             ];
@@ -175,7 +169,7 @@ class ContactController extends AbstractController
                 'fullname' => $contact->getFullname(),
                 'lastname' => $contact->getLastname(),
                 'firstname' => $contact->getFirstname(),
-                'address' => $contact->getAddress()->getInlineAddress(),
+                'address' => $contact->getAddress()?->getInlineAddress(),
                 'mobile_number' => $contact->getMobileNumber(),
                 'email' => $contact->getEmail(),
             ],

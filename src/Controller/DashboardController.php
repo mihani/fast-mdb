@@ -86,15 +86,21 @@ class DashboardController extends AbstractController
         $searchProjectsQuery = null;
         if ($searchProjectForm->isSubmitted() && $searchProjectForm->isValid()) {
             $searchProjectFormData = $searchProjectForm->getData();
-            $searchProjectsQuery = $this->entityManager
-                ->getRepository(Project::class)
-                ->searchProjectsQuery(
-                    $this->getUser(),
-                    $searchProjectFormData['states'],
-                    $searchProjectFormData['cityOrPostalCode'],
-                    $searchProjectFormData['contactSearch']['contactId']
-                )
-            ;
+            if (is_null($searchProjectFormData['contactSearch']['search'])) {
+                $searchProjectFormData['contactSearch']['contactId'] = null;
+            }
+
+            if (!$searchProjectForm->isEmpty()) {
+                $searchProjectsQuery = $this->entityManager
+                    ->getRepository(Project::class)
+                    ->searchProjectsQuery(
+                        $this->getUser(),
+                        $searchProjectFormData['states'],
+                        $searchProjectFormData['cityOrPostalCode'],
+                        $searchProjectFormData['contactSearch']['contactId']
+                    )
+                ;
+            }
         }
 
         $projectsPagination = $paginator->paginate(

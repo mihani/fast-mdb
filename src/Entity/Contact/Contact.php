@@ -35,7 +35,7 @@ class Contact
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $firstname;
 
@@ -50,7 +50,7 @@ class Contact
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $mobileNumber;
 
@@ -100,7 +100,7 @@ class Contact
         return $this;
     }
 
-    public function getMobileNumber(): string
+    public function getMobileNumber(): ?string
     {
         return $this->mobileNumber;
     }
