@@ -33,6 +33,7 @@ Encore
         }
 
         options['process.env'].GOOGLE_STREET_VIEW_API = JSON.stringify(env.parsed.GOOGLE_STREET_VIEW_API);
+        options['process.env'].IGN_API_KEY = JSON.stringify(env.parsed.IGN_API_KEY);
     })
 
     /*
