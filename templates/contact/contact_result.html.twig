@@ -5,7 +5,14 @@
 {% else %}
     {% for contact in contacts %}
         <a href="#" class="list-group-item list-group-item-action contact-search-result-item">
-            <div class="d-flex w-100" data-fullname="{{ contact['fullname'] }}" data-id="{{ contact['id'] }}">
+            <div class="d-flex align-items-center w-100" data-fullname="{{ contact['fullname'] }}" data-id="{{ contact['id'] }}">
+                {% if contact['contactType'] == constant('App\\Entity\\Contact\\Notary::TYPE') %}
+                    <i class="me-1 fas fa-pen-nib fa-xs"></i>
+                {% elseif contact['contactType'] == constant('App\\Entity\\Contact\\Seller::TYPE') %}
+                    <i class="me-1 fas fa-hand-holding-usd fa-xs"></i>
+                {% elseif contact['contactType'] == constant('App\\Entity\\Contact\\EstateAgent::TYPE') %}
+                    <i class="me-1 fas fa-home fa-xs"></i>
+                {% endif %}
                 <h6 class="mb-0">{{ contact['fullname'] }}</h6>
             </div>
             <p class="mb-0">

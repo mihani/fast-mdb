@@ -1,6 +1,6 @@
 "use strict";
 
-import  L from 'leaflet';
+import L from 'leaflet';
 import mapMarkerIcon from 'leaflet/dist/images/marker-icon.png'
 
 document.addEventListener('DOMContentLoaded', (event) => {

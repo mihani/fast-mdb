@@ -172,6 +172,8 @@ dashboard:
           contact:
             label: Contact
           submit: Filtrer
+      contact-tooltip:
+        title: Icones type contact
     preview:
       title: Créer un projet
       form_field:

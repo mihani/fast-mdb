@@ -3,5 +3,6 @@ import './styles/bootstrap.scss';
 import 'choices.js/src/styles/choices.scss';
 import './styles/app.scss';
 import 'leaflet/dist/leaflet.css';
+import '@fortawesome/fontawesome-free/js/all'
 import 'bootstrap';
 

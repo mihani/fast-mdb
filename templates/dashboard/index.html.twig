@@ -175,6 +175,27 @@
                             <div class="row form-group order-lg-3 col-lg-9">
                                 <div class="col-lg-4">
                                     {{ form_label(searchProjectForm.contactSearch, null, {'label_attr':{'class':'col-form-label'}}) }}
+
+                                    {% set htmlPopover %}
+                                        <i class="me-1 fas fa-pen-nib fa-xs"></i>{{ 'contact.type.notary'|trans|capitalize }}
+                                        <br>
+                                        <i class="me-1 fas fa-hand-holding-usd fa-xs"></i>{{ 'contact.type.seller'|trans|capitalize }}
+                                        <br>
+                                        <i class="me-1 fas fa-home fa-xs"></i>{{ 'contact.type.estate_agent'|trans|capitalize }}
+                                    {% endset %}
+
+                                    <a
+                                        data-bs-toggle="popover"
+                                        type="button"
+                                        tabindex="0"
+                                        title="{{ 'dashboard.project.list.contact-tooltip.title'|trans }}"
+                                        data-bs-placement="bottom"
+                                        data-bs-html="true"
+                                        data-bs-trigger="click"
+                                        data-bs-content="{{ htmlPopover|e }}"
+                                    >
+                                        <i class="far fa-question-circle"></i>
+                                    </a>
                                 </div>
                                 <div class="col-lg search-existing-contact">
                                     <div id="search-existing-contact__input-group" class="search-existing-contact__input-group input-group">
@@ -236,8 +257,11 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('addressSearchBar') }}
-    {{ encore_entry_script_tags('streetViewMap') }}
-    {{ encore_entry_script_tags('aerialViewMap') }}
     {{ encore_entry_script_tags('choices') }}
     {{ encore_entry_script_tags('contactSearchBar') }}
+
+    {% if addressData is not null %}
+        {{ encore_entry_script_tags('streetViewMap') }}
+        {{ encore_entry_script_tags('aerialViewMap') }}
+    {% endif %}
 {% endblock %}

@@ -106,6 +106,7 @@ class ContactController extends AbstractController
             $contacts[] = [
                 'id' => $contactDocument['_id'],
                 'fullname' => $current['fullname'],
+                'contactType' => $current['contact_metadata']['type'],
                 'mobileNumber' => $current['mobile_number'],
                 'email' => $current['email'],
             ];
