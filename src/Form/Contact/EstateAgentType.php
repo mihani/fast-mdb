@@ -23,6 +23,7 @@ class EstateAgentType extends AbstractType
         $builder
             ->add('firstname', TextType::class, [
                 'label' => 'project.show.contact.create.form_field.firstname',
+                'required' => false
             ])
             ->add('lastname', TextType::class, [
                 'label' => 'project.show.contact.create.form_field.lastname',
@@ -37,8 +38,11 @@ class EstateAgentType extends AbstractType
             ])
             ->add('mobileNumber', TelType::class, [
                 'label' => 'project.show.contact.create.form_field.mobile_number',
+                'required' => false
             ])
-            ->add('address', AddressType::class)
+            ->add('address', AddressType::class, [
+                'required' => false
+            ])
         ;
     }
 
