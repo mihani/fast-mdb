@@ -10,15 +10,18 @@ use App\Entity\LoggerDvf;
 use App\Exception\FastMdbHttpResponseException;
 use App\Utils\AddressUtils;
 use Doctrine\ORM\EntityManagerInterface;
+use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,21 +42,21 @@ class ImportDvfCommand extends Command
     private GeoApiFr $geoApiFr;
     private LoggerInterface $logger;
     private HttpClientInterface $client;
-    private EntityManagerInterface $em;
+    private EntityManagerInterface $entityManager;
 
     private ?string $previousAddress;
     private ?array $previousGeoPoint;
     private array $addressesNotFound;
     private array $addressesTimeout;
 
-    public function __construct(string $name = null, string $elasticHost, string $elasticDvfIndexName, GeoApiFr $geoApiFr, LoggerInterface $logger, EntityManagerInterface $em)
+    public function __construct(string $name = null, string $elasticHost, string $elasticDvfIndexName, GeoApiFr $geoApiFr, LoggerInterface $logger, EntityManagerInterface $entityManager)
     {
         parent::__construct($name);
         $this->elasticHost = $elasticHost;
         $this->elasticDvfIndexName = $elasticDvfIndexName;
         $this->geoApiFr = $geoApiFr;
         $this->logger = $logger;
-        $this->em = $em;
+        $this->entityManager = $entityManager;
         $this->client = HttpClient::create();
         $this->previousAddress = null;
         $this->previousGeoPoint = null;
@@ -67,13 +70,29 @@ class ImportDvfCommand extends Command
             ->setDescription('Import DVF File in elasticsearch')
             ->addArgument('year', InputArgument::REQUIRED, 'Enter year of DVF')
             ->addArgument('url-file', InputArgument::REQUIRED, 'Link of DVF file found in https://www.data.gouv.fr/fr/datasets/demandes-de-valeurs-foncieres/')
-            ->addOption('delete', null, InputOption::VALUE_OPTIONAL, 'This option allow to delete dvf of the year before insert new dvf', false)
+            ->addArgument('departments', mode: InputArgument::IS_ARRAY | InputArgument::OPTIONAL, description: 'Choose departement you need to import. (separate multiple departments with a space)')
+            ->addOption('delete', mode: InputOption::VALUE_OPTIONAL, description: 'This option allow to delete dvf of the year before insert new dvf', default: false)
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $dvfYear = $input->getArgument('year');
+
+        if (null === $input->getOption('delete')) {
+            $question = new ConfirmationQuestion(sprintf('You choose to delete ALL dvf for the year %s. Are you sure to continue ? ', $dvfYear), false);
+
+            $helper = new QuestionHelper();
+
+            if (!$helper->ask($input, $output, $question)) {
+                return Command::SUCCESS;
+            }
+        }
+
+        $selectedDepartements = null;
+        if (!empty($input->getArgument('departments'))) {
+            $selectedDepartements = $input->getArgument('departments');
+        }
 
         $client = ClientBuilder::create()
             ->setHosts([$this->elasticHost])
@@ -87,66 +106,13 @@ class ImportDvfCommand extends Command
         ]);
 
         if (null === $input->getOption('delete')) {
-            $output->writeln([
-                '<fg=black;bg=yellow>Delete begin...</>',
-                '',
-            ]);
-
-            $removeParams = [
-                'index' => $this->elasticDvfIndexName,
-                'body' => [
-                    'query' => [
-                        'match' => [
-                            'dvf_metadata.year' => $dvfYear,
-                        ],
-                    ],
-                ],
-            ];
-
-            try {
-                $result = $client->deleteByQuery($removeParams);
-                $output->writeln([
-                    sprintf('<fg=black;bg=yellow>%s/%s documents deleted</>', $result['deleted'], $result['total']),
-                    '',
-                ]);
-            } catch (Missing404Exception $missing404Exception) {
-                $output->writeln([
-                    '<fg=black;bg=yellow>Index Not found</>',
-                    '',
-                ]);
-            }
+            $this->deleteDvfYear($dvfYear, $output, $client);
         }
 
         try {
             $client->indices()->get(['index' => $this->elasticDvfIndexName]);
         } catch (Missing404Exception $missing404Exception) {
-            $output->writeln([
-                sprintf('<fg=black;bg=yellow>Index %s not found - Creation begin</>', $this->elasticDvfIndexName),
-                '',
-            ]);
-
-            $indexParams = [
-                'index' => $this->elasticDvfIndexName,
-                'body' => [
-                    'settings' => [
-                        'number_of_shards' => 2,
-                        'number_of_replicas' => 1,
-                    ],
-                    'mappings' => [
-                        '_source' => [
-                            'enabled' => true,
-                        ],
-                        'properties' => DvfDocumentMapping::MAPPING,
-                    ],
-                ],
-            ];
-
-            $client->indices()->create($indexParams);
-
-            $output->writeln([
-                sprintf('<fg=black;bg=green>Index %s creation succed</>', $this->elasticDvfIndexName),
-                '',
-            ]);
+            $this->createIndex($output, $client);
         }
 
         $output->writeln([
@@ -190,6 +156,10 @@ class ImportDvfCommand extends Command
             if ($i === 0) {
                 ++$i;
 
+                continue;
+            }
+
+            if (!is_null($selectedDepartements) && !in_array($data[18], $selectedDepartements)) {
                 continue;
             }
 
@@ -313,8 +283,8 @@ class ImportDvfCommand extends Command
             ->setAddressesTimeout($this->addressesTimeout)
         ;
 
-        $this->em->persist($loggerDvf);
-        $this->em->flush();
+        $this->entityManager->persist($loggerDvf);
+        $this->entityManager->flush();
 
         return Command::SUCCESS;
     }
@@ -385,5 +355,68 @@ class ImportDvfCommand extends Command
         ];
 
         return $this->previousGeoPoint;
+    }
+
+    private function createIndex(OutputInterface $output, Client $elasticClient): void
+    {
+        $output->writeln([
+            sprintf('<fg=black;bg=yellow>Index %s not found - Creation begin</>', $this->elasticDvfIndexName),
+            '',
+        ]);
+
+        $indexParams = [
+            'index' => $this->elasticDvfIndexName,
+            'body' => [
+                'settings' => [
+                    'number_of_shards' => 2,
+                    'number_of_replicas' => 1,
+                ],
+                'mappings' => [
+                    '_source' => [
+                        'enabled' => true,
+                    ],
+                    'properties' => DvfDocumentMapping::MAPPING,
+                ],
+            ],
+        ];
+
+        $elasticClient->indices()->create($indexParams);
+
+        $output->writeln([
+            sprintf('<fg=black;bg=green>Index %s creation succed</>', $this->elasticDvfIndexName),
+            '',
+        ]);
+    }
+
+    private function deleteDvfYear(string $dvfYear, OutputInterface $output, Client $elasticClient): void
+    {
+        $output->writeln([
+            '<fg=black;bg=yellow>Delete begin...</>',
+            '',
+        ]);
+
+        $removeParams = [
+            'index' => $this->elasticDvfIndexName,
+            'body' => [
+                'query' => [
+                    'match' => [
+                        'dvf_metadata.year' => $dvfYear,
+                    ],
+                ],
+            ],
+        ];
+
+        try {
+            $result = $elasticClient->deleteByQuery($removeParams);
+            $output->writeln([
+                sprintf('<fg=black;bg=yellow>%s/%s documents deleted</>', $result['deleted'], $result['total']),
+                '',
+            ]);
+        } catch (Missing404Exception $missing404Exception) {
+            $output->writeln([
+                '<fg=black;bg=yellow>Index Not found</>',
+                '',
+            ]);
+        }
     }
 }
