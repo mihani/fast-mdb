@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Elasticsearch\Repository;
 
+use App\Elasticsearch\Dto\HitsDto;
 use App\Elasticsearch\ElasticsearchUtils;
 use Elasticsearch\ClientBuilder;
 use Psr\Log\LoggerInterface;
@@ -20,7 +21,7 @@ abstract class AbstractElasticsearchRepository
         $this->logger = $logger;
     }
 
-    public function search(array $params)
+    public function search(array $params): ?HitsDto
     {
         $client = ClientBuilder::create()
             ->setHosts([$this->elasticHost])
@@ -38,7 +39,7 @@ abstract class AbstractElasticsearchRepository
             return $elasticResponse->hits;
         }
 
-        $this->logger->error('[ELASTICSEARCH] An error occured when retrieve proximity sales', $result);
+        $this->logger->error(sprintf('[ELASTICSEARCH] An error occured when retrieve data from %s', $params['index']), $result);
 
         return null;
     }

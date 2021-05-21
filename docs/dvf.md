@@ -1,6 +1,10 @@
 # DVF
 
-## DVF CSV file mappin
+## Important informations
+
+* /!\ cityCode (Code commune) in dvf is only 2 or 3 last digit of official insee code.
+
+## DVF CSV file mapping
 
 ```
 0 => "Code service CH"
