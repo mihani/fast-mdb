@@ -8,12 +8,15 @@ use App\Api\GeoApiFr\GeoApiFr;
 use App\Api\GeoPortailUrbanisme\GeoPortailUrbanisme;
 use App\Elasticsearch\Repository\DvfRepository;
 use App\Entity\Project;
+use App\Entity\SquareMeterPrice;
 use App\Entity\User;
 use App\Factory\AddressFactory;
+use App\Factory\SquareMeterPriceFactory;
 use App\Factory\UrbanDocumentFactory;
 use App\Form\Address\AddressMoreInformationType;
 use App\Form\Project\ProjectFromPreviewType;
 use App\Form\Project\SearchProjectType;
+use App\Repository\SquareMeterPriceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Psr\Log\LoggerInterface;
@@ -39,30 +42,35 @@ class DashboardController extends AbstractController
     private LoggerInterface $logger;
     private GeoPortailUrbanisme $geoPortailUrbanisme;
     private EntityManagerInterface $entityManager;
+    private DvfRepository $dvfRepository;
 
-    public function __construct(GeoApiFr $geoApiFr, TranslatorInterface $translator, LoggerInterface $logger, GeoPortailUrbanisme $geoPortailUrbanisme, EntityManagerInterface $entityManager)
+    private array $dvfYears;
+
+    public function __construct(GeoApiFr $geoApiFr, TranslatorInterface $translator, LoggerInterface $logger, GeoPortailUrbanisme $geoPortailUrbanisme, EntityManagerInterface $entityManager, DvfRepository $dvfRepository, array $dvfYears)
     {
         $this->geoApiFr = $geoApiFr;
         $this->translator = $translator;
         $this->logger = $logger;
         $this->geoPortailUrbanisme = $geoPortailUrbanisme;
         $this->entityManager = $entityManager;
+        $this->dvfRepository = $dvfRepository;
+        $this->dvfYears = $dvfYears;
     }
 
     #[Route('/', name: 'dashboard_index')]
-    public function index(Request $request, PaginatorInterface $paginator, DvfRepository $dvfElasticRepository): Response
+    public function index(Request $request, PaginatorInterface $paginator): Response
     {
         $searchBarForm = $this->createForm(type: AddressMoreInformationType::class, options: [
             'method' => Request::METHOD_GET,
         ]);
         $searchBarForm->handleRequest($request);
 
-        $addressData = $urbanDocuments = $proximitySalesPagination = $projectFromPreviewForm = null;
+        $addressData = $squareMeterPrices = $urbanDocuments = $proximitySalesPagination = $projectFromPreviewForm = null;
         if ($searchBarForm->isSubmitted() && $searchBarForm->isValid()) {
             $addressData = $this->getMoreAddressInfo($searchBarForm->get('address')->getData());
             if ($addressData !== null) {
                 $urbanDocuments = $this->getUrbanDocuments($addressData['inseeCode']);
-                $proximitySales = $dvfElasticRepository->getProximitySales($addressData['latitude'], $addressData['longitude']);
+                $proximitySales = $this->dvfRepository->getProximitySales($addressData['latitude'], $addressData['longitude']);
                 if ($proximitySales) {
                     $proximitySalesPagination = $paginator->paginate(
                         $proximitySales,
@@ -77,6 +85,8 @@ class DashboardController extends AbstractController
                 $projectFromPreviewForm = $this->createForm(ProjectFromPreviewType::class, $project, [
                     'action' => $this->generateUrl('dashboard_create_project'),
                 ]);
+
+                $squareMeterPrices = $this->calculateSquareMeterPrice($addressData['departmentCode'],$addressData['address']['postCode'], $addressData['address']['city'], $addressData['inseeCode']);
             }
         }
 
@@ -121,6 +131,7 @@ class DashboardController extends AbstractController
             'projectFromPreviewForm' => $projectFromPreviewForm ? $projectFromPreviewForm->createView() : null,
             'projectsPagination' => $projectsPagination,
             'searchProjectForm' => $searchProjectForm->createView(),
+            'squareMeterPrices' => $squareMeterPrices
         ]);
     }
 
@@ -136,6 +147,14 @@ class DashboardController extends AbstractController
             $project->setUser($this->getUser())
                 ->setCompany($this->getUser()->getCompany())
             ;
+
+            $squareMeterPriceByYears = $this->entityManager->getRepository(SquareMeterPrice::class)->findByInseeCode($project->getAddress()->getInseeCode());
+
+            /** @var SquareMeterPrice $squareMeterPrice */
+            foreach ($squareMeterPriceByYears as $squareMeterPrice) {
+                $project->addSquareMeterPrice($squareMeterPrice);
+            }
+
             $this->entityManager->persist($project);
             $this->entityManager->flush();
 
@@ -145,6 +164,41 @@ class DashboardController extends AbstractController
         }
 
         return $this->redirectToRoute('dashboard_index');
+    }
+
+    private function calculateSquareMeterPrice(string $departmentCode, string $postalCode, string $city, string $inseeCode): array
+    {
+        $evolutionSquareMeterPriceByYears = $this->entityManager->getRepository(SquareMeterPrice::class)->findByInseeCode($inseeCode);
+
+        if ($evolutionSquareMeterPriceByYears){
+            return $evolutionSquareMeterPriceByYears;
+        }
+
+        $evolutionSquareMeterPriceByYears = [];
+        // Foreach year present in parameters
+        foreach ($this->dvfYears as $dvfYear) {
+            $squareMeterPrice = 0;
+            $dvfHitsDto = $this->dvfRepository->getDvfByCity($departmentCode, $postalCode, $city, (string) $dvfYear);
+            // Foreach dvf documents calculate square meter of dvf
+            foreach ($dvfHitsDto->hits as $dvfDocument) {
+                $current = $dvfDocument['_source'];
+
+                if ((double) $current['actual_build_area'] === 0 && (double) $current['land_area'] === 0){
+                    continue;
+                }
+                $surface = (double) $current['actual_build_area'] === (double) 0 ? (double) $current['land_area'] : (double) $current['actual_build_area'];
+                $squareMeterPrice += ((double) $current['land_value'] / $surface);
+            }
+
+            $evolutionSquareMeterPriceByYears[$dvfYear] = $squareMeterPrice/$dvfHitsDto->maxScore;
+        }
+
+        foreach ($evolutionSquareMeterPriceByYears as $year => $squareMeterPrice) {
+            $this->entityManager->persist(SquareMeterPriceFactory::create($squareMeterPrice, $inseeCode, (string) $year));
+            $this->entityManager->flush();
+        }
+
+        return $evolutionSquareMeterPriceByYears;
     }
 
     private function generateProjectFromData(array $addressData, array $urbanDocumentsData): Project

@@ -98,7 +98,7 @@ project:
       aerial_view_with_casdastral_cut: Vue aérienne avec découpe cadastrale
       dynamic_street_view: StreetView dynamique
       no_street_view_exist: Il n'existe pas de street map pour cette adresse
-    square_metre_price: "Prix au mètre carré de la commune : %price%€/m"
+    square_meter_price: "Prix du mètre carré de la commune (€/m²)"
     no_proximity_sale: "Pas de ventes réalisé depuis 2016 dans ce rayon."
     sales_in_delimited_area:
       title: "Ventes réalisées dans un rayon de %km% km (par proximité)"

@@ -85,7 +85,7 @@ class DvfDocumentMapping
                         'name' => [ // Commune
                             'type' => 'text',
                         ],
-                        'code' => [ // Code commune
+                        'code' => [ // Code commune, becareful it's 2 or 3 last digit of insee code in this field.
                             'type' => 'text',
                         ],
                     ],
