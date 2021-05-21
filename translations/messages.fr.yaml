@@ -262,13 +262,6 @@ error_page:
     title: 403 - Access Forbidden
     message: Vous n'avez pas les droits pour cette page
     return_home: Retour au dashboard
-emails:
-  reset_password_link:
-    hi: Bonjour,
-    to_reset_your_password: Pour réinitialiser votre mot de passe merci de cliquer sur le lien suivant
-    reset_password_link: Réinitialiser le mot de passe
-    link_will_expire_in: Ce lien expirera dans %expireTime%
-    thanks: Merci
 email:
   account_create:
     subject: Votre compte sur fast-mdb à été créé
@@ -280,6 +273,12 @@ email:
       thanks: Merci
   reset_password:
     subject: Demande de reinitialisation de mot de passe
+  reset_password_link:
+    hi: Bonjour,
+    to_reset_your_password: Pour réinitialiser votre mot de passe merci de cliquer sur le lien suivant
+    reset_password_link: Réinitialiser le mot de passe
+    link_will_expire_in: Ce lien expirera dans %expireTime%
+    thanks: Merci
 #Reset password bundle message
 The link in your email is expired. Please try to reset your password again.: "Le lien présent de l'email est expiré. Merci de refaire une demande de réinitialisation de mot de passe."
 The reset password link is invalid. Please try to reset your password again.: "Le lien de réinitialisation est invalide. Merci de refaire une demande de réinitialisation de mot de passe."

@@ -9,12 +9,14 @@ use App\Entity\Contact\Contact;
 use App\Entity\Contact\EstateAgent;
 use App\Entity\Contact\Notary;
 use App\Entity\Contact\Seller;
+use App\Entity\Note;
 use App\Entity\Project;
 use App\Exception\FastMdbLogicException;
 use App\Form\Contact\EstateAgentType;
 use App\Form\Contact\NotaryType;
 use App\Form\Contact\SearchExistingContactType;
 use App\Form\Contact\SellerType;
+use App\Form\NoteType;
 use App\Form\Project\ProjectType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -40,7 +42,7 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/{id}', name: 'project_show', methods: ['GET', 'POST'])]
-    public function show(Project $project, DvfRepository $dvfRepository, Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager)
+    public function show(Project $project, DvfRepository $dvfRepository, Request $request, PaginatorInterface $paginator)
     {
         $proximitySalesPagination = null;
 
@@ -48,7 +50,7 @@ class ProjectController extends AbstractController
         $projectForm->handleRequest($request);
 
         if ($projectForm->isSubmitted() && $projectForm->isValid()) {
-            $entityManager->flush();
+            $this->entityManager->flush();
         }
 
         $address = $project->getAddress();
@@ -83,6 +85,17 @@ class ProjectController extends AbstractController
             ])->createView(),
         ];
 
+        $note = new Note();
+        $noteForm = $this->createForm(NoteType::class, $note);
+        $noteForm->handleRequest($request);
+
+        if ($noteForm->isSubmitted() && $noteForm->isValid()){
+            $note->setProject($project);
+            $note->setAuthor($this->getUser()->getFullName());
+            $this->entityManager->persist($note);
+            $this->entityManager->flush();
+        }
+
         return $this->render('project/show.html.twig', [
             'project' => $project,
             'proximitySalesPagination' => $proximitySalesPagination,
@@ -91,6 +104,7 @@ class ProjectController extends AbstractController
             'estateAgentContactForm' => $this->createEstateAgentContactForm($project)->createView(),
             'notaryContactForm' => $this->createNotaryContactForm($project)->createView(),
             'searchForms' => $searchForms,
+            'noteForm' => $noteForm->createView()
         ]);
     }
 

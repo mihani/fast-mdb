@@ -253,18 +253,14 @@
             <div class="card">
                 <div class="card-content">
                     <div class="card-body">
-                        Coming soon
-{#                        <div class="row">#}
-{#                            <div class="col-12">#}
-{#                                Formulaire calcul de rentablité - coming soon#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        <div class="row">#}
-{#                            <div class="d-flex">#}
-{#                                <h6 class="cart-title me-auto">Image uploader</h6>#}
-{#                                <button class="btn btn-sm btn-outline-primary">Upload coming soon</button>#}
-{#                            </div>#}
-{#                        </div>#}
+                        <div class="d-inline-flex">
+                            <h6 class="cart-title me-2">Notes</h6>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#note-edit"><i class="bi bi-plus-circle-fill"></i></a>
+                            {% include 'note/modal/note_edit.html.twig' with {
+                                'modalId': 'note-edit',
+                                'noteForm': noteForm
+                            } only %}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,8 +1,8 @@
 {% extends 'base_email.html.twig' %}
 
 {% block content %}
-    <h1>{{ 'emails.reset_password_link.hi'|trans }}</h1>
-    <p>{{ 'emails.reset_password_link.to_reset_your_password'|trans }}</p>
+    <h1>{{ 'email.reset_password_link.hi'|trans }}</h1>
+    <p>{{ 'email.reset_password_link.to_reset_your_password'|trans }}</p>
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
         <tbody>
         <tr>
@@ -11,7 +11,7 @@
                     <tbody>
                     <tr>
                         <td>
-                            <a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ 'emails.reset_password_link.reset_password_link'|trans }}</a>
+                            <a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ 'email.reset_password_link.reset_password_link'|trans }}</a>
                         </td>
                     </tr>
                     </tbody>
@@ -20,6 +20,6 @@
         </tr>
         </tbody>
     </table>
-    <p>{{ 'emails.reset_password_link.link_will_expire_in'|trans({'%expireTime%': resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle')}) }}</p>
-    <p>{{ 'emails.reset_password_link.thanks'|trans }}</p>
+    <p>{{ 'email.reset_password_link.link_will_expire_in'|trans({'%expireTime%': resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle')}) }}</p>
+    <p>{{ 'email.reset_password_link.thanks'|trans }}</p>
 {% endblock %}
