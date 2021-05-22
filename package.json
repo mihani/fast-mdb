@@ -2,13 +2,12 @@
     "devDependencies": {
         "@symfony/stimulus-bridge": "^2.0.0",
         "@symfony/webpack-encore": "^1.1.2",
-        "dotenv": "^9.0.2",
         "regenerator-runtime": "^0.13.2",
         "sass-loader": "^11.0.0",
         "stimulus": "^2.0.0",
         "webpack-notifier": "^1.6.0"
     },
-    "license": "UNLICENSED",
+    "license": "MIT",
     "private": true,
     "scripts": {
         "dev-server": "encore dev-server",
@@ -23,6 +22,7 @@
         "bootstrap": "5.0.0-beta1",
         "bootstrap-icons": "^1.4.1",
         "choices.js": "^9.0.1",
+        "dotenv-webpack": "^7.0.2",
         "feather-icons": "^4.28.0",
         "file-loader": "^6.2.0",
         "jquery": "^3.6.0",

@@ -173,6 +173,11 @@ class DashboardController extends AbstractController
         foreach ($this->dvfYears as $dvfYear) {
             $squareMeterPrice = 0;
             $dvfHitsDto = $this->dvfRepository->getDvfByCity($departmentCode, $postalCode, $city, (string) $dvfYear);
+
+            if (is_null($dvfHitsDto)) {
+                continue;
+            }
+
             // Foreach dvf documents calculate square meter of dvf
             foreach ($dvfHitsDto->hits as $dvfDocument) {
                 $current = $dvfDocument['_source'];
@@ -184,7 +189,7 @@ class DashboardController extends AbstractController
                 $squareMeterPrice += ((float) $current['land_value'] / $surface);
             }
 
-            $evolutionSquareMeterPriceByYears[$dvfYear] = $squareMeterPrice / $dvfHitsDto->maxScore;
+            $evolutionSquareMeterPriceByYears[$dvfYear] = $squareMeterPrice / $dvfHitsDto->total->value;
         }
 
         foreach ($evolutionSquareMeterPriceByYears as $year => $squareMeterPrice) {

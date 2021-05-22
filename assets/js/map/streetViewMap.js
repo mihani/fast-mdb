@@ -1,4 +1,7 @@
+"use strict";
+
 import { Loader } from "@googlemaps/js-api-loader"
+
 const GOOGLE_STREET_VIEW_API = process.env.GOOGLE_STREET_VIEW_API;
 
 document.addEventListener('DOMContentLoaded', (event) => {
