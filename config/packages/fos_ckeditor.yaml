@@ -4,6 +4,7 @@ fos_ck_editor:
     configs:
         my_config:
             toolbar: [ ["Source", "-", "Bold", "Italic", "Underline" ] ]
+            removePlugins: 'exportpdf'
 
 twig:
     form_themes:

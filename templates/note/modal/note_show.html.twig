@@ -4,8 +4,10 @@
 
 {% block modal_form_body %}
     <div class="d-flex justify-content-between mb-3">
-        <small>{{ note.author }}</small>
         <small>{{ note.createdAt|date('d-m-Y H:i:m') }}</small>
     </div>
     {{ note.content|raw }}
+    <div class="d-flex mt-1">
+        <small>{{ note.author }}</small>
+    </div>
 {% endblock %}

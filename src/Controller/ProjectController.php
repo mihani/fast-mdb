@@ -87,17 +87,6 @@ class ProjectController extends AbstractController
             ])->createView(),
         ];
 
-        $notes = $noteRepository->findBy(['project' => $project], ['createdAt' => 'DESC']);
-        $notesPagination = null;
-        if ($notes) {
-            $notesPagination = $paginator->paginate(
-                $notes,
-                $request->query->getInt('notesPage', 1),
-                self::ITEM_PER_PAGE,
-                ['pageParameterName' => 'notesPage']
-            );
-        }
-
         $noteForm = $this->createForm(NoteType::class, new Note());
         $noteForm->handleRequest($request);
 
@@ -108,6 +97,17 @@ class ProjectController extends AbstractController
             ;
             $this->entityManager->persist($note);
             $this->entityManager->flush();
+        }
+
+        $notes = $noteRepository->findBy(['project' => $project], ['createdAt' => 'DESC']);
+        $notesPagination = null;
+        if ($notes) {
+            $notesPagination = $paginator->paginate(
+                $notes,
+                $request->query->getInt('notesPage', 1),
+                self::ITEM_PER_PAGE,
+                ['pageParameterName' => 'notesPage']
+            );
         }
 
         return $this->render('project/show.html.twig', [

@@ -2,6 +2,7 @@
 
 import L from 'leaflet';
 import mapMarkerIcon from 'leaflet/dist/images/marker-icon.png'
+
 const IGN_API_KEY = process.env.IGN_API_KEY;
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -10,7 +11,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 function aerialMapGeneration(longitude, latitude){
-
     let aerialMap = L.map('aerial-map',{
         center: L.latLng([latitude, longitude]),
         zoom: 18
