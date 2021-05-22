@@ -16,7 +16,6 @@ use App\Factory\UrbanDocumentFactory;
 use App\Form\Address\AddressMoreInformationType;
 use App\Form\Project\ProjectFromPreviewType;
 use App\Form\Project\SearchProjectType;
-use App\Repository\SquareMeterPriceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Psr\Log\LoggerInterface;
@@ -75,18 +74,16 @@ class DashboardController extends AbstractController
                     $proximitySalesPagination = $paginator->paginate(
                         $proximitySales,
                         $request->query->getInt('proximitySalesPage', 1),
-                        self::ITEM_PER_PAGE
+                        self::ITEM_PER_PAGE,
+                        ['pageParameterName' => 'proximitySalesPage']
                     );
-                    $proximitySalesPagination->setCustomParameters([
-                        'pageParameterName ' => 'proximitySalesPage',
-                    ]);
                 }
                 $project = $this->generateProjectFromData($addressData, $urbanDocuments);
                 $projectFromPreviewForm = $this->createForm(ProjectFromPreviewType::class, $project, [
                     'action' => $this->generateUrl('dashboard_create_project'),
                 ]);
 
-                $squareMeterPrices = $this->calculateSquareMeterPrice($addressData['departmentCode'],$addressData['address']['postCode'], $addressData['address']['city'], $addressData['inseeCode']);
+                $squareMeterPrices = $this->calculateSquareMeterPrice($addressData['departmentCode'], $addressData['address']['postCode'], $addressData['address']['city'], $addressData['inseeCode']);
             }
         }
 
@@ -116,12 +113,9 @@ class DashboardController extends AbstractController
         $projectsPagination = $paginator->paginate(
             is_null($searchProjectsQuery) ? $this->getUser()->getProjects() : $searchProjectsQuery,
             $request->query->getInt('projectPage', 1),
-            self::ITEM_PER_PAGE
+            self::ITEM_PER_PAGE,
+            ['pageParameterName' => 'projectPage']
         );
-
-        $projectsPagination->setCustomParameters([
-            'pageParameterName' => 'projectPage',
-        ]);
 
         return $this->render('dashboard/index.html.twig', [
             'searchBarForm' => $searchBarForm->createView(),
@@ -131,7 +125,7 @@ class DashboardController extends AbstractController
             'projectFromPreviewForm' => $projectFromPreviewForm ? $projectFromPreviewForm->createView() : null,
             'projectsPagination' => $projectsPagination,
             'searchProjectForm' => $searchProjectForm->createView(),
-            'squareMeterPrices' => $squareMeterPrices
+            'squareMeterPrices' => $squareMeterPrices,
         ]);
     }
 
@@ -170,7 +164,7 @@ class DashboardController extends AbstractController
     {
         $evolutionSquareMeterPriceByYears = $this->entityManager->getRepository(SquareMeterPrice::class)->findByInseeCode($inseeCode);
 
-        if ($evolutionSquareMeterPriceByYears){
+        if ($evolutionSquareMeterPriceByYears) {
             return $evolutionSquareMeterPriceByYears;
         }
 
@@ -183,14 +177,14 @@ class DashboardController extends AbstractController
             foreach ($dvfHitsDto->hits as $dvfDocument) {
                 $current = $dvfDocument['_source'];
 
-                if ((double) $current['actual_build_area'] === 0 && (double) $current['land_area'] === 0){
+                if ((float) $current['actual_build_area'] === 0 && (float) $current['land_area'] === 0) {
                     continue;
                 }
-                $surface = (double) $current['actual_build_area'] === (double) 0 ? (double) $current['land_area'] : (double) $current['actual_build_area'];
-                $squareMeterPrice += ((double) $current['land_value'] / $surface);
+                $surface = (float) $current['actual_build_area'] === (float) 0 ? (float) $current['land_area'] : (float) $current['actual_build_area'];
+                $squareMeterPrice += ((float) $current['land_value'] / $surface);
             }
 
-            $evolutionSquareMeterPriceByYears[$dvfYear] = $squareMeterPrice/$dvfHitsDto->maxScore;
+            $evolutionSquareMeterPriceByYears[$dvfYear] = $squareMeterPrice / $dvfHitsDto->maxScore;
         }
 
         foreach ($evolutionSquareMeterPriceByYears as $year => $squareMeterPrice) {

@@ -18,6 +18,7 @@ use App\Form\Contact\SearchExistingContactType;
 use App\Form\Contact\SellerType;
 use App\Form\NoteType;
 use App\Form\Project\ProjectType;
+use App\Repository\NoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,7 +43,7 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/{id}', name: 'project_show', methods: ['GET', 'POST'])]
-    public function show(Project $project, DvfRepository $dvfRepository, Request $request, PaginatorInterface $paginator)
+    public function show(Project $project, DvfRepository $dvfRepository, Request $request, PaginatorInterface $paginator, NoteRepository $noteRepository)
     {
         $proximitySalesPagination = null;
 
@@ -62,8 +63,9 @@ class ProjectController extends AbstractController
         if ($proximitySales) {
             $proximitySalesPagination = $paginator->paginate(
                 $proximitySales,
-                $request->query->getInt('page', 1),
-                self::ITEM_PER_PAGE
+                $request->query->getInt('proximitySalesPage', 1),
+                self::ITEM_PER_PAGE,
+                ['pageParameterName' => 'proximitySalesPage']
             );
         }
 
@@ -85,13 +87,25 @@ class ProjectController extends AbstractController
             ])->createView(),
         ];
 
-        $note = new Note();
-        $noteForm = $this->createForm(NoteType::class, $note);
+        $notes = $noteRepository->findBy(['project' => $project], ['createdAt' => 'DESC']);
+        $notesPagination = null;
+        if ($notes) {
+            $notesPagination = $paginator->paginate(
+                $notes,
+                $request->query->getInt('notesPage', 1),
+                self::ITEM_PER_PAGE,
+                ['pageParameterName' => 'notesPage']
+            );
+        }
+
+        $noteForm = $this->createForm(NoteType::class, new Note());
         $noteForm->handleRequest($request);
 
-        if ($noteForm->isSubmitted() && $noteForm->isValid()){
-            $note->setProject($project);
-            $note->setAuthor($this->getUser()->getFullName());
+        if ($noteForm->isSubmitted() && $noteForm->isValid()) {
+            $note = $noteForm->getData();
+            $note->setProject($project)
+                ->setAuthor($this->getUser()->getFullName().' - '.$this->getUser()->getEmail())
+            ;
             $this->entityManager->persist($note);
             $this->entityManager->flush();
         }
@@ -104,7 +118,8 @@ class ProjectController extends AbstractController
             'estateAgentContactForm' => $this->createEstateAgentContactForm($project)->createView(),
             'notaryContactForm' => $this->createNotaryContactForm($project)->createView(),
             'searchForms' => $searchForms,
-            'noteForm' => $noteForm->createView()
+            'noteForm' => $noteForm->createView(),
+            'notesPagination' => $notesPagination,
         ]);
     }
 

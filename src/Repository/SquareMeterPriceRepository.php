@@ -9,8 +9,8 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method SquareMeterPrice|null find($id, $lockMode = null, $lockVersion = null)
- * @method SquareMeterPrice|null findOneBy(array $criteria, array $orderBy = null)
+ * @method null|SquareMeterPrice find($id, $lockMode = null, $lockVersion = null)
+ * @method null|SquareMeterPrice findOneBy(array $criteria, array $orderBy = null)
  * @method SquareMeterPrice[]    findAll()
  * @method SquareMeterPrice[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */

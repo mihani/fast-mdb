@@ -261,6 +261,29 @@
                                 'noteForm': noteForm
                             } only %}
                         </div>
+                        {% if notesPagination is not null %}
+                            <div class="list-notes list-group mb-3">
+                                {% for note in notesPagination %}
+                                    <a data-bs-toggle="modal" data-bs-target="#note-show" class="list-notes__item list-group-item">
+                                        <div class="d-flex w-100 justify-content-end mb-1">
+                                            <small>{{ note.createdAt|date('d-m-Y H:i:m') }}</small>
+                                        </div>
+                                        {{ note.content|u.truncate(150, '...', false)|raw }}
+                                        <div class="d-flex justify-content-end mt-2">
+                                            <small>{{ note.author }}</small>
+                                        </div>
+                                    </a>
+                                    {% include 'note/modal/note_show.html.twig' with {
+                                        'modalId': 'note-show',
+                                        'note': note,
+                                        'isBorderlessModal': true
+                                    } only %}
+                                {% endfor %}
+                            </div>
+                            <nav id="notes-pagination">
+                                {{ knp_pagination_render(notesPagination) }}
+                            </nav>
+                        {% endif %}
                     </div>
                 </div>
             </div>

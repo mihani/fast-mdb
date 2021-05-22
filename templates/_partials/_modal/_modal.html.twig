@@ -1,7 +1,11 @@
-<div class="modal fade text-left" id="{{ modalId }}" tabindex="-1" role="dialog" aria-labelledby="{{ modalId }}-label" aria-hidden="true">
+{% set borderlessClass = "" %}
+{% if isBorderlessModal is defined and isBorderlessModal == true %}
+    {% set borderlessClass = "modal-borderless" %}
+{% endif %}
+<div class="modal fade text-left {{ borderlessClass }}" id="{{ modalId }}" tabindex="-1" role="dialog" aria-labelledby="{{ modalId }}-label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header pb-0">
                 <h5 class="modal-title" id="{{ modalId }}-label">{% block modal_form_title %}{% endblock %}</h5>
                 <button type="button" class="close" data-bs-dismiss="modal"
                         aria-label="Close">
@@ -11,7 +15,7 @@
             <div class="modal-body">
                 {% block modal_form_body %}{% endblock %}
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer pt-0">
                 {% block modal_form_footer %}
                     <button type="button" class="btn" data-bs-dismiss="modal">
                         <i class="bx bx-x d-block d-sm-none"></i>

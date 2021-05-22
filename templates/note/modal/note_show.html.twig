@@ -1,0 +1,11 @@
+{% extends '_partials/_modal/_modal.html.twig' %}
+
+{% block modal_form_title %}Note{% endblock %}
+
+{% block modal_form_body %}
+    <div class="d-flex justify-content-between mb-3">
+        <small>{{ note.author }}</small>
+        <small>{{ note.createdAt|date('d-m-Y H:i:m') }}</small>
+    </div>
+    {{ note.content|raw }}
+{% endblock %}

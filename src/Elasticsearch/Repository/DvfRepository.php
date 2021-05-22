@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Elasticsearch\Repository;
 
 use App\Elasticsearch\Dto\HitsDto;
-use App\Elasticsearch\ElasticsearchUtils;
 use App\Utils\AddressUtils;
-use Elasticsearch\ClientBuilder;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -38,12 +36,12 @@ class DvfRepository extends AbstractElasticsearchRepository
                         ],
                     ],
                 ],
-            ]
+            ],
         ];
 
         $dvfHits = $this->search($params);
 
-        if ($dvfHits === null){
+        if ($dvfHits === null) {
             return null;
         }
 
