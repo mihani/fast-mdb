@@ -185,7 +185,7 @@
                                 <h6>{{ 'project.card.square_meter_price'|trans }}</h6>
                                 {% set squareMeterPrices = project.squareMeterPrices %}
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-bordered">
+                                    <table class="table table-striped table-bordered align-middle text-center">
                                         <thead>
                                         <tr>
                                             {# @var squareMeterPrice \App\Entity\SquareMeterPrice #}
@@ -212,7 +212,7 @@
                                 <h6>{{ 'project.card.sales_in_delimited_area.title'|trans({'%km%':5}) }}</h6>
                                 {% if proximitySalesPagination is not null %}
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered">
+                                        <table class="table table-striped table-bordered align-middle text-center">
                                             <thead>
                                             <tr>
                                                 <th>{{ 'project.card.sales_in_delimited_area.table.header.address'|trans }}</th>
