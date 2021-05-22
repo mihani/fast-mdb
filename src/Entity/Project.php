@@ -101,11 +101,17 @@ class Project
      */
     private $squareMeterPrices;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Note::class, mappedBy="project", orphanRemoval=true)
+     */
+    private $notes;
+
     public function __construct()
     {
         $this->state = self::STATUS_DRAFT;
         $this->urbanDocuments = new ArrayCollection();
         $this->squareMeterPrices = new ArrayCollection();
+        $this->notes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -287,6 +293,36 @@ class Project
     {
         if ($this->squareMeterPrices->removeElement($squareMeterPrice)) {
             $squareMeterPrice->removeProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Note[]
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Note $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes[] = $note;
+            $note->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Note $note): self
+    {
+        if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
+            if ($note->getProject() === $this) {
+                $note->setProject(null);
+            }
         }
 
         return $this;

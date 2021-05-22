@@ -1,0 +1,23 @@
+{% extends '_partials/_modal/_modal_form.html.twig' %}
+
+{% set modalId = modalId %}
+
+{% block modal_form_title %}{{ 'note.edit.title'|trans}}{% endblock %}
+
+{% block modal_form_body %}
+    <div class="modal-body">
+        {{ form_start(noteForm, {'attr':{'class':'row'}}) }}
+            <div class="form-group">
+                {{ form_widget(noteForm.content, {'attr':{'class':'form-control'}}) }}
+            </div>
+            <div class="form-actions d-flex justify-content-end">
+                <button type="button" class="btn me-3" data-bs-dismiss="modal">
+                    {{ 'note.edit.button.close'|trans }}
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    {{ 'note.edit.button.submit'|trans }}
+                </button>
+            </div>
+        {{ form_end(noteForm) }}
+    </div>
+{% endblock %}

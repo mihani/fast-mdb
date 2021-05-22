@@ -1,0 +1,18 @@
+.list-notes{
+    &__item {
+        p {
+            margin-bottom: 0;
+        }
+    }
+
+    a {
+        &:hover{
+            color: $white;
+            background-color: $primary;
+        }
+
+        color: $body-color;
+        cursor: default;
+        text-decoration: none;
+    }
+}
