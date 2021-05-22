@@ -2,7 +2,7 @@
 
 {% set modalId = modalId %}
 
-{% block modal_form_title %}Ajout d'une note{% endblock %}
+{% block modal_form_title %}{{ 'note.edit.title'|trans}}{% endblock %}
 
 {% block modal_form_body %}
     <div class="modal-body">
@@ -12,10 +12,10 @@
             </div>
             <div class="form-actions d-flex justify-content-end">
                 <button type="button" class="btn me-3" data-bs-dismiss="modal">
-                    {{ 'project.show.contact.button.close'|trans }}
+                    {{ 'note.edit.button.close'|trans }}
                 </button>
                 <button type="submit" class="btn btn-primary">
-                    {{ 'contact.edit.form_field.submit'|trans }}
+                    {{ 'note.edit.button.submit'|trans }}
                 </button>
             </div>
         {{ form_end(noteForm) }}

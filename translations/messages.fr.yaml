@@ -55,6 +55,8 @@ project:
   fields:
     state: etat
     estate_agent: Agent Immobilier
+  note:
+    title: Notes
   show:
     title: 'Project : "%address%"'
     contact:
@@ -192,6 +194,14 @@ dashboard:
           urban_portal:
             retrieve_urban_docs: Un problème est survenue lors de la récupération des documents d'urbanisme
             retrieve_urban_docs_details: Un problème est survenue lors de la récupération des détails du document %name%
+note:
+  edit:
+    title: Ajouter une note
+    button:
+      close: Fermer
+      submit: Ajouter
+  show:
+    title: Note
 admin:
   company:
     edit:
