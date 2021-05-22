@@ -174,7 +174,7 @@ class DashboardController extends AbstractController
             $squareMeterPrice = 0;
             $dvfHitsDto = $this->dvfRepository->getDvfByCity($departmentCode, $postalCode, $city, (string) $dvfYear);
 
-            if (is_null($dvfHitsDto)){
+            if (is_null($dvfHitsDto)) {
                 continue;
             }
 

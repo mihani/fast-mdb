@@ -198,7 +198,7 @@
                                         <tr>
                                             {# @var squareMeterPrice \App\Entity\SquareMeterPrice #}
                                             {% for squareMeterPrice in squareMeterPrices %}
-                                                <td>{{ squareMeterPrice.price|round(2) }}</td>
+                                                <td>{{ squareMeterPrice.price|number_format(2, ',', ' ') }}</td>
                                             {% endfor %}
                                         </tr>
                                         </tbody>
@@ -227,7 +227,7 @@
                                             {% for proximitySale in proximitySalesPagination %}
                                                 <tr>
                                                     <td>{{ proximitySale.address }}</td>
-                                                    <td>{{ proximitySale.salePrice }}</td>
+                                                    <td>{{ proximitySale.salePrice|number_format(2, ',', ' ') }}</td>
                                                     <td>{{ proximitySale.localType }}</td>
                                                     <td>{{ proximitySale.landArea }}</td>
                                                     <td>{{ proximitySale.buildArea }}</td>
