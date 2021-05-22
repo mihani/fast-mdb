@@ -10,7 +10,11 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 if (Encore.isProduction()){
     Encore.addPlugin(new Dotenv({ systemvars: true }))
 }else {
-    Encore.addPlugin(new Dotenv({ path: './.env.local', systemvars: true }))
+    Encore.addPlugin(new Dotenv({
+        path: './.env.local',
+        systemvars: true,
+        ignoreStub: true
+    }))
 }
 
 Encore

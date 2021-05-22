@@ -5,8 +5,6 @@ import { Loader } from "@googlemaps/js-api-loader"
 const GOOGLE_STREET_VIEW_API = process.env.GOOGLE_STREET_VIEW_API;
 
 document.addEventListener('DOMContentLoaded', (event) => {
-
-    console.log(GOOGLE_STREET_VIEW_API);
     const loader = new Loader({
         apiKey: GOOGLE_STREET_VIEW_API,
         version: "weekly",
