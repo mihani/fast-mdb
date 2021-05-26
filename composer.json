@@ -23,6 +23,7 @@
         "ramsey/uuid": "^4.1",
         "sensio/framework-extra-bundle": "^6.1",
         "stof/doctrine-extensions-bundle": "^1.6",
+        "symfony/apache-pack": "^1.0",
         "symfony/asset": "5.2.*",
         "symfony/console": "5.2.*",
         "symfony/dotenv": "5.2.*",
@@ -31,11 +32,11 @@
         "symfony/framework-bundle": "5.2.*",
         "symfony/http-client": "5.2.*",
         "symfony/mailer": "5.2.*",
-        "symfony/mailgun-mailer": "5.2.*",
         "symfony/monolog-bundle": "^3.7",
         "symfony/property-access": "5.2.*",
         "symfony/proxy-manager-bridge": "5.2.*",
         "symfony/security-bundle": "5.2.*",
+        "symfony/sendgrid-mailer": "5.2.*",
         "symfony/serializer": "5.2.*",
         "symfony/stopwatch": "5.2.*",
         "symfony/string": "5.2.*",
@@ -90,9 +91,6 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ],
-        "compile": [
-            "php bin/console doctrine:migrations:migrate"
         ]
     },
     "conflict": {
