@@ -78,36 +78,42 @@ class ImportDvfCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $dvfYear = $input->getArgument('year');
-
-        if (null === $input->getOption('delete')) {
-            $question = new ConfirmationQuestion(sprintf('You choose to delete ALL dvf for the year %s. Are you sure to continue ? ', $dvfYear), false);
-
-            $helper = new QuestionHelper();
-
-            if (!$helper->ask($input, $output, $question)) {
-                return Command::SUCCESS;
-            }
-        }
-
-        $selectedDepartements = null;
-        if (!empty($input->getArgument('departments'))) {
-            $selectedDepartements = $input->getArgument('departments');
-        }
+        $delete = $input->getOption('delete');
+        $selectedDepartements = $input->getArgument('departments');
 
         $client = ClientBuilder::create()
             ->setHosts([$this->elasticHost])
             ->build()
         ;
 
+        if (is_null($delete)) {
+            $question = new ConfirmationQuestion(sprintf('You choose to delete ALL dvf for the year %s. Are you sure to continue ? ', $dvfYear), false);
+            if (!empty($selectedDepartements)) {
+                $question = new ConfirmationQuestion(sprintf('You choose to delete dvf for departments %s for the year %s. Are you sure to continue ? ', implode(',', $selectedDepartements), $dvfYear), false);
+            }
+
+            $helper = new QuestionHelper();
+
+            if (!$helper->ask($input, $output, $question)) {
+                return Command::SUCCESS;
+            }
+
+            if (null === $input->getOption('delete')) {
+                if (empty($selectedDepartements)) {
+                    $this->deleteDvfYear($dvfYear, $output, $client);
+                } else {
+                    foreach ($selectedDepartements as $selectedDepartement) {
+                        $this->deleteDvfYear($dvfYear, $output, $client, $selectedDepartement);
+                    }
+                }
+            }
+        }
+
         $output->writeln([
             '',
             '<fg=black;bg=green>Import DFV Begin</>',
             '',
         ]);
-
-        if (null === $input->getOption('delete')) {
-            $this->deleteDvfYear($dvfYear, $output, $client);
-        }
 
         try {
             $client->indices()->get(['index' => $this->elasticDvfIndexName]);
@@ -159,7 +165,7 @@ class ImportDvfCommand extends Command
                 continue;
             }
 
-            if (!is_null($selectedDepartements) && !in_array($data[18], $selectedDepartements)) {
+            if (!empty($selectedDepartements) && !in_array($data[18], $selectedDepartements)) {
                 continue;
             }
 
@@ -388,23 +394,31 @@ class ImportDvfCommand extends Command
         ]);
     }
 
-    private function deleteDvfYear(string $dvfYear, OutputInterface $output, Client $elasticClient): void
+    private function deleteDvfYear(string $dvfYear, OutputInterface $output, Client $elasticClient, string $department = null): void
     {
-        $output->writeln([
-            '<fg=black;bg=yellow>Delete begin...</>',
-            '',
-        ]);
-
         $removeParams = [
             'index' => $this->elasticDvfIndexName,
             'body' => [
                 'query' => [
-                    'match' => [
-                        'dvf_metadata.year' => $dvfYear,
+                    'bool' => [
+                        'must' => [
+                            ['match' => ['dvf_metadata.year' => $dvfYear]],
+                        ],
                     ],
                 ],
             ],
         ];
+
+        $message = 'Delete begin...';
+        if (!is_null($department)) {
+            $message = sprintf('Delete department %s begin...', $department);
+            $removeParams['body']['query']['bool']['must'][] = ['match' => ['address.department_code' => $department]];
+        }
+
+        $output->writeln([
+            sprintf('<fg=black;bg=yellow>%s</>', $message),
+            '',
+        ]);
 
         try {
             $result = $elasticClient->deleteByQuery($removeParams);
