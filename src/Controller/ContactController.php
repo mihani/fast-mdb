@@ -85,7 +85,7 @@ class ContactController extends AbstractController
         return $this->handleContactForm($estateAgentForm, $request);
     }
 
-    #[Route('/search/{contactType}', name: 'contact_search', methods: ['GET'], schemes: ['https'])]
+    #[Route('/search/{contactType}', name: 'contact_search', methods: ['GET'])]
     public function searchContact(Request $request, ContactRepository $contactElasticRepository, string $contactType = Contact::TYPE)
     {
         if (!$request->isXmlHttpRequest()) {
