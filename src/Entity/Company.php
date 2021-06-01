@@ -42,9 +42,15 @@ class Company
      */
     private $projects;
 
+    /**
+     * @ORM\OneToOne(targetEntity=SimulatorConf::class, mappedBy="company", cascade={"persist", "remove"})
+     */
+    private $simulatorConf;
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
+        $this->setSimulatorConf(new SimulatorConf());
     }
 
     public function getId(): ?int
@@ -90,6 +96,22 @@ class Company
                 $project->setCompany(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSimulatorConf(): ?SimulatorConf
+    {
+        return $this->simulatorConf;
+    }
+
+    public function setSimulatorConf(SimulatorConf $simulatorConf): self
+    {
+        if ($simulatorConf->getCompany() !== $this) {
+            $simulatorConf->setCompany($this);
+        }
+
+        $this->simulatorConf = $simulatorConf;
 
         return $this;
     }

@@ -7,15 +7,19 @@ namespace App\Controller;
 use App\Api\GeoApiFr\GeoApiFr;
 use App\Api\GeoPortailUrbanisme\GeoPortailUrbanisme;
 use App\Elasticsearch\Repository\DvfRepository;
+use App\Entity\Company;
 use App\Entity\Project;
+use App\Entity\SimulatorConf;
 use App\Entity\SquareMeterPrice;
 use App\Entity\User;
 use App\Factory\AddressFactory;
+use App\Factory\SimulatorInfoFactory;
 use App\Factory\SquareMeterPriceFactory;
 use App\Factory\UrbanDocumentFactory;
 use App\Form\Address\AddressMoreInformationType;
 use App\Form\Project\ProjectFromPreviewType;
 use App\Form\Project\SearchProjectType;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Psr\Log\LoggerInterface;
@@ -130,7 +134,7 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/create-project', name: 'dashboard_create_project')]
-    public function createProject(Request $request): RedirectResponse
+    public function createProject(Request $request, EntityManagerInterface $em): RedirectResponse
     {
         $projectFromPreviewForm = $this->createForm(ProjectFromPreviewType::class);
         $projectFromPreviewForm->handleRequest($request);
@@ -141,6 +145,10 @@ class DashboardController extends AbstractController
             $project->setUser($this->getUser())
                 ->setCompany($this->getUser()->getCompany())
             ;
+
+            /** @var SimulatorConf $simulatorConf */
+            $simulatorConf = $em->getRepository(SimulatorConf::class)->findOneBy(['company' => $project->getCompany()]);
+            $project->setSimulatorInfo(SimulatorInfoFactory::create($simulatorConf));
 
             $squareMeterPriceByYears = $this->entityManager->getRepository(SquareMeterPrice::class)->findByInseeCode($project->getAddress()->getInseeCode());
 

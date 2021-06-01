@@ -106,6 +106,11 @@ class Project
      */
     private $notes;
 
+    /**
+     * @ORM\OneToOne(targetEntity=SimulatorInfo::class, mappedBy="project", cascade={"persist", "remove"})
+     */
+    private $simulatorInfo;
+
     public function __construct()
     {
         $this->state = self::STATUS_DRAFT;
@@ -324,6 +329,23 @@ class Project
                 $note->setProject(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSimulatorInfo(): ?SimulatorInfo
+    {
+        return $this->simulatorInfo;
+    }
+
+    public function setSimulatorInfo(SimulatorInfo $simulatorInfo): self
+    {
+        // set the owning side of the relation if necessary
+        if ($simulatorInfo->getProject() !== $this) {
+            $simulatorInfo->setProject($this);
+        }
+
+        $this->simulatorInfo = $simulatorInfo;
 
         return $this;
     }
