@@ -8,9 +8,9 @@ install:
 	cp .env .env.local
 	$(DC) up -d
 	$(DC) exec php composer install
-	$(DC) exec php sf doctrine:migrations:migrate
-	$(DC) exec node npm install
-	$(DC) exec node yarn encore dev
+	$(DC) exec php bin/console doctrine:migrations:migrate
+	$(DC) run --rm node npm install
+	$(DC) run --rm node yarn encore dev
 
 .PHONY : clean
 

@@ -186,7 +186,9 @@ class DashboardController extends AbstractController
                     continue;
                 }
                 $surface = (float) $current['actual_build_area'] === (float) 0 ? (float) $current['land_area'] : (float) $current['actual_build_area'];
-                $squareMeterPrice += ((float) $current['land_value'] / $surface);
+                if ($surface > 0) {
+                    $squareMeterPrice += ((float) $current['land_value'] / $surface);
+                }
             }
 
             $evolutionSquareMeterPriceByYears[$dvfYear] = $squareMeterPrice / $dvfHitsDto->total->value;
