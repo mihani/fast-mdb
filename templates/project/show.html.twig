@@ -253,6 +253,121 @@
             <div class="card">
                 <div class="card-content">
                     <div class="card-body">
+                        <div class="row">
+                            {{ form_start(simulatorForm) }}
+                                <div class="form-check">
+                                    <div class="checkbox">
+                                        {{- form_widget(simulatorForm.hasEstateAgencyPurchaseFee, {'attr': {'class' : 'form-check-input'}}) -}}
+                                        {{- form_label(simulatorForm.hasEstateAgencyPurchaseFee) -}}
+                                        {{- form_help(simulatorForm.hasEstateAgencyPurchaseFee) -}}
+                                        &nbsp;
+                                        {{- form_widget(simulatorForm.estateAgencyPurchaseFee) -}}
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <div class="checkbox">
+                                        {{- form_widget(simulatorForm.hasEstateAgencySaleFee, {'attr': {'class' : 'form-check-input'}}) -}}
+                                        {{- form_label(simulatorForm.hasEstateAgencySaleFee) -}}
+                                        {{- form_help(simulatorForm.hasEstateAgencySaleFee) -}}
+                                        &nbsp;
+                                        {{- form_widget(simulatorForm.estateAgencySaleFee) -}}
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <div class="checkbox">
+                                        {{- form_widget(simulatorForm.hasInsurance, {'attr': {'class' : 'form-check-input'}}) -}}
+                                        {{- form_label(simulatorForm.hasInsurance) -}}
+                                        {{- form_help(simulatorForm.hasInsurance) -}}
+                                        &nbsp;
+                                        {{- form_widget(simulatorForm.insuranceFee) -}}
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <div class="checkbox">
+                                        {{- form_widget(simulatorForm.hasIntermediationFee, {'attr': {'class' : 'form-check-input'}}) -}}
+                                        {{- form_label(simulatorForm.hasIntermediationFee) -}}
+                                        {{- form_help(simulatorForm.hasIntermediationFee) -}}
+                                        &nbsp;
+                                        {{- form_widget(simulatorForm.intermediationFee) -}}
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <div class="checkbox">
+                                        {{- form_widget(simulatorForm.hasMainsDrainageTax, {'attr': {'class' : 'form-check-input'}}) -}}
+                                        {{- form_label(simulatorForm.hasMainsDrainageTax) -}}
+                                        {{- form_help(simulatorForm.hasMainsDrainageTax) -}}
+                                        &nbsp;
+                                        {{- form_widget(simulatorForm.mainsDrainageTax) -}}
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <div class="checkbox">
+                                        {{- form_widget(simulatorForm.hasUrbanismBuildingPermits, {'attr': {'class' : 'form-check-input'}}) -}}
+                                        {{- form_label(simulatorForm.hasUrbanismBuildingPermits) -}}
+                                        {{- form_help(simulatorForm.hasUrbanismBuildingPermits) -}}
+                                        &nbsp;
+                                        {{- form_widget(simulatorForm.architectFee) -}}
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <div class="checkbox">
+                                        {{- form_widget(simulatorForm.hasUrbanismPlanningPermission, {'attr': {'class' : 'form-check-input'}}) -}}
+                                        {{- form_label(simulatorForm.hasUrbanismPlanningPermission) -}}
+                                        {{- form_help(simulatorForm.hasUrbanismPlanningPermission) -}}
+                                        &nbsp;
+                                        {{- form_widget(simulatorForm.studyOfficeFee) -}}
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <div class="checkbox">
+                                        {{- form_widget(simulatorForm.hasUrbanismPriorDeclaration, {'attr': {'class' : 'form-check-input'}}) -}}
+                                        {{- form_label(simulatorForm.hasUrbanismPriorDeclaration) -}}
+                                        {{- form_help(simulatorForm.hasUrbanismPriorDeclaration) -}}
+                                        &nbsp;
+                                        {{- form_widget(simulatorForm.geometerFee) -}}
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <div class="checkbox">
+                                        {{- form_widget(simulatorForm.hasVatOnMargin, {'attr': {'class' : 'form-check-input'}}) -}}
+                                        {{- form_label(simulatorForm.hasVatOnMargin) -}}
+                                        {{- form_help(simulatorForm.hasVatOnMargin) -}}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    {{- form_row(simulatorForm.careFee) -}}
+                                </div>
+                                <div class="form-group">
+                                    {{- form_row(simulatorForm.unexpectedFee) -}}
+                                </div>
+                                <div class="form-group">
+                                    {{- form_row(simulatorForm.acceptableMargin) -}}
+                                </div>
+                                <div class="form-group">
+                                    {{- form_row(simulatorForm.salePrice) -}}
+                                </div>
+                                <div class="form-group">
+                                    {{- form_row(simulatorForm.purchasePrice) -}}
+                                </div>
+                                <div class="form-group">
+                                    {{- form_row(simulatorForm.worksCost) -}}
+                                </div>
+                                <div class="form-group">
+                                    {{- form_row(simulatorForm.financialContribution) -}}
+                                </div>
+                            {{ form_end(simulatorForm) }}
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-12">
+                                Marge : {{ project.simulatorInfo.getMargin()}} ({{ project.simulatorInfo.getMarginRate()}}%)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
                         <div class="d-inline-flex">
                             <h6 class="cart-title me-2">{{ 'project.note.title'|trans }}</h6>
                             <a href="#" data-bs-toggle="modal" data-bs-target="#note-edit"><i class="bi bi-plus-circle-fill"></i></a>

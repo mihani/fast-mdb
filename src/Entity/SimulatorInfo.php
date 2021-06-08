@@ -175,7 +175,6 @@ class SimulatorInfo
         $this->hasInsurance = false;
         $this->hasIntermediationFee = false;
         $this->hasMainsDrainageTax = false;
-        $this->hasEstateAgencyPurchaseFee = false;
         $this->hasUrbanismBuildingPermits = false;
         $this->hasUrbanismPlanningPermission = false;
         $this->hasUrbanismPriorDeclaration = false;
@@ -185,6 +184,120 @@ class SimulatorInfo
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    private function isPercentage($value)
+    {
+        if ($value < 1) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function getUrbanismFee()
+    {
+        $urbanismFee = 0;
+
+        if ($this->hasUrbanismBuildingPermits) {
+            $urbanismFee += $this->getArchitectFee();
+        }
+        if ($this->hasUrbanismPriorDeclaration) {
+            $urbanismFee += $this->getGeometerFee();
+        }
+        if ($this->hasUrbanismPlanningPermission) {
+            $urbanismFee += $this->getStudyOfficeFee();
+        }
+        if ($this->hasMainsDrainageTax) {
+            $urbanismFee += $this->getMainsDrainageTax();
+        }
+
+        return $urbanismFee;
+    }
+
+    public function getTotalCost()
+    {
+        $purchasePrice = $this->getPurchasePrice();
+        $salePrice = $this->getSalePrice();
+
+        $estateAgencyPurchaseFee = 0;
+        $estateAgencySaleFee = 0;
+        $insuranceFee = 0;
+        $intermediateFee = 0;
+        $careFee = $this->getCareFee();
+        $urbanismFee = $this->getUrbanismFee();
+        $workCost = $this->getWorksCost();
+        $unexpectedFee = $this->isPercentage($this->getUnexpectedFee()) ? $workCost * $this->getUnexpectedFee() : $this->getUnexpectedFee();
+        $purchaseFee = $this->isPercentage($this->getPurchaseFee()) ? $purchasePrice * $this->getPurchaseFee() : $this->getPurchaseFee();
+        $financialContribution = $this->getFinancialContribution();
+
+        if ($this->hasEstateAgencyPurchaseFee) {
+            $estateAgencyPurchaseFee = $this->isPercentage($this->getEstateAgencyPurchaseFee()) ? $this->getEstateAgencyPurchaseFee() * $purchasePrice : $this->getEstateAgencyPurchaseFee();
+        }
+
+        if ($this->hasEstateAgencySaleFee) {
+            $estateAgencySaleFee = $this->isPercentage($this->getEstateAgencySaleFee()) ? $this->getEstateAgencySaleFee() * $salePrice : $this->getEstateAgencySaleFee();
+        }
+
+        if ($this->hasInsurance) {
+            $insuranceFee = $this->isPercentage($this->getInsuranceFee()) ? $workCost * $this->getInsuranceFee() : $this->getInsuranceFee();
+        }
+
+        if ($this->hasIntermediationFee) {
+            $intermediateFee = $this->getIntermediationFee();
+        }
+
+        $costWithoutBankFee = $purchasePrice
+            + $estateAgencyPurchaseFee
+            + $estateAgencySaleFee
+            + $careFee
+            + $urbanismFee
+            + $workCost
+            + $insuranceFee
+            + $unexpectedFee
+            + $purchaseFee
+            + $intermediateFee;
+        $bankFee = $this->getBankFee($costWithoutBankFee, $financialContribution);
+        return $costWithoutBankFee + $bankFee;
+    }
+
+    public function getMargin()
+    {
+        $salePrice = $this->getSalePrice();
+
+        $totalCost = $this->getTotalCost();
+        $marginWithTax = $salePrice - $totalCost;
+        $tax = $this->getTax($marginWithTax);
+
+        return round($marginWithTax - $tax, 2);
+    }
+
+    public function getMarginRate()
+    {
+        $margin = $this->getMargin();
+        $totalCost = $this->getTotalCost();
+
+        return round($margin / $totalCost * 100, 2);
+    }
+
+    private function getBankFee($costWithoutBankFee, $financialContribution)
+    {
+        $borrowed = $costWithoutBankFee - $financialContribution;
+
+        $interest = $this->isPercentage($this->getBankInterest()) ? $borrowed * $this->getBankInterest() : $this->getBankInterest();
+        $engagement = $this->isPercentage($this->getBankEngagementCommission()) ? $borrowed * $this->getBankEngagementCommission() : $this->getBankEngagementCommission();
+        $admin = $this->isPercentage($this->getBankAdminFee()) ? $borrowed * $this->getBankAdminFee() : $this->getBankAdminFee();
+
+        return ($interest + $engagement + $admin);
+    }
+
+    public function getTax($marginWithTax)
+    {
+        if (!$this->hasVatOnMargin) {
+            return 0;
+        }
+
+        return $marginWithTax - ($marginWithTax / 1.2);
     }
 
     public function getPurchaseFee(): ?float

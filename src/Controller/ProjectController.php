@@ -18,6 +18,7 @@ use App\Form\Contact\SearchExistingContactType;
 use App\Form\Contact\SellerType;
 use App\Form\NoteType;
 use App\Form\Project\ProjectType;
+use App\Form\SimulatorInfoType;
 use App\Repository\NoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -110,6 +111,13 @@ class ProjectController extends AbstractController
             );
         }
 
+        $simulatorForm = $this->createForm(SimulatorInfoType::class, $project->getSimulatorInfo());
+        $simulatorForm->handleRequest($request);
+
+        if ($simulatorForm->isSubmitted() && $simulatorForm->isValid()) {
+            $this->entityManager->flush();
+        }
+
         return $this->render('project/show.html.twig', [
             'project' => $project,
             'proximitySalesPagination' => $proximitySalesPagination,
@@ -120,6 +128,7 @@ class ProjectController extends AbstractController
             'searchForms' => $searchForms,
             'noteForm' => $noteForm->createView(),
             'notesPagination' => $notesPagination,
+            'simulatorForm' => $simulatorForm->createView(),
         ]);
     }
 
