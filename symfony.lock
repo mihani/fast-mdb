@@ -148,6 +148,9 @@
     "guzzlehttp/psr7": {
         "version": "1.8.2"
     },
+    "imagine/imagine": {
+        "version": "1.2.4"
+    },
     "jms/metadata": {
         "version": "2.5.0"
     },
@@ -169,6 +172,9 @@
     "league/flysystem": {
         "version": "2.1.0"
     },
+    "league/flysystem-aws-s3-v3": {
+        "version": "2.1.0"
+    },
     "league/flysystem-bundle": {
         "version": "1.0",
         "recipe": {
@@ -184,6 +190,19 @@
     },
     "league/mime-type-detection": {
         "version": "1.7.0"
+    },
+    "liip/imagine-bundle": {
+        "version": "1.8",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.8",
+            "ref": "5a5bdc2d0e2533ed6935d5ae562f2b318a8fc1ee"
+        },
+        "files": [
+            "config/packages/liip_imagine.yaml",
+            "config/routes/liip_imagine.yaml"
+        ]
     },
     "monolog/monolog": {
         "version": "2.2.0"

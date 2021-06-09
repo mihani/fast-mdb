@@ -1,7 +1,9 @@
 # Read the documentation at https://github.com/thephpleague/flysystem-bundle/blob/master/docs/1-getting-started.md
 flysystem:
     storages:
-        default.storage:
-            adapter: 'local'
+        multimedia.storage:
+            adapter: 'aws'
             options:
-                directory: '%kernel.project_dir%/var/storage/default'
+                client: scaleway.s3_client
+                bucket: '%env(SCALEWAY_MULTIMEDIA_BUCKET)%'
+                prefix: 'multimedia'

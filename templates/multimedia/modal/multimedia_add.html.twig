@@ -1,0 +1,23 @@
+{% extends '_partials/_modal/_modal_form.html.twig' %}
+
+{% set modalId = modalId %}
+
+{% block modal_form_title %}{{ 'multimedia.add.title'|trans}}{% endblock %}
+
+{% block modal_form_body %}
+    <div class="modal-body">
+        {{ form_start(multimediaForm, {'attr':{'class':'row'}}) }}
+        <div class="form-group">
+            {{ form_widget(multimediaForm.files, {'attr':{'class':'form-control'}}) }}
+        </div>
+        <div class="form-actions d-flex justify-content-end">
+            <button type="button" class="btn me-3" data-bs-dismiss="modal">
+                {{ 'multimedia.add.button.close'|trans }}
+            </button>
+            <button type="submit" class="btn btn-primary">
+                {{ 'multimedia.add.button.submit'|trans }}
+            </button>
+        </div>
+        {{ form_end(multimediaForm) }}
+    </div>
+{% endblock %}

@@ -254,6 +254,46 @@
                 <div class="card-content">
                     <div class="card-body">
                         <div class="d-inline-flex">
+                            <h6 class="cart-title me-2">{{ 'project.multimedia.title'|trans }}</h6>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#multimedia-add"><i class="bi bi-plus-circle-fill"></i></a>
+                            {% include 'multimedia/modal/multimedia_add.html.twig' with {
+                                'modalId': 'multimedia-add',
+                                'multimediaForm': multimediaForm,
+                                'project': project
+                            } only %}
+                        </div>
+                        {% if notesPagination is not null %}
+                            <div class="list-notes list-group mb-3">
+                                {% for key, note in notesPagination %}
+                                    {% set modalId = 'note-show-'~key %}
+                                    <a data-bs-toggle="modal" data-bs-target="#{{ modalId }}" class="list-notes__item list-group-item">
+                                        <div class="d-flex w-100 justify-content-end mb-1">
+                                            <small>{{ note.createdAt|date('d-m-Y H:i:m') }}</small>
+                                        </div>
+                                        {{ note.content|u.truncate(150, '...', false)|raw }}
+                                        <div class="d-flex justify-content-end mt-2">
+                                            <small>{{ note.author }}</small>
+                                        </div>
+                                    </a>
+                                    {% include 'note/modal/note_show.html.twig' with {
+                                        'modalId': modalId,
+                                        'note': note,
+                                        'isBorderlessModal': true
+                                    } only %}
+                                {% endfor %}
+                            </div>
+                            <nav id="notes-pagination">
+                                {{ knp_pagination_render(notesPagination) }}
+                            </nav>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {# Notes part #}
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="d-inline-flex">
                             <h6 class="cart-title me-2">{{ 'project.note.title'|trans }}</h6>
                             <a href="#" data-bs-toggle="modal" data-bs-target="#note-edit"><i class="bi bi-plus-circle-fill"></i></a>
                             {% include 'note/modal/note_edit.html.twig' with {
