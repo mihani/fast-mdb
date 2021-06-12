@@ -25,6 +25,15 @@ RUN apk add --update --no-cache \
     addgroup bar && \
     adduser -D -h /home -s /bin/bash -G bar foo
 
+# GD
+RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev && \
+    docker-php-ext-configure gd \
+        --with-freetype \
+        --with-jpeg && \
+    NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) && \
+    docker-php-ext-install -j${NPROC} gd && \
+    apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev
+
 # Composer
 RUN curl -sS https://getcomposer.org/installer \
         | php -- --filename=composer --install-dir=/usr/local/bin --version=${COMPOSER_VERSION}

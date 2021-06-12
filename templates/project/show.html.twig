@@ -254,6 +254,47 @@
                 <div class="card-content">
                     <div class="card-body">
                         <div class="d-inline-flex">
+                            <h6 class="cart-title me-2">{{ 'project.multimedia.title'|trans }}</h6>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#multimedia-add"><i class="bi bi-plus-circle-fill"></i></a>
+                            {% include 'multimedia/modal/multi_multimedia_add.html.twig' with {
+                                'modalId': 'multimedia-add',
+                                'multimediaForm': multimediaForm,
+                                'project': project
+                            } only %}
+                        </div>
+                    </div>
+                    <div id="multimedia-carousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                        {% if project.multimedia is not empty %}
+                            <div class="carousel-inner">
+                                {% for multimedium in project.multimedia %}
+                                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                        {% if not multimedium.isImage() %}
+                                            <a target="_blank" href="{{ app.request.server.get('SCALEWAY_MULTIMEDIA_BUCKET_ENDPOINT')~'/multimedia/'~multimedium.file.name }}"><img class="d-block mx-auto w-100" src="{{ asset('build/images/video-thumbnail-h300.png') }}" alt="Bld Immo Logo"></a>
+                                        {% else %}
+                                            <a target="_blank" href="{{ app.request.server.get('SCALEWAY_MULTIMEDIA_BUCKET_ENDPOINT')~'/multimedia/'~multimedium.file.name }}"><img class="w-100 d-block mx-auto" src="{{ vich_uploader_asset(multimedium)| imagine_filter('multimedia_carousel_resize') }}" alt="{{ multimedium.file.originalName }}"></a>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <a class="carousel-control-prev" href="#multimedia-carousel" role="button"
+                               data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#multimedia-carousel" role="button"
+                               data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {# Notes part #}
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="d-inline-flex">
                             <h6 class="cart-title me-2">{{ 'project.note.title'|trans }}</h6>
                             <a href="#" data-bs-toggle="modal" data-bs-target="#note-edit"><i class="bi bi-plus-circle-fill"></i></a>
                             {% include 'note/modal/note_edit.html.twig' with {

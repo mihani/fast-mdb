@@ -57,6 +57,8 @@ project:
     estate_agent: Agent Immobilier
   note:
     title: Notes
+  multimedia:
+    title: Multimedia
   show:
     title: 'Project : "%address%"'
     contact:
@@ -194,6 +196,12 @@ dashboard:
           urban_portal:
             retrieve_urban_docs: Un problème est survenue lors de la récupération des documents d'urbanisme
             retrieve_urban_docs_details: Un problème est survenue lors de la récupération des détails du document %name%
+multimedia:
+  add:
+    title: Ajouter des fichiers multimedia
+    button:
+      close: Fermer
+      submit: Ajouter
 note:
   edit:
     title: Ajouter une note

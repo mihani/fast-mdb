@@ -28,3 +28,7 @@ yarn-error.log
 dvf.csv
 
 .clever.json
+
+###> liip/imagine-bundle ###
+/public/media/cache/
+###< liip/imagine-bundle ###

@@ -9,6 +9,7 @@ use App\Entity\Contact\Contact;
 use App\Entity\Contact\EstateAgent;
 use App\Entity\Contact\Notary;
 use App\Entity\Contact\Seller;
+use App\Entity\Multimedia;
 use App\Entity\Note;
 use App\Entity\Project;
 use App\Exception\FastMdbLogicException;
@@ -16,6 +17,8 @@ use App\Form\Contact\EstateAgentType;
 use App\Form\Contact\NotaryType;
 use App\Form\Contact\SearchExistingContactType;
 use App\Form\Contact\SellerType;
+use App\Form\Multimedia\MultiMultimediaType;
+use App\Form\MultimediaType;
 use App\Form\NoteType;
 use App\Form\Project\ProjectType;
 use App\Repository\NoteRepository;
@@ -87,6 +90,12 @@ class ProjectController extends AbstractController
             ])->createView(),
         ];
 
+        $multimediaForm = $this->createForm(type: MultiMultimediaType::class, options: [
+            'action' => $this->generateUrl('project_add_multimedia', [
+                'id' => $project->getId(),
+            ])
+        ]);
+
         $noteForm = $this->createForm(NoteType::class, new Note());
         $noteForm->handleRequest($request);
 
@@ -120,6 +129,7 @@ class ProjectController extends AbstractController
             'searchForms' => $searchForms,
             'noteForm' => $noteForm->createView(),
             'notesPagination' => $notesPagination,
+            'multimediaForm' => $multimediaForm->createView()
         ]);
     }
 
@@ -145,6 +155,35 @@ class ProjectController extends AbstractController
             $contact = $this->entityManager->getRepository(Contact::class)->find($searchForm->getData()['contactId']);
 
             return $this->projectContactHandler($project, $contact, 'add');
+        }
+
+        $this->addFlash('error', 'project.show.flashbag.error.contact_has_not_been_added');
+
+        return $this->redirectToRoute('project_show', [
+            'id' => $project->getId(),
+        ]);
+    }
+
+    #[Route('/{id}/multimedia/add', name: 'project_add_multimedia', methods: ['POST'])]
+    public function addMultimedia(Project $project, Request $request): RedirectResponse
+    {
+        $multimediaForm = $this->createForm(MultiMultimediaType::class);
+        $multimediaForm->handleRequest($request);
+
+        if ($multimediaForm->isSubmitted() && $multimediaForm->isValid()) {
+            /** @var Multimedia $medium */
+            foreach ($multimediaForm->getData()['files'] as $file) {
+                $multimedia = (new Multimedia())
+                    ->setProject($project)
+                    ->setMultimediaFile($file);
+
+                $this->entityManager->persist($multimedia);
+            }
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('project_show', [
+                'id' => $project->getId(),
+            ]);
         }
 
         $this->addFlash('error', 'project.show.flashbag.error.contact_has_not_been_added');

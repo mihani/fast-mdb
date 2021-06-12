@@ -38,3 +38,17 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    scaleway.s3_client:
+        class: 'Aws\S3\S3Client'
+        arguments:
+            - version: 'latest'
+              credentials:
+                key: '%env(SCALEWAY_MULTIMEDIA_ACCESS_KEY)%'
+                secret: '%env(SCALEWAY_MULTIMEDIA_SECRET)%'
+              endpoint: '%env(SCALEWAY_S3_FR_ENDPOINT)%'
+              region: '%env(SCALEWAY_MULTIMEDIA_REGION)%'
+              S3:
+                endpoint_url: '%env(SCALEWAY_S3_FR_ENDPOINT)%'
+              S3API:
+                endpoint_url: '%env(SCALEWAY_S3_FR_ENDPOINT)%'

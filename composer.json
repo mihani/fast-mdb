@@ -11,6 +11,7 @@
         "ext-curl": "*",
         "ext-iconv": "*",
         "ext-zlib": "*",
+        "aws/aws-sdk-php": "^3.183",
         "composer/package-versions-deprecated": "1.11.99.1",
         "doctrine/annotations": "^1.12",
         "doctrine/doctrine-bundle": "^2.3",
@@ -20,6 +21,9 @@
         "friendsofphp/php-cs-fixer": "^2.18",
         "friendsofsymfony/ckeditor-bundle": "^2.3",
         "knplabs/knp-paginator-bundle": "^5.4",
+        "league/flysystem-aws-s3-v3": "^2.1",
+        "league/flysystem-bundle": "^2.0",
+        "liip/imagine-bundle": "^2.6",
         "ramsey/uuid": "^4.1",
         "sensio/framework-extra-bundle": "^6.1",
         "stof/doctrine-extensions-bundle": "^1.6",
@@ -32,6 +36,7 @@
         "symfony/framework-bundle": "5.2.*",
         "symfony/http-client": "5.2.*",
         "symfony/mailer": "5.2.*",
+        "symfony/mime": "5.2.*",
         "symfony/monolog-bundle": "^3.7",
         "symfony/property-access": "5.2.*",
         "symfony/proxy-manager-bridge": "5.2.*",
@@ -51,7 +56,8 @@
         "twig/cssinliner-extra": "^3.3",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/string-extra": "^3.3",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "vich/uploader-bundle": "^1.17"
     },
     "require-dev": {
         "symfony/debug-bundle": "5.2.*",
