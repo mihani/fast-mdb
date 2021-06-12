@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cde2508b177a60399346834cef7fd208",
+    "content-hash": "54c3243912915e1b3012961d127ca427",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -6471,16 +6471,16 @@
         },
         {
             "name": "symfony/mime",
-            "version": "v5.2.6",
+            "version": "v5.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mime.git",
-                "reference": "1b2092244374cbe48ae733673f2ca0818b37197b"
+                "reference": "0cb96ba3149255f5e5e257db9ea38ef86e154111"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mime/zipball/1b2092244374cbe48ae733673f2ca0818b37197b",
-                "reference": "1b2092244374cbe48ae733673f2ca0818b37197b",
+                "url": "https://api.github.com/repos/symfony/mime/zipball/0cb96ba3149255f5e5e257db9ea38ef86e154111",
+                "reference": "0cb96ba3149255f5e5e257db9ea38ef86e154111",
                 "shasum": ""
             },
             "require": {
@@ -6534,7 +6534,7 @@
                 "mime-type"
             ],
             "support": {
-                "source": "https://github.com/symfony/mime/tree/v5.2.6"
+                "source": "https://github.com/symfony/mime/tree/v5.2.10"
             },
             "funding": [
                 {
@@ -6550,7 +6550,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-03-12T13:18:39+00:00"
+            "time": "2021-05-26T12:52:38+00:00"
         },
         {
             "name": "symfony/monolog-bridge",

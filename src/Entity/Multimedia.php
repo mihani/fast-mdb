@@ -109,4 +109,9 @@ class Multimedia
 
         return $this;
     }
+
+    public function isImage(): bool
+    {
+        return (bool) preg_match('/^image|images\//', $this->file->getMimeType());
+    }
 }

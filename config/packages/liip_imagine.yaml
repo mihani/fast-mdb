@@ -2,18 +2,27 @@
 liip_imagine:
     # valid drivers options include "gd" or "gmagick" or "imagick"
     driver: "gd"
-    cache: multimedia
+    cache: multimedia_cache
+    data_loader: multimedia
 
     loaders:
         multimedia:
             flysystem:
                 filesystem_service: multimedia.storage
-    data_loader: multimedia
+
+    resolvers:
+        multimedia_cache:
+            flysystem:
+                filesystem_service: multimedia.cache
+                root_url: '%env(LIIP_IMAGINE_MULTIMEDIA_RESOLVER_ROOT_URL)%'
+                visibility: public
 
     filter_sets:
-        cache: ~
-        multimedia_thumbnail:
-            quality: 75
+        multimedia_carousel_resize:
+            data_loader: multimedia
+            cache: multimedia_cache
+            jpeg_quality: 85
+            png_compression_level: 8
             filters:
-                thumbnail: { size: [120, 90], mode: outbound }
-                background: { size: [124, 94], position: center, color: '#000000' }
+                relative_resize:
+                    heighten: 300

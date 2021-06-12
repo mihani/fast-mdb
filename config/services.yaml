@@ -46,17 +46,9 @@ services:
               credentials:
                 key: '%env(SCALEWAY_MULTIMEDIA_ACCESS_KEY)%'
                 secret: '%env(SCALEWAY_MULTIMEDIA_SECRET)%'
-              endpoint: '%env(SCALEWAY_MULTIMEDIA_ENDPOINT)%'
-              region: 'fr-par'
+              endpoint: '%env(SCALEWAY_S3_FR_ENDPOINT)%'
+              region: '%env(SCALEWAY_MULTIMEDIA_REGION)%'
               S3:
-                endpoint_url: '%env(SCALEWAY_MULTIMEDIA_ENDPOINT)%'
+                endpoint_url: '%env(SCALEWAY_S3_FR_ENDPOINT)%'
               S3API:
-                endpoint_url: '%env(SCALEWAY_MULTIMEDIA_ENDPOINT)%'
-
-    app.imagine.cache.resolver.scaleway_s3:
-      class: Liip\ImagineBundle\Imagine\Cache\Resolver\AwsS3Resolver
-      arguments:
-        - "@scaleway.s3_client"
-        - '%env(SCALEWAY_MULTIMEDIA_BUCKET)%'
-      tags:
-        - { name: "liip_imagine.cache.resolver", resolver: "amazon_s3" }
+                endpoint_url: '%env(SCALEWAY_S3_FR_ENDPOINT)%'

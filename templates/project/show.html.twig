@@ -256,35 +256,36 @@
                         <div class="d-inline-flex">
                             <h6 class="cart-title me-2">{{ 'project.multimedia.title'|trans }}</h6>
                             <a href="#" data-bs-toggle="modal" data-bs-target="#multimedia-add"><i class="bi bi-plus-circle-fill"></i></a>
-                            {% include 'multimedia/modal/multimedia_add.html.twig' with {
+                            {% include 'multimedia/modal/multi_multimedia_add.html.twig' with {
                                 'modalId': 'multimedia-add',
                                 'multimediaForm': multimediaForm,
                                 'project': project
                             } only %}
                         </div>
-                        {% if notesPagination is not null %}
-                            <div class="list-notes list-group mb-3">
-                                {% for key, note in notesPagination %}
-                                    {% set modalId = 'note-show-'~key %}
-                                    <a data-bs-toggle="modal" data-bs-target="#{{ modalId }}" class="list-notes__item list-group-item">
-                                        <div class="d-flex w-100 justify-content-end mb-1">
-                                            <small>{{ note.createdAt|date('d-m-Y H:i:m') }}</small>
-                                        </div>
-                                        {{ note.content|u.truncate(150, '...', false)|raw }}
-                                        <div class="d-flex justify-content-end mt-2">
-                                            <small>{{ note.author }}</small>
-                                        </div>
-                                    </a>
-                                    {% include 'note/modal/note_show.html.twig' with {
-                                        'modalId': modalId,
-                                        'note': note,
-                                        'isBorderlessModal': true
-                                    } only %}
+                    </div>
+                    <div id="multimedia-carousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                        {% if project.multimedia is not empty %}
+                            <div class="carousel-inner">
+                                {% for multimedium in project.multimedia %}
+                                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                        {% if not multimedium.isImage() %}
+                                            <a target="_blank" href="{{ app.request.server.get('SCALEWAY_MULTIMEDIA_BUCKET_ENDPOINT')~'/multimedia/'~multimedium.file.name }}"><img class="d-block mx-auto w-100" src="{{ asset('build/images/video-thumbnail-h300.png') }}" alt="Bld Immo Logo"></a>
+                                        {% else %}
+                                            <a target="_blank" href="{{ app.request.server.get('SCALEWAY_MULTIMEDIA_BUCKET_ENDPOINT')~'/multimedia/'~multimedium.file.name }}"><img class="w-100 d-block mx-auto" src="{{ vich_uploader_asset(multimedium)| imagine_filter('multimedia_carousel_resize') }}" alt="{{ multimedium.file.originalName }}"></a>
+                                        {% endif %}
+                                    </div>
                                 {% endfor %}
                             </div>
-                            <nav id="notes-pagination">
-                                {{ knp_pagination_render(notesPagination) }}
-                            </nav>
+                            <a class="carousel-control-prev" href="#multimedia-carousel" role="button"
+                               data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#multimedia-carousel" role="button"
+                               data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </a>
                         {% endif %}
                     </div>
                 </div>
