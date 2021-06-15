@@ -5,5 +5,9 @@ vich_uploader:
     mappings:
         multimedia:
             upload_destination: multimedia.storage
-            uri_prefix: '%env(SCALEWAY_MULTIMEDIA_BUCKET_ENDPOINT)%'
+            uri_prefix: '%env(SCALEWAY_BUCKET_ENDPOINT)%'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+        document:
+            upload_destination: documents.storage
+            uri_prefix: '%env(SCALEWAY_BUCKET_ENDPOINT)%'
             namer: Vich\UploaderBundle\Naming\SmartUniqueNamer

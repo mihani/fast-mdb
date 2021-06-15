@@ -9,6 +9,7 @@ use App\Entity\Contact\Contact;
 use App\Entity\Contact\EstateAgent;
 use App\Entity\Contact\Notary;
 use App\Entity\Contact\Seller;
+use App\Entity\Document;
 use App\Entity\Multimedia;
 use App\Entity\Note;
 use App\Entity\Project;
@@ -17,8 +18,8 @@ use App\Form\Contact\EstateAgentType;
 use App\Form\Contact\NotaryType;
 use App\Form\Contact\SearchExistingContactType;
 use App\Form\Contact\SellerType;
+use App\Form\DocumentsType;
 use App\Form\Multimedia\MultiMultimediaType;
-use App\Form\MultimediaType;
 use App\Form\NoteType;
 use App\Form\Project\ProjectType;
 use App\Repository\NoteRepository;
@@ -93,7 +94,13 @@ class ProjectController extends AbstractController
         $multimediaForm = $this->createForm(type: MultiMultimediaType::class, options: [
             'action' => $this->generateUrl('project_add_multimedia', [
                 'id' => $project->getId(),
-            ])
+            ]),
+        ]);
+
+        $documentForm = $this->createForm(type: DocumentsType::class, options: [
+            'action' => $this->generateUrl('project_add_documents', [
+                'id' => $project->getId(),
+            ]),
         ]);
 
         $noteForm = $this->createForm(NoteType::class, new Note());
@@ -129,7 +136,8 @@ class ProjectController extends AbstractController
             'searchForms' => $searchForms,
             'noteForm' => $noteForm->createView(),
             'notesPagination' => $notesPagination,
-            'multimediaForm' => $multimediaForm->createView()
+            'multimediaForm' => $multimediaForm->createView(),
+            'documentsForm' => $documentForm->createView(),
         ]);
     }
 
@@ -171,11 +179,12 @@ class ProjectController extends AbstractController
         $multimediaForm->handleRequest($request);
 
         if ($multimediaForm->isSubmitted() && $multimediaForm->isValid()) {
-            /** @var Multimedia $medium */
+            // @var Multimedia $medium
             foreach ($multimediaForm->getData()['files'] as $file) {
                 $multimedia = (new Multimedia())
                     ->setProject($project)
-                    ->setMultimediaFile($file);
+                    ->setMultimediaFile($file)
+                ;
 
                 $this->entityManager->persist($multimedia);
             }
@@ -186,7 +195,37 @@ class ProjectController extends AbstractController
             ]);
         }
 
-        $this->addFlash('error', 'project.show.flashbag.error.contact_has_not_been_added');
+        $this->addFlash('error', 'project.show.flashbag.error.multimedia_has_not_been_added');
+
+        return $this->redirectToRoute('project_show', [
+            'id' => $project->getId(),
+        ]);
+    }
+
+    #[Route('/{id}/documents/add', name: 'project_add_documents', methods: ['POST'])]
+    public function addDocuments(Project $project, Request $request): RedirectResponse
+    {
+        $documentsForm = $this->createForm(DocumentsType::class);
+        $documentsForm->handleRequest($request);
+
+        if ($documentsForm->isSubmitted() && $documentsForm->isValid()) {
+            // @var Multimedia $medium
+            foreach ($documentsForm->getData()['files'] as $file) {
+                $document = (new Document())
+                    ->setProject($project)
+                    ->setDocumentFile($file)
+                ;
+
+                $this->entityManager->persist($document);
+            }
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('project_show', [
+                'id' => $project->getId(),
+            ]);
+        }
+
+        $this->addFlash('error', 'project.show.flashbag.error.documents_has_not_been_added');
 
         return $this->redirectToRoute('project_show', [
             'id' => $project->getId(),

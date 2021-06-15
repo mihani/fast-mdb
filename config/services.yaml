@@ -44,10 +44,10 @@ services:
         arguments:
             - version: 'latest'
               credentials:
-                key: '%env(SCALEWAY_MULTIMEDIA_ACCESS_KEY)%'
-                secret: '%env(SCALEWAY_MULTIMEDIA_SECRET)%'
+                key: '%env(SCALEWAY_S3_ACCESS_KEY)%'
+                secret: '%env(SCALEWAY_S3_SECRET)%'
               endpoint: '%env(SCALEWAY_S3_FR_ENDPOINT)%'
-              region: '%env(SCALEWAY_MULTIMEDIA_REGION)%'
+              region: '%env(SCALEWAY_REGION)%'
               S3:
                 endpoint_url: '%env(SCALEWAY_S3_FR_ENDPOINT)%'
               S3API:

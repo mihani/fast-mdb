@@ -111,6 +111,11 @@ class Project
      */
     private $multimedia;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Document::class, mappedBy="project", orphanRemoval=true)
+     */
+    private $documents;
+
     public function __construct()
     {
         $this->state = self::STATUS_DRAFT;
@@ -118,6 +123,7 @@ class Project
         $this->squareMeterPrices = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->multimedia = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -358,6 +364,36 @@ class Project
             // set the owning side to null (unless already changed)
             if ($multimedia->getProject() === $this) {
                 $multimedia->setProject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Document[]
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(Document $document): self
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents[] = $document;
+            $document->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(Document $document): self
+    {
+        if ($this->multimedia->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getProject() === $this) {
+                $document->setProject(null);
             }
         }
 
