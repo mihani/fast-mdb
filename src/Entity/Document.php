@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Repository\MultimediaRepository;
+use App\Repository\DocumentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\HttpFoundation\File\File;
@@ -13,10 +13,10 @@ use Vich\UploaderBundle\Entity\File as EmbeddedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
- * @ORM\Entity(repositoryClass=MultimediaRepository::class)
+ * @ORM\Entity(repositoryClass=DocumentRepository::class)
  * @Vich\Uploadable
  */
-class Multimedia
+class Document
 {
     use TimestampableEntity;
 
@@ -30,11 +30,11 @@ class Multimedia
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
-     * @Vich\UploadableField(mapping="multimedia", fileNameProperty="file.name", size="file.size", mimeType="file.mimeType", originalName="file.originalName", dimensions="file.dimensions")
+     * @Vich\UploadableField(mapping="document", fileNameProperty="file.name", size="file.size", mimeType="file.mimeType", originalName="file.originalName", dimensions="file.dimensions")
      *
      * @var null|File
      */
-    private $multimediaFile;
+    private $documentFile;
 
     /**
      * @ORM\Embedded(class="Vich\UploaderBundle\Entity\File")
@@ -44,7 +44,7 @@ class Multimedia
     private $file;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Project::class, inversedBy="multimedia")
+     * @ORM\ManyToOne(targetEntity=Project::class, inversedBy="documents")
      * @ORM\JoinColumn(nullable=false)
      */
     private $project;
@@ -61,13 +61,13 @@ class Multimedia
      * must be able to accept an instance of 'File' as the bundle will inject one here
      * during Doctrine hydration.
      *
-     * @param null|File|UploadedFile $multimediaFile
+     * @param null|File|UploadedFile $documentFile
      */
-    public function setMultimediaFile(?File $multimediaFile = null): self
+    public function setDocumentFile(?File $documentFile = null): self
     {
-        $this->multimediaFile = $multimediaFile;
+        $this->documentFile = $documentFile;
 
-        if (null !== $multimediaFile) {
+        if (null !== $documentFile) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
             $this->updatedAt = new \DateTimeImmutable();
@@ -76,9 +76,9 @@ class Multimedia
         return $this;
     }
 
-    public function getMultimediaFile(): ?File
+    public function getDocumentFile(): ?File
     {
-        return $this->multimediaFile;
+        return $this->documentFile;
     }
 
     public function getId(): ?int
@@ -108,10 +108,5 @@ class Multimedia
         $this->project = $project;
 
         return $this;
-    }
-
-    public function isImage(): bool
-    {
-        return (bool) preg_match('/^image|images\//', $this->file->getMimeType());
     }
 }

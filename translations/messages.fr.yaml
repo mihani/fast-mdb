@@ -59,6 +59,8 @@ project:
     title: Notes
   multimedia:
     title: Multimedia
+  documents:
+    title: Documents
   show:
     title: 'Project : "%address%"'
     contact:
@@ -87,12 +89,16 @@ project:
         contact_has_been_removed: "Le %contact% à correctement été supprimé du projet"
       error:
         contact_has_not_been_added: "Une erreur s'est produite lors de l'ajout du contact au projet"
+        multimedia_has_not_been_added: "Une erreur s'est produite lors de l'ajout du media au projet"
+        documents_has_not_been_added: "Une erreur s'est produite lors de l'ajout du document au projet"
   card:
     more_information_address: Infos précise de l'adresse
+    document:
+      no_documents_exist: Ce projet ne possède pas encore de document
     urban_document:
       document_available: Document d'urbanisme disponible
       download_archive: Télécharger l'archive
-      no_documents_exist: Aucun document n'existe pour cette adresse
+      no_documents_exist: Aucun document d'urbanisme n'existe pour cette adresse
     gps_coordinates:
       title: Coordonnées GPS
       latitude: Latitude
@@ -196,6 +202,12 @@ dashboard:
           urban_portal:
             retrieve_urban_docs: Un problème est survenue lors de la récupération des documents d'urbanisme
             retrieve_urban_docs_details: Un problème est survenue lors de la récupération des détails du document %name%
+document:
+  add:
+    title: Ajouter des documents
+    button:
+      close: Fermer
+      submit: Ajouter
 multimedia:
   add:
     title: Ajouter des fichiers multimedia

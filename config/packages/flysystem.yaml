@@ -6,12 +6,19 @@ flysystem:
             visibility: public
             options:
                 client: scaleway.s3_client
-                bucket: '%env(SCALEWAY_MULTIMEDIA_BUCKET)%'
+                bucket: '%env(SCALEWAY_BUCKET)%'
                 prefix: 'multimedia'
         multimedia.cache:
             adapter: 'aws'
             visibility: public
             options:
                 client: scaleway.s3_client
-                bucket: '%env(SCALEWAY_MULTIMEDIA_BUCKET)%'
+                bucket: '%env(SCALEWAY_BUCKET)%'
                 prefix: 'cache/multimedia'
+        documents.storage:
+            adapter: 'aws'
+            visibility: private
+            options:
+                client: scaleway.s3_client
+                bucket: '%env(SCALEWAY_BUCKET)%'
+                prefix: 'documents'

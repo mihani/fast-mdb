@@ -185,7 +185,11 @@ class DashboardController extends AbstractController
                 if ((float) $current['actual_build_area'] === 0 && (float) $current['land_area'] === 0) {
                     continue;
                 }
+
                 $surface = (float) $current['actual_build_area'] === (float) 0 ? (float) $current['land_area'] : (float) $current['actual_build_area'];
+                if ($surface <= 0) {
+                    $surface = 1;
+                }
                 $squareMeterPrice += ((float) $current['land_value'] / $surface);
             }
 

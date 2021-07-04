@@ -250,6 +250,7 @@
             </div>
         </div>
         <div class="col-12 col-lg-5">
+            {# Multimedia part #}
             <div class="card">
                 <div class="card-content">
                     <div class="card-body">
@@ -269,9 +270,9 @@
                                 {% for multimedium in project.multimedia %}
                                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                                         {% if not multimedium.isImage() %}
-                                            <a target="_blank" href="{{ app.request.server.get('SCALEWAY_MULTIMEDIA_BUCKET_ENDPOINT')~'/multimedia/'~multimedium.file.name }}"><img class="d-block mx-auto w-100" src="{{ asset('build/images/video-thumbnail-h300.png') }}" alt="Bld Immo Logo"></a>
+                                            <a target="_blank" href="{{ app.request.server.get('SCALEWAY_BUCKET_ENDPOINT')~'/multimedia/'~multimedium.file.name }}"><img class="d-block mx-auto w-100" src="{{ asset('build/images/video-thumbnail-h300.png') }}" alt="Bld Immo Logo"></a>
                                         {% else %}
-                                            <a target="_blank" href="{{ app.request.server.get('SCALEWAY_MULTIMEDIA_BUCKET_ENDPOINT')~'/multimedia/'~multimedium.file.name }}"><img class="w-100 d-block mx-auto" src="{{ vich_uploader_asset(multimedium)| imagine_filter('multimedia_carousel_resize') }}" alt="{{ multimedium.file.originalName }}"></a>
+                                            <a target="_blank" href="{{ app.request.server.get('SCALEWAY_BUCKET_ENDPOINT')~'/multimedia/'~multimedium.file.name }}"><img class="w-100 d-block mx-auto" src="{{ vich_uploader_asset(multimedium)| imagine_filter('multimedia_carousel_resize') }}" alt="{{ multimedium.file.originalName }}"></a>
                                         {% endif %}
                                     </div>
                                 {% endfor %}
@@ -326,6 +327,37 @@
                                 {{ knp_pagination_render(notesPagination) }}
                             </nav>
                         {% endif %}
+                    </div>
+                </div>
+            </div>
+            {# Documents part #}
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="d-inline-flex">
+                            <h6 class="cart-title me-2">{{ 'project.documents.title'|trans }}</h6>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#documents-add"><i class="bi bi-plus-circle-fill"></i></a>
+                            {% include 'document/modal/documents_add.html.twig' with {
+                                'modalId': 'documents-add',
+                                'documentsForm': documentsForm,
+                                'project': project
+                            } only %}
+                        </div>
+                    </div>
+                    <div class="pt-0 card-body">
+                        <div class="d-flex">
+                            {% if project.documents is empty %}
+                                <p>{{ 'project.card.document.no_documents_exist'|trans }}</p>
+                            {% else %}
+                                <ul>
+                                    {% for document in project.documents %}
+                                        <li>
+                                            <a target="_blank" href="{{ path('document_download',{'id':document.id}) }}">{{ document.file.originalName }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -9,6 +9,7 @@ use App\Entity\Contact\Contact;
 use App\Entity\Contact\EstateAgent;
 use App\Entity\Contact\Notary;
 use App\Entity\Contact\Seller;
+use App\Entity\Document;
 use App\Entity\Multimedia;
 use App\Entity\Note;
 use App\Entity\Project;
@@ -17,11 +18,12 @@ use App\Form\Contact\EstateAgentType;
 use App\Form\Contact\NotaryType;
 use App\Form\Contact\SearchExistingContactType;
 use App\Form\Contact\SellerType;
+use App\Form\DocumentsType;
 use App\Form\Multimedia\MultiMultimediaType;
-use App\Form\MultimediaType;
 use App\Form\NoteType;
 use App\Form\Project\ProjectType;
 use App\Repository\NoteRepository;
+use App\Security\Voter\ProjectVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -48,6 +50,8 @@ class ProjectController extends AbstractController
     #[Route('/{id}', name: 'project_show', methods: ['GET', 'POST'])]
     public function show(Project $project, DvfRepository $dvfRepository, Request $request, PaginatorInterface $paginator, NoteRepository $noteRepository)
     {
+        $this->denyAccessUnlessGranted(ProjectVoter::COMPANY_VIEW, $project);
+
         $proximitySalesPagination = null;
 
         $projectForm = $this->createForm(ProjectType::class, $project);
@@ -93,7 +97,13 @@ class ProjectController extends AbstractController
         $multimediaForm = $this->createForm(type: MultiMultimediaType::class, options: [
             'action' => $this->generateUrl('project_add_multimedia', [
                 'id' => $project->getId(),
-            ])
+            ]),
+        ]);
+
+        $documentForm = $this->createForm(type: DocumentsType::class, options: [
+            'action' => $this->generateUrl('project_add_documents', [
+                'id' => $project->getId(),
+            ]),
         ]);
 
         $noteForm = $this->createForm(NoteType::class, new Note());
@@ -129,25 +139,32 @@ class ProjectController extends AbstractController
             'searchForms' => $searchForms,
             'noteForm' => $noteForm->createView(),
             'notesPagination' => $notesPagination,
-            'multimediaForm' => $multimediaForm->createView()
+            'multimediaForm' => $multimediaForm->createView(),
+            'documentsForm' => $documentForm->createView(),
         ]);
     }
 
     #[Route('/{id}/contact/remove/{contact}', name: 'project_remove_contact', methods: ['GET'])]
     public function removeContact(Project $project, Contact $contact): RedirectResponse
     {
+        $this->denyAccessUnlessGranted(ProjectVoter::COMPANY_VIEW, $project);
+
         return $this->projectContactHandler($project, $contact, 'remove');
     }
 
     #[Route('/{id}/contact/add/{contact}', name: 'project_add_contact', methods: ['GET'])]
     public function addContact(Project $project, Contact $contact): RedirectResponse
     {
+        $this->denyAccessUnlessGranted(ProjectVoter::COMPANY_VIEW, $project);
+
         return $this->projectContactHandler($project, $contact, 'add');
     }
 
     #[Route('/{id}/existing-contact/add', name: 'project_add_existing_contact', methods: ['POST'])]
     public function addExistingContact(Project $project, Request $request): RedirectResponse
     {
+        $this->denyAccessUnlessGranted(ProjectVoter::COMPANY_VIEW, $project);
+
         $searchForm = $this->createForm(SearchExistingContactType::class);
         $searchForm->handleRequest($request);
 
@@ -167,15 +184,18 @@ class ProjectController extends AbstractController
     #[Route('/{id}/multimedia/add', name: 'project_add_multimedia', methods: ['POST'])]
     public function addMultimedia(Project $project, Request $request): RedirectResponse
     {
+        $this->denyAccessUnlessGranted(ProjectVoter::COMPANY_VIEW, $project);
+
         $multimediaForm = $this->createForm(MultiMultimediaType::class);
         $multimediaForm->handleRequest($request);
 
         if ($multimediaForm->isSubmitted() && $multimediaForm->isValid()) {
-            /** @var Multimedia $medium */
+            // @var Multimedia $medium
             foreach ($multimediaForm->getData()['files'] as $file) {
                 $multimedia = (new Multimedia())
                     ->setProject($project)
-                    ->setMultimediaFile($file);
+                    ->setMultimediaFile($file)
+                ;
 
                 $this->entityManager->persist($multimedia);
             }
@@ -186,7 +206,39 @@ class ProjectController extends AbstractController
             ]);
         }
 
-        $this->addFlash('error', 'project.show.flashbag.error.contact_has_not_been_added');
+        $this->addFlash('error', 'project.show.flashbag.error.multimedia_has_not_been_added');
+
+        return $this->redirectToRoute('project_show', [
+            'id' => $project->getId(),
+        ]);
+    }
+
+    #[Route('/{id}/documents/add', name: 'project_add_documents', methods: ['POST'])]
+    public function addDocuments(Project $project, Request $request): RedirectResponse
+    {
+        $this->denyAccessUnlessGranted(ProjectVoter::COMPANY_VIEW, $project);
+
+        $documentsForm = $this->createForm(DocumentsType::class);
+        $documentsForm->handleRequest($request);
+
+        if ($documentsForm->isSubmitted() && $documentsForm->isValid()) {
+            // @var Multimedia $medium
+            foreach ($documentsForm->getData()['files'] as $file) {
+                $document = (new Document())
+                    ->setProject($project)
+                    ->setDocumentFile($file)
+                ;
+
+                $this->entityManager->persist($document);
+            }
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('project_show', [
+                'id' => $project->getId(),
+            ]);
+        }
+
+        $this->addFlash('error', 'project.show.flashbag.error.documents_has_not_been_added');
 
         return $this->redirectToRoute('project_show', [
             'id' => $project->getId(),
