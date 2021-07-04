@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Document;
+use App\Security\Voter\DocumentVoter;
 use League\Flysystem\FilesystemOperator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
@@ -19,6 +20,8 @@ class DocumentController extends AbstractController
     #[Route('/{id}/download', name: 'document_download')]
     public function download(Document $document, FilesystemOperator $documentsStorage): Response
     {
+        $this->denyAccessUnlessGranted(DocumentVoter::COMPANY_VIEW, $document);
+
         $resource = $documentsStorage->readStream($document->getFile()->getName());
 
         if ($resource === false) {

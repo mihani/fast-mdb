@@ -23,6 +23,7 @@ use App\Form\Multimedia\MultiMultimediaType;
 use App\Form\NoteType;
 use App\Form\Project\ProjectType;
 use App\Repository\NoteRepository;
+use App\Security\Voter\ProjectVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -49,6 +50,8 @@ class ProjectController extends AbstractController
     #[Route('/{id}', name: 'project_show', methods: ['GET', 'POST'])]
     public function show(Project $project, DvfRepository $dvfRepository, Request $request, PaginatorInterface $paginator, NoteRepository $noteRepository)
     {
+        $this->denyAccessUnlessGranted(ProjectVoter::COMPANY_VIEW, $project);
+
         $proximitySalesPagination = null;
 
         $projectForm = $this->createForm(ProjectType::class, $project);
@@ -144,18 +147,24 @@ class ProjectController extends AbstractController
     #[Route('/{id}/contact/remove/{contact}', name: 'project_remove_contact', methods: ['GET'])]
     public function removeContact(Project $project, Contact $contact): RedirectResponse
     {
+        $this->denyAccessUnlessGranted(ProjectVoter::COMPANY_VIEW, $project);
+
         return $this->projectContactHandler($project, $contact, 'remove');
     }
 
     #[Route('/{id}/contact/add/{contact}', name: 'project_add_contact', methods: ['GET'])]
     public function addContact(Project $project, Contact $contact): RedirectResponse
     {
+        $this->denyAccessUnlessGranted(ProjectVoter::COMPANY_VIEW, $project);
+
         return $this->projectContactHandler($project, $contact, 'add');
     }
 
     #[Route('/{id}/existing-contact/add', name: 'project_add_existing_contact', methods: ['POST'])]
     public function addExistingContact(Project $project, Request $request): RedirectResponse
     {
+        $this->denyAccessUnlessGranted(ProjectVoter::COMPANY_VIEW, $project);
+
         $searchForm = $this->createForm(SearchExistingContactType::class);
         $searchForm->handleRequest($request);
 
@@ -175,6 +184,8 @@ class ProjectController extends AbstractController
     #[Route('/{id}/multimedia/add', name: 'project_add_multimedia', methods: ['POST'])]
     public function addMultimedia(Project $project, Request $request): RedirectResponse
     {
+        $this->denyAccessUnlessGranted(ProjectVoter::COMPANY_VIEW, $project);
+
         $multimediaForm = $this->createForm(MultiMultimediaType::class);
         $multimediaForm->handleRequest($request);
 
@@ -205,6 +216,8 @@ class ProjectController extends AbstractController
     #[Route('/{id}/documents/add', name: 'project_add_documents', methods: ['POST'])]
     public function addDocuments(Project $project, Request $request): RedirectResponse
     {
+        $this->denyAccessUnlessGranted(ProjectVoter::COMPANY_VIEW, $project);
+
         $documentsForm = $this->createForm(DocumentsType::class);
         $documentsForm->handleRequest($request);
 
