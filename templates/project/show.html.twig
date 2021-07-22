@@ -270,9 +270,13 @@
                                 {% for multimedium in project.multimedia %}
                                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                                         {% if not multimedium.isImage() %}
-                                            <a target="_blank" href="{{ app.request.server.get('SCALEWAY_BUCKET_ENDPOINT')~'/multimedia/'~multimedium.file.name }}"><img class="d-block mx-auto w-100" src="{{ asset('build/images/video-thumbnail-h300.png') }}" alt="Bld Immo Logo"></a>
+                                            <a target="_blank" href="{{ app.request.server.get('SCALEWAY_BUCKET_ENDPOINT')~'/multimedia/'~multimedium.file.name }}">
+                                                <img class="carousel-item__img d-block mx-auto" src="{{ asset('build/images/video-thumbnail-h300.png') }}" alt="Bld Immo Logo">
+                                            </a>
                                         {% else %}
-                                            <a target="_blank" href="{{ app.request.server.get('SCALEWAY_BUCKET_ENDPOINT')~'/multimedia/'~multimedium.file.name }}"><img class="w-100 d-block mx-auto" src="{{ vich_uploader_asset(multimedium)| imagine_filter('multimedia_carousel_resize') }}" alt="{{ multimedium.file.originalName }}"></a>
+                                            <a target="_blank" href="{{ app.request.server.get('SCALEWAY_BUCKET_ENDPOINT')~'/multimedia/'~multimedium.file.name }}">
+                                                <img class="d-block mx-auto" src="{{ vich_uploader_asset(multimedium)| imagine_filter('multimedia_carousel_resize') }}" alt="{{ multimedium.file.originalName }}">
+                                            </a>
                                         {% endif %}
                                     </div>
                                 {% endfor %}

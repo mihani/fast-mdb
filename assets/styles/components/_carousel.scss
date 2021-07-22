@@ -4,3 +4,12 @@
 .carousel-caption h5 {
     color: $carousel-caption-color
 }
+.carousel-item {
+    &__img {
+        width: initial;
+
+        @media (max-width: 767px) {
+            width: 100%;
+        }
+    }
+}
