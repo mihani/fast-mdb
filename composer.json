@@ -11,6 +11,7 @@
         "ext-curl": "*",
         "ext-iconv": "*",
         "ext-zlib": "*",
+        "ext-gd": "*",
         "aws/aws-sdk-php": "^3.183",
         "composer/package-versions-deprecated": "1.11.99.1",
         "doctrine/annotations": "^1.12",
