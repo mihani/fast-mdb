@@ -23,6 +23,8 @@ demo:
     text: "Pour vous connecter 2 posibilités (login - password):"
     user_login: "Identifiant user : %user% - %password%"
     admin_login: "Identifiant admin : %user% - %password%"
+  reset_password:
+    text: "Si vous souhaitez tester cette fonctionnalité, veuillez vous créez un compte en vous connectant en tant qu'admin."
 check_email:
   title: L'email a été envoyé
   email_send_with_link: "Un email a été envoyé, celui-ci contient un lien pour réinitialiser votre mot de passe."
