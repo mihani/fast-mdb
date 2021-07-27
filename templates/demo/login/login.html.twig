@@ -1,0 +1,12 @@
+{% extends 'demo/base_demo.html.twig' %}
+
+{% block content %}
+    <h4 class="alert-heading">{{ 'demo.title'|trans }}</h4>
+    <p>
+        {{ 'demo.login.text'|trans }}
+        <br>
+        {{ 'demo.login.user_login'|trans({'%user%':demo_userdemo,'%password%':demo_password}) }}
+        <br>
+        {{ 'demo.login.admin_login'|trans({'%user%':demo_admindemo,'%password%':demo_password}) }}
+    </p>
+{% endblock %}

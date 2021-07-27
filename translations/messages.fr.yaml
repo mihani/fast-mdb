@@ -17,6 +17,12 @@ request_reset_password:
   log_in: Connectez-vous
   button:
     send_reset_email: Envoyer l'email
+demo:
+  title: Mode Démo
+  login:
+    text: "Pour vous connecter 2 posibilités (login - password):"
+    user_login: "Identifiant user : %user% - %password%"
+    admin_login: "Identifiant admin : %user% - %password%"
 check_email:
   title: L'email a été envoyé
   email_send_with_link: "Un email a été envoyé, celui-ci contient un lien pour réinitialiser votre mot de passe."
