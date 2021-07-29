@@ -27,6 +27,10 @@ services:
             $elasticDvfIndexName: '%elastic.index.name.dvf%'
             $elasticContactIndexName: '%elastic.index.name.contact%'
             $dvfYears: '%dvf.years%'
+            $demoMode: '%demo.mode%'
+            $demoPassword: '%demo.password%'
+            $demoUserdemo: '%demo.userdemo%'
+            $demoAdmindemo: '%demo.admindemo%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

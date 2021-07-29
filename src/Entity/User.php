@@ -242,8 +242,10 @@ class User implements UserInterface
         return $this->active;
     }
 
-    public function setActive(bool $active): void
+    public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
     }
 }
