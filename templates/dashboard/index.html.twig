@@ -3,7 +3,11 @@
 <div class="page-heading">
     <h3>{{ 'dashboard.title'|trans }}</h3>
 </div>
-{{ include('_partials/_flash_message.html.twig') }}
+    {% if demo_mode == true %}
+        {% include 'demo/dashboard/index.html.twig' %}
+    {% endif %}
+
+    {{ include('_partials/_flash_message.html.twig') }}
 <div class="page-content">
     <section class="row">
         {# Creation project part #}
