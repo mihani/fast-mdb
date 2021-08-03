@@ -47,14 +47,15 @@ class CreateDemoUserCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!$this->demoMode){
+        if (!$this->demoMode) {
             $output->writeln('<comment>Demo mode must be activate</comment>');
+
             return Command::FAILURE;
         }
 
-
-        if (!$this->demoAdmindemo || !$this->demoPassword || !$this->demoUserdemo){
+        if (!$this->demoAdmindemo || !$this->demoPassword || !$this->demoUserdemo) {
             $output->writeln('<comment>Variables `DEMO_PASSWORD`, `DEMO_USER` and `DEMO_ADMIN` cannot be null or empty</comment>');
+
             return Command::FAILURE;
         }
 
@@ -95,7 +96,7 @@ class CreateDemoUserCommand extends Command
             $this->entityManager->flush();
 
             $output->writeln('<info>Users are created</info>');
-        }catch (Exception $exception){
+        } catch (Exception $exception) {
             $output->writeln('<error>Issue during user creation</error>');
         }
 

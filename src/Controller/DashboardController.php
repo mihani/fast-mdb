@@ -193,11 +193,15 @@ class DashboardController extends AbstractController
                 $squareMeterPrice += ((float) $current['land_value'] / $surface);
             }
 
-            $evolutionSquareMeterPriceByYears[$dvfYear] = $squareMeterPrice / $dvfHitsDto->total->value;
+            $evolutionSquareMeterPriceByYears[] = SquareMeterPriceFactory::create(
+                $squareMeterPrice / $dvfHitsDto->total->value,
+                $inseeCode,
+                (string) $dvfYear
+            );
         }
 
-        foreach ($evolutionSquareMeterPriceByYears as $year => $squareMeterPrice) {
-            $this->entityManager->persist(SquareMeterPriceFactory::create($squareMeterPrice, $inseeCode, (string) $year));
+        foreach ($evolutionSquareMeterPriceByYears as $squareMeterPrice) {
+            $this->entityManager->persist($squareMeterPrice);
             $this->entityManager->flush();
         }
 
