@@ -17,6 +17,16 @@ request_reset_password:
   log_in: Connectez-vous
   button:
     send_reset_email: Envoyer l'email
+demo:
+  title: Mode Démo
+  login:
+    text: "Pour vous connecter 2 posibilités (login - password):"
+    user_login: "Identifiant user : %user% - %password%"
+    admin_login: "Identifiant admin : %user% - %password%"
+  reset_password:
+    text: "Si vous souhaitez tester cette fonctionnalité, veuillez vous créez un compte en vous connectant en tant qu'admin."
+  dashboard:
+    text_1: "Pour des questions de stockage de données, seules les adresses situées dans le département du 59 vous permettrons de tester l'application dans son entièreté"
 check_email:
   title: L'email a été envoyé
   email_send_with_link: "Un email a été envoyé, celui-ci contient un lien pour réinitialiser votre mot de passe."

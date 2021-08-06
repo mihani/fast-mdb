@@ -1,2 +1,7 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
+    globals:
+        demo_mode: '%demo.mode%'
+        demo_password: '%demo.password%'
+        demo_userdemo: '%demo.userdemo%'
+        demo_admindemo: '%demo.admindemo%'

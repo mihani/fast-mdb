@@ -4,10 +4,18 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    defaut.demo_mode: false
+    defaut.demo_password: ''
+    defaut.demo_userdemo: ''
+    defaut.demo_admindemo: ''
     elastic.host: '%env(resolve:ELASTICSEARCH_HOST)%'
     elastic.index.name.dvf: '%env(resolve:ELASTICSEARCH_DVF_INDEX_NAME)%'
     elastic.index.name.contact: '%env(resolve:ELASTICSEARCH_CONTACT_INDEX_NAME)%'
     dvf.years: '%env(json:DVF_YEAR_AVAILABLE)%'
+    demo.mode: '%env(default:defaut.demo_mode:bool:DEMO_MODE)%'
+    demo.password: '%env(default:defaut.demo_password:string:DEMO_PASSWORD)%'
+    demo.userdemo: '%env(default:defaut.demo_userdemo:string:DEMO_USER)%'
+    demo.admindemo: '%env(default:defaut.demo_admindemo:string:DEMO_ADMIN)%'
 
 services:
     # default configuration for services in *this* file
@@ -19,6 +27,10 @@ services:
             $elasticDvfIndexName: '%elastic.index.name.dvf%'
             $elasticContactIndexName: '%elastic.index.name.contact%'
             $dvfYears: '%dvf.years%'
+            $demoMode: '%demo.mode%'
+            $demoPassword: '%demo.password%'
+            $demoUserdemo: '%demo.userdemo%'
+            $demoAdmindemo: '%demo.admindemo%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

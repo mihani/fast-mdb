@@ -3,6 +3,10 @@
 {% block title %}{{ 'request_reset_password.title'|trans }}{% endblock %}
 
 {% block body %}
+    {% if demo_mode == true %}
+        {% include 'demo/reset_password/request.html.twig' %}
+    {% endif %}
+
     <h1 class="auth-title">{{ 'request_reset_password.title'|trans }}</h1>
     <p class="auth-subtitle mb-5">{{ 'request_reset_password.enter_email_and_send_you_email'|trans }}</p>
 

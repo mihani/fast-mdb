@@ -3,6 +3,10 @@
 {% block body %}
     <h1 class="auth-title">{{ 'login.title'|trans }}</h1>
     <form method="post">
+        {% if demo_mode == true %}
+            {% include 'demo/login/login.html.twig' %}
+        {% endif %}
+
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
