@@ -1,0 +1,49 @@
+{% extends 'base_login.html.twig' %}
+
+{% block title %}{{ 'signup.title'|trans }}{% endblock %}
+
+{% block body %}
+    <h1 class="auth-title">{{ 'signup.title'|trans }}</h1>
+    <p class="auth-subtitle mb-5">{{ 'signup.subtitle'|trans }}</p>
+
+    {% for flashError in app.flashes('signup_error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+
+    {{ form_start(requestForm) }}
+    {{ form_errors(requestForm.company) }}
+    {{ form_errors(requestForm.email) }}
+    {{ form_errors(requestForm.firstname) }}
+    {{ form_errors(requestForm.lastname) }}
+    <div class="form-group position-relative has-icon-left mb-4">
+        {{ form_widget(requestForm.company, {'attr':{'class':'form-control form-control-xl'}}) }}
+        <div class="form-control-icon">
+            <i class="bi bi-building"></i>
+        </div>
+    </div>
+    <div class="form-group position-relative has-icon-left mb-4">
+        {{ form_widget(requestForm.email, {'attr':{'class':'form-control form-control-xl'}}) }}
+        <div class="form-control-icon">
+            <i class="bi bi-envelope"></i>
+        </div>
+    </div>
+    <div class="form-group position-relative has-icon-left mb-4">
+        {{ form_widget(requestForm.firstname, {'attr':{'class':'form-control form-control-xl'}}) }}
+        <div class="form-control-icon">
+            <i class="bi bi-person"></i>
+        </div>
+    </div>
+    <div class="form-group position-relative has-icon-left mb-4">
+        {{ form_widget(requestForm.lastname, {'attr':{'class':'form-control form-control-xl'}}) }}
+        <div class="form-control-icon">
+            <i class="bi bi-person"></i>
+        </div>
+    </div>
+    <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">{{ 'signup.button.submit'|trans }}</button>
+    {{ form_end(requestForm) }}
+    <div class="text-center mt-5 text-lg fs-4">
+        <p class='text-gray-600'>
+            {{ 'signup.remember_account'|trans }} <a href="{{ path('app_login') }}" class="font">{{ 'signup.log_in'|trans }}</a>
+        </p>
+    </div>
+{% endblock %}

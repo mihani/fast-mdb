@@ -1,3 +1,30 @@
+signup:
+  error:
+    company_exist: Veuillez modifier le nom de votre société
+    email_exist: L'adresse e-mail est incorrect
+  success: Pour finaliser votre inscription, consultez vos mails.
+  log_in: Connectez-vous.
+  remember_account: Vous avez déjà un compte ?
+  button:
+    submit: S'inscrire
+  subtitle: Inscrivez-vous.
+  constraint:
+    lastname:
+      not_blank: Le nom doit être renseigné
+    firstname:
+      not_blank: Le prénom doit être renseigné
+    company:
+      not_blank: La société doit être renseignée
+    email:
+      not_blank: L'email doit être renseigné
+      valid: L'email doit être valide. Nous allons l'utiliser pour vous envoyer vos informations de connexion.
+  form_field:
+    lastname: Nom
+    firstname: Prénom
+    company: Société
+    email: Email
+  link: Inscription
+  title: Inscription
 reset_password:
   title: Réinitialiser votre mot de passe
   form_field:
