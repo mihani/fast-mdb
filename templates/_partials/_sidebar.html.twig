@@ -11,7 +11,6 @@
     </div>
     <div class="sidebar-menu">
         <ul class="menu">
-            <li class="sidebar-title">{{ 'menu.main.title'|trans }}</li>
             <li class="sidebar-item">
                 <a href="{{ path('dashboard_index') }}" class='sidebar-link'>
                     <i class="bi bi-grid-fill"></i>
@@ -20,7 +19,6 @@
             </li>
 
             {% if is_granted('ROLE_ADMIN') %}
-            <li class="sidebar-title">{{ 'menu.admin.title'|trans }}</li>
             <li class="sidebar-item">
                 <a href="{{ path('company_index') }}" class='sidebar-link'>
                     <i class="bi bi-building"></i>
@@ -34,6 +32,13 @@
                 </a>
             </li>
             {% endif %}
+
+            <li class="sidebar-item">
+                <a href="{{ path('app_logout') }}" class='sidebar-link'>
+                    <i class="icon-mid bi bi-box-arrow-left"></i>
+                    <span>{{ 'menu.user.logout'|trans }}</span>
+                </a>
+            </li>
         </ul>
     </div>
     <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>

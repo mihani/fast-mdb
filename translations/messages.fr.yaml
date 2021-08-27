@@ -83,8 +83,8 @@ menu:
     items:
       company: Société
       user: User
-vertical_nav:
-  dropdown:
+  user:
+    title: Utilisateur
     logout: Déconnexion
 project:
   title: Project
@@ -99,7 +99,7 @@ project:
   documents:
     title: Documents
   show:
-    title: 'Project : "%address%"'
+    title: 'Projet : "%name%"'
     contact:
       title: Contacts
       replace_by_existing_contact: Remplacer par un contact existant
@@ -165,6 +165,8 @@ project:
         sales_price: Prix de vente
         date: Date
   form_field:
+    name: Nom du projet
+    description: Description du projet
     good_type:
       label: Type de bien
       placeholder: Choisir un type de bien

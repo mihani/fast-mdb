@@ -44,6 +44,16 @@ class Project
     private $id;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
      * @ORM\Column(type="string", length=125)
      */
     private $state;
@@ -145,6 +155,30 @@ class Project
     public function setCadastralPlanNumber(?string $cadastralPlanNumber): self
     {
         $this->cadastralPlanNumber = $cadastralPlanNumber;
+
+        return $this;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
 
         return $this;
     }

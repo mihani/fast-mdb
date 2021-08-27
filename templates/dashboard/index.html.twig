@@ -195,26 +195,20 @@
                 {# @var project \App\Entity\Project #}
                 {% for project in projectsPagination %}
                 <a href="{{ path('project_show', {'id': project.id}) }}">
-                    <div class="card px-3 py-2 flex-row mb-3">
-                        <div class="w-25 cart-content me-3">
-                            <div class="cart-body">
-                                <h6>{% if project.goodsType is not null %}
-                                        {{ project.goodsType.name }}
-                                    {% else %}
-                                        {{ 'project.goods_type_not_defined'|trans }}
-                                    {% endif %}</h6>
-                                <p class="list-projects__p">
+                    <div class="card card-shadow mt-3">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="card-title">
+                                    {{ project.name }}
+                                </div>
+                                <p class="card-text">
                                     {{ project.address.inlineAddress }}
                                 </p>
-                            </div>
-                        </div>
-                        <div class="cart-content">
-                            <div class="cart-body">
-                                <p class="list-projects__p">
+                                <p class="card-text">
                                     {{ 'project.fields.state'|trans|capitalize }} : {{ ('project.state.value.'~project.state)|trans }}
                                     <br>
-                                    {{ 'project.fields.estate_agent'|trans|capitalize }} :
                                     {% if project.estateAgent is not null %}
+                                        {{ 'project.fields.estate_agent'|trans|capitalize }} :
                                         {% set estateAgent = project.estateAgent %}{{ estateAgent.fullname }} {% if estateAgent.estateAgencyName is not null %}({{ estateAgent.estateAgencyName }}){% endif %}
                                     {% endif %}
                                 </p>

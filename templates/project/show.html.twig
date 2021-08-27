@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="page-heading">
-    <h3>{{ 'project.show.title'|trans({ '%address%': project.address.getInlineAddress() }) }}</h3>
+    <h3>{{ 'project.show.title'|trans({ '%name%': project.name }) }}</h3>
 </div>
 {{ include('_partials/_flash_message.html.twig') }}
 <div class="page-content">
@@ -14,6 +14,23 @@
                 <div class="card-content">
                     <div class="card-body">
                         {{ form_start(projectForm, {'attr': {'class':'d-flex row justify-content-between'}}) }}
+                        <div class="col-12 col-lg-12">
+                            <div class="form-group row align-items-center">
+                                <div class="col-4 col-lg-3">
+                                    {{ form_label(projectForm.name, null, {'label_attr': {'class': 'col-form-label'}}) }}
+                                </div>
+                                <div class="col-8 col-lg-9">
+                                    {{ form_widget(projectForm.name, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12">
+                            <div class="form-group row align-items-center">
+                                <div class="col-12 col-lg-12">
+                                    {{ form_widget(projectForm.description, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-12 col-lg-4">
                             <div class="form-group row align-items-center">
                                 <div class="col-4 col-lg-3">
@@ -38,6 +55,143 @@
                             <button class="w-100 btn btn-primary" type="submit">{{'project.form_field.submit'|trans}}</button>
                         </div>
                         {{ form_end(projectForm) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        {# Address and urban documents part#}
+                        <div class="row">
+                            <div class="col-12 col-lg-5">
+                                <h6>{{ 'project.card.more_information_address'|trans }}</h6>
+                                <p>
+                                    {{ project.address.addressLine1 }}
+                                    {% if project.address.addressLine2 is not null %}
+                                        <br>
+                                        {{ project.address.addressLine1 }}
+                                    {% endif %}
+                                    <br>
+                                    {{ project.address.postalCode }} {{ project.address.city }}
+                                </p>
+                                <h6>{{ 'project.card.gps_coordinates.title'|trans }}</h6>
+                                <p>
+                                    {{ 'project.card.gps_coordinates.latitude'|trans }} : {{ project.address.latitude }}
+                                    <br>
+                                    {{ 'project.card.gps_coordinates.longitude'|trans }} : {{ project.address.longitude }}
+                                </p>
+                            </div>
+                            <div class="col-12 col-lg-7">
+                                <h6>{{ 'project.card.urban_document.document_available'|trans }}</h6>
+                                {% if project.urbanDocuments is empty %}
+                                    <p>{{ 'project.card.urban_document.no_documents_exist'|trans }}</p>
+                                {% else %}
+                                    <ul>
+                                        {% for urbanDocument in project.urbanDocuments %}
+                                            <li>{{ urbanDocument.name }} -
+                                                <a href="{{ urbanDocument.archiveLink }}">
+                                                    <small>{{ 'project.card.urban_document.download_archive'|trans }}</small>
+                                                </a>
+                                            </li>
+                                            <ul>
+                                                {% for file in urbanDocument.urbanFiles %}
+                                                    <li><a target="_blank" href="{{ file.link }}">{{ file.name }}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {# Maps part#}
+                        <div class="row">
+                            <div class="col-12 col-lg-6">
+                                <h6>{{ 'project.card.map.aerial_view_with_casdastral_cut'|trans }}</h6>
+                                <div
+                                        id="aerial-map"
+                                        data-longitude="{{ project.address.longitude }}"
+                                        data-latitude="{{ project.address.latitude }}"
+                                >
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 mt-2 mt-lg-0">
+                                <h6>{{ 'project.card.map.dynamic_street_view'|trans }}</h6>
+                                <div
+                                        id="street-view-map-pano"
+                                        data-longitude="{{ project.address.longitude }}"
+                                        data-latitude="{{ project.address.latitude }}"
+                                >
+                                    <p>{{ 'project.card.map.no_street_view_exist'|trans }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="mt-3 col-12">
+                            {% include "project/square_meter_price.html.twig" with {'squareMeterPrices' : squareMeterPrices} only%}
+                        </div>
+                        <div class="col-12">
+                            {% include "project/sales_in_delimited_area.html.twig" with {'proximitySalesPagination' : proximitySalesPagination} only %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-5">
+            {# Multimedia part #}
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="d-inline-flex">
+                            <h6 class="cart-title me-2">{{ 'project.multimedia.title'|trans }}</h6>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#multimedia-add"><i class="bi bi-plus-circle-fill"></i></a>
+                            {% include 'multimedia/modal/multi_multimedia_add.html.twig' with {
+                                'modalId': 'multimedia-add',
+                                'multimediaForm': multimediaForm,
+                                'project': project
+                            } only %}
+                        </div>
+                    </div>
+                    <div id="multimedia-carousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                        {% if project.multimedia is not empty %}
+                            <div class="carousel-inner">
+                                {% for multimedium in project.multimedia %}
+                                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                        {% if not multimedium.isImage() %}
+                                            <a target="_blank" href="{{ app.request.server.get('SCALEWAY_BUCKET_ENDPOINT')~'/multimedia/'~multimedium.file.name }}">
+                                                <img class="carousel-item__img d-block mx-auto" src="{{ asset('build/images/video-thumbnail-h300.png') }}" alt="Bld Immo Logo">
+                                            </a>
+                                        {% else %}
+                                            <a target="_blank" href="{{ app.request.server.get('SCALEWAY_BUCKET_ENDPOINT')~'/multimedia/'~multimedium.file.name }}">
+                                                <img class="d-block mx-auto" src="{{ vich_uploader_asset(multimedium)| imagine_filter('multimedia_carousel_resize') }}" alt="{{ multimedium.file.originalName }}">
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <a class="carousel-control-prev" href="#multimedia-carousel" role="button"
+                               data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#multimedia-carousel" role="button"
+                               data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {# Notes part #}
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
                         <div class="d-flex mb-2 flex-column">
                             <h6>{{ 'project.show.contact.title'|trans }}</h6>
                             <div class="mb-2">{{ 'contact.type.seller'|trans|capitalize }} :
@@ -118,130 +272,10 @@
                                 } only %}
                             </div>
                         </div>
-                        {# Address and urban documents part#}
-                        <div class="row">
-                            <div class="col-12 col-lg-5">
-                                <h6>{{ 'project.card.more_information_address'|trans }}</h6>
-                                <p>
-                                    {{ project.address.addressLine1 }}
-                                    {% if project.address.addressLine2 is not null %}
-                                        <br>
-                                        {{ project.address.addressLine1 }}
-                                    {% endif %}
-                                    <br>
-                                    {{ project.address.postalCode }} {{ project.address.city }}
-                                </p>
-                                <h6>{{ 'project.card.gps_coordinates.title'|trans }}</h6>
-                                <p>
-                                    {{ 'project.card.gps_coordinates.latitude'|trans }} : {{ project.address.latitude }}
-                                    <br>
-                                    {{ 'project.card.gps_coordinates.longitude'|trans }} : {{ project.address.longitude }}
-                                </p>
-                            </div>
-                            <div class="col-12 col-lg-7">
-                                <h6>{{ 'project.card.urban_document.document_available'|trans }}</h6>
-                                {% if project.urbanDocuments is empty %}
-                                    <p>{{ 'project.card.urban_document.no_documents_exist'|trans }}</p>
-                                {% else %}
-                                    <ul>
-                                        {% for urbanDocument in project.urbanDocuments %}
-                                            <li>{{ urbanDocument.name }} -
-                                                <a href="{{ urbanDocument.archiveLink }}">
-                                                    <small>{{ 'project.card.urban_document.download_archive'|trans }}</small>
-                                                </a>
-                                            </li>
-                                            <ul>
-                                                {% for file in urbanDocument.urbanFiles %}
-                                                    <li><a target="_blank" href="{{ file.link }}">{{ file.name }}</a></li>
-                                                {% endfor %}
-                                            </ul>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-                            </div>
-                        </div>
-                        {# Maps part#}
-                        <div class="row">
-                            <div class="col-12 col-lg-6">
-                                <h6>{{ 'project.card.map.aerial_view_with_casdastral_cut'|trans }}</h6>
-                                <div
-                                        id="aerial-map"
-                                        data-longitude="{{ project.address.longitude }}"
-                                        data-latitude="{{ project.address.latitude }}"
-                                >
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 mt-2 mt-lg-0">
-                                <h6>{{ 'project.card.map.dynamic_street_view'|trans }}</h6>
-                                <div
-                                        id="street-view-map-pano"
-                                        data-longitude="{{ project.address.longitude }}"
-                                        data-latitude="{{ project.address.latitude }}"
-                                >
-                                    <p>{{ 'project.card.map.no_street_view_exist'|trans }}</p>
-                                </div>
-                            </div>
-                            <div class="mt-3 col-12">
-                                {% include "project/square_meter_price.html.twig" with {'squareMeterPrices' : squareMeterPrices} only%}
-                            </div>
-                        </div>
-                        {# Sales in address area #}
-                        <div class="row">
-                            <div class="col-12">
-                                {% include "project/sales_in_delimited_area.html.twig" with {'proximitySalesPagination' : proximitySalesPagination} only %}
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-12 col-lg-5">
-            {# Multimedia part #}
-            <div class="card">
-                <div class="card-content">
-                    <div class="card-body">
-                        <div class="d-inline-flex">
-                            <h6 class="cart-title me-2">{{ 'project.multimedia.title'|trans }}</h6>
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#multimedia-add"><i class="bi bi-plus-circle-fill"></i></a>
-                            {% include 'multimedia/modal/multi_multimedia_add.html.twig' with {
-                                'modalId': 'multimedia-add',
-                                'multimediaForm': multimediaForm,
-                                'project': project
-                            } only %}
-                        </div>
-                    </div>
-                    <div id="multimedia-carousel" class="carousel slide mb-4" data-bs-ride="carousel">
-                        {% if project.multimedia is not empty %}
-                            <div class="carousel-inner">
-                                {% for multimedium in project.multimedia %}
-                                    <div class="carousel-item {% if loop.first %}active{% endif %}">
-                                        {% if not multimedium.isImage() %}
-                                            <a target="_blank" href="{{ app.request.server.get('SCALEWAY_BUCKET_ENDPOINT')~'/multimedia/'~multimedium.file.name }}">
-                                                <img class="carousel-item__img d-block mx-auto" src="{{ asset('build/images/video-thumbnail-h300.png') }}" alt="Bld Immo Logo">
-                                            </a>
-                                        {% else %}
-                                            <a target="_blank" href="{{ app.request.server.get('SCALEWAY_BUCKET_ENDPOINT')~'/multimedia/'~multimedium.file.name }}">
-                                                <img class="d-block mx-auto" src="{{ vich_uploader_asset(multimedium)| imagine_filter('multimedia_carousel_resize') }}" alt="{{ multimedium.file.originalName }}">
-                                            </a>
-                                        {% endif %}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                            <a class="carousel-control-prev" href="#multimedia-carousel" role="button"
-                               data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#multimedia-carousel" role="button"
-                               data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            {# Notes part #}
+            {# Contact part #}
             <div class="card">
                 <div class="card-content">
                     <div class="card-body">

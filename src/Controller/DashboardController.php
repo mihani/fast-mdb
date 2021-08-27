@@ -138,6 +138,8 @@ class DashboardController extends AbstractController
         if ($projectFromPreviewForm->isSubmitted() && $projectFromPreviewForm->isValid()) {
             /** @var Project $project */
             $project = $projectFromPreviewForm->getData();
+
+            $project->setName($project->getAddress()->getInlineAddress());
             $project->setUser($this->getUser())
                 ->setCompany($this->getUser()->getCompany())
             ;
