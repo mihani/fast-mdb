@@ -305,62 +305,69 @@ class ImportDvfCommand extends Command
             return $this->previousGeoPoint;
         }
 
-        $response = $this->geoApiFr->search(
-            [
-                'q' => $address,
-                'autocomplete' => '0',
-                'limit' => '1',
-                'type' => 'housenumber',
-            ]
-        );
+        try {
+            $response = $this->geoApiFr->search(
+                [
+                    'q' => $address,
+                    'autocomplete' => '0',
+                    'limit' => '1',
+                    'type' => 'housenumber',
+                ]
+            );
 
-        foreach ($this->client->stream($response) as $response => $chunk) {
-            if ($chunk->isTimeout()) {
-                if (!array_key_exists($address, $this->addressesTimeout)) {
-                    $this->addressesTimeout[$address] = 0;
-                }
-
+            if ($response->getStatusCode() === 509) {
+                // Chill a second
+                sleep(1);
                 $this->logger->warning(sprintf(
-                    '[GEO API] Retrieve Geo Coding point - Timeout to search this address : %s',
-                    $address
+                    '[GEO API] Wait a second, Bandwidth Limit Exceeded - Errno : %s Message : %s',
+                    $response->getStatusCode(),
+                    $response->getInfo('error')
+                ));
+
+                $this->getGeoPoints($address);
+            }
+
+            if ($response->getStatusCode() !== Response::HTTP_OK) {
+                $this->logger->warning(sprintf(
+                    '[GEO API] Retrieve Geo Coding point - Errno : %s Message : %s',
+                    $response->getStatusCode(),
+                    $response->getInfo('error')
                 ));
 
                 return [];
             }
-        }
 
-        if ($response->getStatusCode() !== Response::HTTP_OK) {
-            $this->logger->warning(sprintf(
-                '[GEO API] Retrieve Geo Coding point - Errno : %s Message : %s',
-                $response->getStatusCode(),
-                $response->getInfo('error')
-            ));
+            if (empty($response->toArray(false)['features'])) {
+                $this->addressesNotFound[$address] = false;
+                $this->logger->warning(sprintf(
+                    '[GEO API] Retrieve Geocoding point - No point found for this address : %s',
+                    $address,
+                ));
 
-            return [];
-        }
+                return [];
+            }
 
-        if (empty($response->toArray()['features'])) {
-            $this->addressesNotFound[$address] = false;
-            $this->logger->warning(sprintf(
-                '[GEO API] Retrieve Geocoding point - No point found for this address : %s',
+            if (array_key_exists($address, $this->addressesTimeout)) {
+                unset($this->addressesTimeout[$address]);
+            }
+
+            $addressResult = $response->toArray(false)['features'][0];
+
+            $this->previousAddress = $address;
+            $this->previousGeoPoint = [
+                $addressResult['geometry']['coordinates'][1], $addressResult['geometry']['coordinates'][0],
+            ];
+
+            return $this->previousGeoPoint;
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf(
+                '[GEO API] Retrieve Geocoding point - Network error : %s - Address : %s',
+                $e->getMessage(),
                 $address,
             ));
-
-            return [];
         }
 
-        if (array_key_exists($address, $this->addressesTimeout)) {
-            unset($this->addressesTimeout[$address]);
-        }
-
-        $addressResult = $response->toArray()['features'][0];
-
-        $this->previousAddress = $address;
-        $this->previousGeoPoint = [
-            $addressResult['geometry']['coordinates'][1], $addressResult['geometry']['coordinates'][0],
-        ];
-
-        return $this->previousGeoPoint;
+        return [];
     }
 
     private function createIndex(OutputInterface $output, Client $elasticClient): void
