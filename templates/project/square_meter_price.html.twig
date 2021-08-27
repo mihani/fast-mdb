@@ -1,0 +1,21 @@
+<h6>{{ 'project.card.square_meter_price'|trans }}</h6>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered align-middle text-center">
+        <thead>
+        <tr>
+            {# @var squareMeterPrice \App\Entity\SquareMeterPrice #}
+            {% for squareMeterPrice in squareMeterPrices %}
+                <td>{{ squareMeterPrice.year }} - {{ squareMeterPrice.type }}</td>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            {# @var squareMeterPrice \App\Entity\SquareMeterPrice #}
+            {% for squareMeterPrice in squareMeterPrices %}
+                <td>{{ squareMeterPrice.price|number_format(2, ',', ' ') }}</td>
+            {% endfor %}
+        </tr>
+        </tbody>
+    </table>
+</div>

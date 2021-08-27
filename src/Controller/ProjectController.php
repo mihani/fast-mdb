@@ -24,6 +24,7 @@ use App\Form\NoteType;
 use App\Form\Project\ProjectType;
 use App\Repository\NoteRepository;
 use App\Security\Voter\ProjectVoter;
+use App\Service\SquareMeterPriceCalculator;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,11 +41,13 @@ class ProjectController extends AbstractController
 
     private TranslatorInterface $translator;
     private EntityManagerInterface $entityManager;
+    private SquareMeterPriceCalculator $squareMeterPriceCalculator;
 
-    public function __construct(TranslatorInterface $translator, EntityManagerInterface $entityManager)
+    public function __construct(TranslatorInterface $translator, EntityManagerInterface $entityManager, SquareMeterPriceCalculator $squareMeterPriceCalculator)
     {
         $this->translator = $translator;
         $this->entityManager = $entityManager;
+        $this->squareMeterPriceCalculator = $squareMeterPriceCalculator;
     }
 
     #[Route('/{id}', name: 'project_show', methods: ['GET', 'POST'])]
@@ -141,6 +144,7 @@ class ProjectController extends AbstractController
             'notesPagination' => $notesPagination,
             'multimediaForm' => $multimediaForm->createView(),
             'documentsForm' => $documentForm->createView(),
+            'squareMeterPrices' => (($address !== null) ? $this->squareMeterPriceCalculator->calculate($address->getInseeCode(), $address->getPostalCode(), $address->getCity()): [])
         ]);
     }
 

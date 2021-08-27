@@ -86,6 +86,8 @@ class ImportDvfCommand extends Command
             ->build()
         ;
 
+        //$this->updateMapping($client);
+
         if (is_null($delete)) {
             $question = new ConfirmationQuestion(sprintf('You choose to delete ALL dvf for the year %s. Are you sure to continue ? ', $dvfYear), false);
             if (!empty($selectedDepartements)) {
@@ -399,6 +401,18 @@ class ImportDvfCommand extends Command
             sprintf('<fg=black;bg=green>Index %s creation succed</>', $this->elasticDvfIndexName),
             '',
         ]);
+    }
+
+    private function updateMapping(Client $elasticClient): void
+    {
+        $indexParams = [
+            'index' => $this->elasticDvfIndexName,
+            'body' => [
+                'properties' => DvfDocumentMapping::MAPPING,
+            ],
+        ];
+
+        $elasticClient->indices()->putMapping($indexParams);
     }
 
     private function deleteDvfYear(string $dvfYear, OutputInterface $output, Client $elasticClient, string $department = null): void

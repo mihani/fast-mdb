@@ -24,7 +24,7 @@ class AddressUtils
     public static function inlineFormatFromDvfEntry(string $number, string $btq, string $type, string $name, string $postalCode, string $city): string
     {
         $inlineAddress = sprintf(
-            '%s%s %s %s %s %s',
+            "%s%s %s %s - %s %s",
             $number,
             $btq,
             strtolower($type),

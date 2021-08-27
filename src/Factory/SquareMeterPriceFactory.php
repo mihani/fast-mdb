@@ -8,10 +8,11 @@ use App\Entity\SquareMeterPrice;
 
 class SquareMeterPriceFactory
 {
-    public static function create(float $price, string $inseeCode, string $year)
+    public static function create(float $price, string $type, string $inseeCode, string $year)
     {
         return (new SquareMeterPrice())
             ->setPrice($price)
+            ->setType($type)
             ->setInseeCode($inseeCode)
             ->setYear($year)
         ;

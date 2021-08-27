@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Elasticsearch\Repository;
 
 use App\Elasticsearch\Dto\HitsDto;
+use App\Elasticsearch\Mapping\DvfDocumentMapping;
 use App\Utils\AddressUtils;
+use Elasticsearch\ClientBuilder;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -21,23 +23,29 @@ class DvfRepository extends AbstractElasticsearchRepository
         $this->elasticDvfIndexName = $elasticDvfIndexName;
     }
 
-    public function getDvfByCity(string $departmentCode, string $postalCode, string $city, string $dvfYear, bool $returnHitsDto = false): ?HitsDto
+    public function getDvfByCity(string $dvfYear, string $postalCode, string $city = null): ?HitsDto
     {
         $params = [
             'index' => $this->elasticDvfIndexName,
             'body' => [
+                'size' => 10000,
                 'query' => [
                     'bool' => [
                         'must' => [
                             ['match' => ['dvf_metadata.year' => $dvfYear]],
-                            ['match' => ['address.department_code' => $departmentCode]],
                             ['match' => ['address.postal_code' => $postalCode]],
-                            ['match' => ['address.city.name' => $city]],
                         ],
+                        'filter' => [
+                            ['terms' => [ 'premises.code' => ['1', '2']]]
+                        ]
                     ],
                 ],
             ],
         ];
+
+        if (null !== $city) {
+            $params['body']['query']['bool']['must'][] = ['match' => ['address.city.name' => $city]];
+        }
 
         $dvfHits = $this->search($params);
 
@@ -70,10 +78,11 @@ class DvfRepository extends AbstractElasticsearchRepository
                             'match_all' => new \stdClass(),
                         ],
                         'filter' => [
-                            'geo_distance' => [
+                            ['geo_distance' => [
                                 'distance' => $distance.'km',
                                 'location' => [$latitude, $longitude],
-                            ],
+                            ]],
+                            ['terms' => [ 'premises.code' => ['1', '2']]]
                         ],
                     ],
                 ],
@@ -96,6 +105,7 @@ class DvfRepository extends AbstractElasticsearchRepository
                 'landArea' => $currentSource['land_area'],
                 'buildArea' => $currentSource['actual_build_area'],
                 'saleDate' => new \DateTime($currentSource['mutation_date']),
+                'roomCount' => $currentSource['room_count'],
             ];
         }
 

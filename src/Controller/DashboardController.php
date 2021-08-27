@@ -16,6 +16,7 @@ use App\Factory\UrbanDocumentFactory;
 use App\Form\Address\AddressMoreInformationType;
 use App\Form\Project\ProjectFromPreviewType;
 use App\Form\Project\SearchProjectType;
+use App\Service\SquareMeterPriceCalculator;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Psr\Log\LoggerInterface;
@@ -42,10 +43,9 @@ class DashboardController extends AbstractController
     private GeoPortailUrbanisme $geoPortailUrbanisme;
     private EntityManagerInterface $entityManager;
     private DvfRepository $dvfRepository;
+    private SquareMeterPriceCalculator $squareMeterPriceCalculator;
 
-    private array $dvfYears;
-
-    public function __construct(GeoApiFr $geoApiFr, TranslatorInterface $translator, LoggerInterface $logger, GeoPortailUrbanisme $geoPortailUrbanisme, EntityManagerInterface $entityManager, DvfRepository $dvfRepository, array $dvfYears)
+    public function __construct(GeoApiFr $geoApiFr, TranslatorInterface $translator, LoggerInterface $logger, GeoPortailUrbanisme $geoPortailUrbanisme, EntityManagerInterface $entityManager, DvfRepository $dvfRepository, SquareMeterPriceCalculator $squareMeterPriceCalculator)
     {
         $this->geoApiFr = $geoApiFr;
         $this->translator = $translator;
@@ -53,7 +53,7 @@ class DashboardController extends AbstractController
         $this->geoPortailUrbanisme = $geoPortailUrbanisme;
         $this->entityManager = $entityManager;
         $this->dvfRepository = $dvfRepository;
-        $this->dvfYears = $dvfYears;
+        $this->squareMeterPriceCalculator = $squareMeterPriceCalculator;
     }
 
     #[Route('/', name: 'dashboard_index')]
@@ -83,7 +83,7 @@ class DashboardController extends AbstractController
                     'action' => $this->generateUrl('dashboard_create_project'),
                 ]);
 
-                $squareMeterPrices = $this->calculateSquareMeterPrice($addressData['departmentCode'], $addressData['address']['postCode'], $addressData['address']['city'], $addressData['inseeCode']);
+                $squareMeterPrices = $this->squareMeterPriceCalculator->calculate($addressData['inseeCode'], $addressData['address']['postCode'], $addressData['address']['city'],);
             }
         }
 
@@ -142,13 +142,6 @@ class DashboardController extends AbstractController
                 ->setCompany($this->getUser()->getCompany())
             ;
 
-            $squareMeterPriceByYears = $this->entityManager->getRepository(SquareMeterPrice::class)->findByInseeCode($project->getAddress()->getInseeCode());
-
-            /** @var SquareMeterPrice $squareMeterPrice */
-            foreach ($squareMeterPriceByYears as $squareMeterPrice) {
-                $project->addSquareMeterPrice($squareMeterPrice);
-            }
-
             $this->entityManager->persist($project);
             $this->entityManager->flush();
 
@@ -160,53 +153,7 @@ class DashboardController extends AbstractController
         return $this->redirectToRoute('dashboard_index');
     }
 
-    private function calculateSquareMeterPrice(string $departmentCode, string $postalCode, string $city, string $inseeCode): array
-    {
-        $evolutionSquareMeterPriceByYears = $this->entityManager->getRepository(SquareMeterPrice::class)->findByInseeCode($inseeCode);
 
-        if ($evolutionSquareMeterPriceByYears) {
-            return $evolutionSquareMeterPriceByYears;
-        }
-
-        $evolutionSquareMeterPriceByYears = [];
-        // Foreach year present in parameters
-        foreach ($this->dvfYears as $dvfYear) {
-            $squareMeterPrice = 0;
-            $dvfHitsDto = $this->dvfRepository->getDvfByCity($departmentCode, $postalCode, $city, (string) $dvfYear);
-
-            if (is_null($dvfHitsDto)) {
-                continue;
-            }
-
-            // Foreach dvf documents calculate square meter of dvf
-            foreach ($dvfHitsDto->hits as $dvfDocument) {
-                $current = $dvfDocument['_source'];
-
-                if ((float) $current['actual_build_area'] === 0 && (float) $current['land_area'] === 0) {
-                    continue;
-                }
-
-                $surface = (float) $current['actual_build_area'] === (float) 0 ? (float) $current['land_area'] : (float) $current['actual_build_area'];
-                if ($surface <= 0) {
-                    $surface = 1;
-                }
-                $squareMeterPrice += ((float) $current['land_value'] / $surface);
-            }
-
-            $evolutionSquareMeterPriceByYears[] = SquareMeterPriceFactory::create(
-                $squareMeterPrice / $dvfHitsDto->total->value,
-                $inseeCode,
-                (string) $dvfYear
-            );
-        }
-
-        foreach ($evolutionSquareMeterPriceByYears as $squareMeterPrice) {
-            $this->entityManager->persist($squareMeterPrice);
-            $this->entityManager->flush();
-        }
-
-        return $evolutionSquareMeterPriceByYears;
-    }
 
     private function generateProjectFromData(array $addressData, array $urbanDocumentsData): Project
     {

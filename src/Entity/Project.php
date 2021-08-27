@@ -97,11 +97,6 @@ class Project
     private $seller;
 
     /**
-     * @ORM\ManyToMany(targetEntity=SquareMeterPrice::class, mappedBy="projects")
-     */
-    private $squareMeterPrices;
-
-    /**
      * @ORM\OneToMany(targetEntity=Note::class, mappedBy="project", orphanRemoval=true)
      */
     private $notes;
@@ -120,7 +115,6 @@ class Project
     {
         $this->state = self::STATUS_DRAFT;
         $this->urbanDocuments = new ArrayCollection();
-        $this->squareMeterPrices = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->multimedia = new ArrayCollection();
         $this->documents = new ArrayCollection();
@@ -279,33 +273,6 @@ class Project
     public function setSeller(?Seller $seller): self
     {
         $this->seller = $seller;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|SquareMeterPrice[]
-     */
-    public function getSquareMeterPrices(): Collection
-    {
-        return $this->squareMeterPrices;
-    }
-
-    public function addSquareMeterPrice(SquareMeterPrice $squareMeterPrice): self
-    {
-        if (!$this->squareMeterPrices->contains($squareMeterPrice)) {
-            $this->squareMeterPrices[] = $squareMeterPrice;
-            $squareMeterPrice->addProject($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSquareMeterPrice(SquareMeterPrice $squareMeterPrice): self
-    {
-        if ($this->squareMeterPrices->removeElement($squareMeterPrice)) {
-            $squareMeterPrice->removeProject($this);
-        }
 
         return $this;
     }
