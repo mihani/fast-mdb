@@ -308,14 +308,7 @@ class ImportDvfCommand extends Command
         }
 
         try {
-            $response = $this->geoApiFr->search(
-                [
-                    'q' => $address,
-                    'autocomplete' => '0',
-                    'limit' => '1',
-                    'type' => 'housenumber',
-                ]
-            );
+            $response = $this->geoApiFr->findOneByQuery($address);
 
             if ($response->getStatusCode() === 509) {
                 // Chill a second

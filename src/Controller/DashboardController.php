@@ -194,14 +194,7 @@ class DashboardController extends AbstractController
     private function getMoreAddressInfo(string $address): array | null
     {
         /** @var ResponseInterface $response */
-        $response = $this->geoApiFr->search(
-            [
-                'q' => $address,
-                'autocomplete' => '0',
-                'limit' => '1',
-                'type' => 'housenumber',
-            ]
-        );
+        $response = $this->geoApiFr->findOneByQuery($address);
 
         if ($response->getStatusCode() === Response::HTTP_OK) {
             $addressData = $response->toArray()['features'][0];
