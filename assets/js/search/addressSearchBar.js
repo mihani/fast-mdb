@@ -4,16 +4,19 @@ import * as $ from 'jquery';
 import 'jquery.typewatch';
 
 $(document).ready(function() {
+    let $form = $('form[name="address_more_information"]');
+
     $('body')
         .click(function() {
             $('#address-search-bar__list-group').css('display','none');
         })
         .on('click', '.result-item', function (){
             $('.dashboard-new-project-search-bar').val($(this).children('div').text());
+            $form.submit();
         })
     ;
 
-    var typeWatchOptions = {
+    let typeWatchOptions = {
         callback: function () {
             let addressSearched = $(this).val();
             if (addressSearched === ''){

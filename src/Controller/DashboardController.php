@@ -172,7 +172,8 @@ class DashboardController extends AbstractController
             $addressData['address']['postCode'],
             $addressData['inseeCode'],
             $addressData['latitude'],
-            $addressData['longitude']
+            $addressData['longitude'],
+            $addressData['cityOnly']
         ));
 
         foreach ($urbanDocumentsData as $urbanDocumentsDatum) {
@@ -201,6 +202,9 @@ class DashboardController extends AbstractController
         if ($response->getStatusCode() === Response::HTTP_OK) {
             $addressData = $response->toArray()['features'][0];
 
+            // Based on assets/js/search/addressSearchBar.js
+            $cityOnly = $addressData['properties']['city'] . ' ' . $addressData['properties']['postcode'] === $address;
+
             return [
                 'address' => [
                     'name' => $addressData['properties']['name'],
@@ -211,6 +215,7 @@ class DashboardController extends AbstractController
                 'inseeCode' => $addressData['properties']['citycode'],
                 'longitude' => $addressData['geometry']['coordinates'][0],
                 'latitude' => $addressData['geometry']['coordinates'][1],
+                'cityOnly' => $cityOnly,
             ];
         }
 

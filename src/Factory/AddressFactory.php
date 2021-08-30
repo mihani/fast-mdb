@@ -11,7 +11,7 @@ use App\Entity\Address;
  */
 class AddressFactory
 {
-    public static function create(string $addressLine1, string $city, string $postalCode, string $inseeCode = null, float $latitude = null, float $longitude = null): Address
+    public static function create(string $addressLine1, string $city, string $postalCode, string $inseeCode = null, float $latitude = null, float $longitude = null, bool $cityOnly = false): Address
     {
         return (new Address())
             ->setAddressLine1($addressLine1)
@@ -20,6 +20,7 @@ class AddressFactory
             ->setInseeCode($inseeCode)
             ->setLatitude($latitude)
             ->setLongitude($longitude)
+            ->setCityOnly($cityOnly)
         ;
     }
 }

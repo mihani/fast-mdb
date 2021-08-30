@@ -67,13 +67,15 @@
                             <div class="col-12 col-lg-5">
                                 <h6>{{ 'project.card.more_information_address'|trans }}</h6>
                                 <p>
-                                    {{ project.address.addressLine1 }}
-                                    {% if project.address.addressLine2 is not null %}
-                                        <br>
+                                    {% if not project.address.cityOnly %}
                                         {{ project.address.addressLine1 }}
+                                        {% if project.address.addressLine2 is not null %}
+                                            <br>
+                                            {{ project.address.addressLine2 }}
+                                        {% endif %}
+                                        <br>
                                     {% endif %}
-                                    <br>
-                                    {{ project.address.postalCode }} {{ project.address.city }}
+                                    {{ project.address.city }}, {{ project.address.postalCode }}
                                 </p>
                                 <h6>{{ 'project.card.gps_coordinates.title'|trans }}</h6>
                                 <p>
@@ -105,27 +107,29 @@
                             </div>
                         </div>
                         {# Maps part#}
-                        <div class="row">
-                            <div class="col-12 col-lg-6">
-                                <h6>{{ 'project.card.map.aerial_view_with_casdastral_cut'|trans }}</h6>
-                                <div
-                                        id="aerial-map"
-                                        data-longitude="{{ project.address.longitude }}"
-                                        data-latitude="{{ project.address.latitude }}"
-                                >
+                        {% if not project.address.cityOnly %}
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <h6>{{ 'project.card.map.aerial_view_with_casdastral_cut'|trans }}</h6>
+                                    <div
+                                            id="aerial-map"
+                                            data-longitude="{{ project.address.longitude }}"
+                                            data-latitude="{{ project.address.latitude }}"
+                                    >
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 mt-2 mt-lg-0">
+                                    <h6>{{ 'project.card.map.dynamic_street_view'|trans }}</h6>
+                                    <div
+                                            id="street-view-map-pano"
+                                            data-longitude="{{ project.address.longitude }}"
+                                            data-latitude="{{ project.address.latitude }}"
+                                    >
+                                        <p>{{ 'project.card.map.no_street_view_exist'|trans }}</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 mt-2 mt-lg-0">
-                                <h6>{{ 'project.card.map.dynamic_street_view'|trans }}</h6>
-                                <div
-                                        id="street-view-map-pano"
-                                        data-longitude="{{ project.address.longitude }}"
-                                        data-latitude="{{ project.address.latitude }}"
-                                >
-                                    <p>{{ 'project.card.map.no_street_view_exist'|trans }}</p>
-                                </div>
-                            </div>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

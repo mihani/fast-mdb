@@ -8,7 +8,7 @@ install:
 	cp .env .env.local
 	$(DC) up -d
 	$(DC) exec php composer install
-	$(DC) exec php bin/console doctrine:migrations:migrate
+	$(DC) exec php bin/console doctrine:migrations:migrate --no-interaction
 	$(DC) run --rm node npm install
 	$(DC) run --rm node yarn encore dev
 
