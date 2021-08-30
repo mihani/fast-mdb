@@ -202,6 +202,9 @@
                     <div class="card card-shadow mt-3">
                         <div class="card-content">
                             <div class="card-body">
+                                {% if project.getFirstImage %}
+                                    <img style="float: right; max-width: 25%; max-height: 100px; border-radius: 0.7rem;" class="d-block mx-auto" src="{{ vich_uploader_asset(project.getFirstImage)| imagine_filter('multimedia_carousel_resize') }}" alt="{{ project.getFirstImage.file.originalName }}">
+                                {% endif %}
                                 <div class="card-title">
                                     {{ project.name }}
                                 </div>

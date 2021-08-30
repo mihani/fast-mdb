@@ -349,6 +349,17 @@ class Project
         return $this->multimedia;
     }
 
+    public function getFirstImage(): ?Multimedia
+    {
+        foreach ($this->multimedia as $multimedium) {
+            if ($multimedium->isImage()) {
+                return $multimedium;
+            }
+        }
+
+        return null;
+    }
+
     public function addMultimedia(Multimedia $multimedia): self
     {
         if (!$this->multimedia->contains($multimedia)) {

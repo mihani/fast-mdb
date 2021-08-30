@@ -1,0 +1,18 @@
+# Read the documentation at https://github.com/thephpleague/flysystem-bundle/blob/master/docs/1-getting-started.md
+flysystem:
+    storages:
+        multimedia.storage:
+            adapter: 'local'
+            visibility: public
+            options:
+                directory: '%kernel.project_dir%/public/build/multimedia'
+        multimedia.cache:
+            adapter: 'local'
+            visibility: public
+            options:
+                directory: '%kernel.project_dir%/public/build/cache/multimedia'
+        documents.storage:
+            adapter: 'local'
+            visibility: private
+            options:
+                directory: '%kernel.project_dir%/public/build/documents'
