@@ -18,6 +18,7 @@ class NoteType extends AbstractType
             ->add('content', CKEditorType::class, [
                 'attr' => [
                     'autocomplete' => 'off',
+                    'id' => 'sdfsdkfhsdf'
                 ],
             ])
         ;

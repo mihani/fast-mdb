@@ -3,11 +3,16 @@
 {% block modal_form_title %}{{ 'note.show.title'|trans }}{% endblock %}
 
 {% block modal_form_body %}
-    <div class="d-flex justify-content-between mb-3">
-        <small>{{ note.createdAt|date('d-m-Y H:i:m') }}</small>
+    <div class="d-flex w-100 justify-content-end mb-1">
+        <small>{{ note.updatedAt|date('d-m-Y H:i:m') }}</small>
     </div>
-    {{ note.content|raw }}
-    <div class="d-flex mt-1">
+    <div class="note-content" data-editable="true" data-note-id="{{ note.id }}">
+        {{ note.content|raw }}
+    </div>
+    <button type="button" style="display: none;" id="update-note-{{ note.id }}" class="btn btn-primary update-note" data-note-id="{{ note.id }}">
+        {{ 'note.edit.button.update'|trans }}
+    </button>
+    <div class="d-flex justify-content-end mt-2">
         <small>{{ note.author }}</small>
     </div>
 {% endblock %}

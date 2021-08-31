@@ -265,6 +265,7 @@ note:
   edit:
     title: Ajouter une note
     button:
+      update: Mettre à jour
       close: Fermer
       submit: Ajouter
   show:

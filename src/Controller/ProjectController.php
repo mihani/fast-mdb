@@ -111,17 +111,9 @@ class ProjectController extends AbstractController
             ]),
         ]);
 
-        $noteForm = $this->createForm(NoteType::class, new Note());
-        $noteForm->handleRequest($request);
-
-        if ($noteForm->isSubmitted() && $noteForm->isValid()) {
-            $note = $noteForm->getData();
-            $note->setProject($project)
-                ->setAuthor($this->getUser()->getFullName().' - '.$this->getUser()->getEmail())
-            ;
-            $this->entityManager->persist($note);
-            $this->entityManager->flush();
-        }
+        $noteForm = $this->createForm(NoteType::class, new Note(), [
+            'action' => $this->generateUrl('project_note_create', ['project' => $project->getId()])
+        ]);
 
         $notes = $noteRepository->findBy(['project' => $project], ['createdAt' => 'DESC']);
         $notesPagination = null;

@@ -308,9 +308,11 @@
                                     {% set modalId = 'note-show-'~key %}
                                     <a data-bs-toggle="modal" data-bs-target="#{{ modalId }}" class="list-notes__item list-group-item">
                                         <div class="d-flex w-100 justify-content-end mb-1">
-                                            <small>{{ note.createdAt|date('d-m-Y H:i:m') }}</small>
+                                            <small>{{ note.updatedAt|date('d-m-Y H:i:m') }}</small>
                                         </div>
-                                        {{ note.content|u.truncate(150, '...', false)|raw }}
+                                        <div id="note-content-truncated-{{ note.id }}">
+                                            {{ note.content|u.truncate(150, '...', false)|raw }}
+                                        </div>
                                         <div class="d-flex justify-content-end mt-2">
                                             <small>{{ note.author }}</small>
                                         </div>
@@ -321,6 +323,11 @@
                                         'isBorderlessModal': true
                                     } only %}
                                 {% endfor %}
+
+                                {% include '_partials/_modal/_modal_form.html.twig' with {
+                                    'modalId': 'edit-note-modal',
+                                    'modal_form_title': 'Editer une note'
+                                } only %}
                             </div>
                             <nav id="notes-pagination">
                                 {{ knp_pagination_render(notesPagination) }}
@@ -366,6 +373,7 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+    {{ encore_entry_script_tags('project') }}
     {{ encore_entry_script_tags('addressSearchBar') }}
     {{ encore_entry_script_tags('contactSearchBar') }}
     {% if not project.address.cityOnly %}
