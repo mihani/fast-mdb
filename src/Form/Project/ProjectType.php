@@ -6,6 +6,7 @@ namespace App\Form\Project;
 
 use App\Entity\GoodsType;
 use App\Entity\Project;
+use App\Form\Address\AddressMoreInformationType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;

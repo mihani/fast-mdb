@@ -87,6 +87,10 @@ menu:
     title: Utilisateur
     logout: Déconnexion
 project:
+  modal:
+    address:
+      edit:
+        submit: Modifier
   title: Project
   goods_type_not_defined: Type de bien non définit
   fields:
@@ -99,6 +103,8 @@ project:
   documents:
     title: Documents
   show:
+    address:
+      edit: Modification de l'adresse
     title: 'Projet : "%name%"'
     contact:
       title: Contacts

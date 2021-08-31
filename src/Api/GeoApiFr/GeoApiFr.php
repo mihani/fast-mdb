@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @author Maud Remoriquet <maud.remoriquet@gmail.com>
@@ -24,11 +25,13 @@ class GeoApiFr
 
     private HttpClientInterface $client;
     private LoggerInterface $logger;
+    private TranslatorInterface $translator;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, TranslatorInterface $translator)
     {
         $this->client = HttpClient::create();
         $this->logger = $logger;
+        $this->translator = $translator;
     }
 
     public function findOneByQuery(string $query): ResponseInterface
@@ -124,4 +127,40 @@ class GeoApiFr
 
         return $cities;
     }
+
+
+    public function getMoreAddressInfo(string $address): array | null
+    {
+        /** @var ResponseInterface $response */
+        $response = $this->findOneByQuery($address);
+
+        if ($response->getStatusCode() === Response::HTTP_OK) {
+            $addressData = $response->toArray()['features'][0];
+
+            // Based on assets/js/search/addressSearchBar.js
+            $cityOnly = $addressData['properties']['city'] . ' ' . $addressData['properties']['postcode'] === $address;
+
+            return [
+                'address' => [
+                    'name' => $addressData['properties']['name'],
+                    'postCode' => $addressData['properties']['postcode'],
+                    'city' => $addressData['properties']['city'],
+                ],
+                'departmentCode' => explode(',', $addressData['properties']['context'])[0],
+                'inseeCode' => $addressData['properties']['citycode'],
+                'longitude' => $addressData['geometry']['coordinates'][0],
+                'latitude' => $addressData['geometry']['coordinates'][1],
+                'cityOnly' => $cityOnly,
+            ];
+        }
+
+        $this->logger->error(sprintf(
+            '[GEO API] Retrieve more info - Errno : %s Message : %s',
+            $response->getStatusCode(),
+            $response->getInfo('error')
+        ));
+
+        return null;
+    }
+
 }

@@ -57,7 +57,7 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/', name: 'dashboard_index')]
-    public function index(Request $request, PaginatorInterface $paginator): Response
+    public function index(Request $request, PaginatorInterface $paginator, GeoApiFr $geoApiFr): Response
     {
         $searchBarForm = $this->createForm(type: AddressMoreInformationType::class, options: [
             'method' => Request::METHOD_GET,
@@ -66,7 +66,7 @@ class DashboardController extends AbstractController
 
         $addressData = $squareMeterPrices = $urbanDocuments = $proximitySalesPagination = $projectFromPreviewForm = null;
         if ($searchBarForm->isSubmitted() && $searchBarForm->isValid()) {
-            $addressData = $this->getMoreAddressInfo($searchBarForm->get('address')->getData());
+            $addressData = $geoApiFr->getMoreAddressInfo($searchBarForm->get('address')->getData());
             if ($addressData !== null) {
                 $urbanDocuments = $this->getUrbanDocuments($addressData['inseeCode']);
                 $proximitySales = $this->dvfRepository->getProximitySales($addressData['latitude'], $addressData['longitude']);
@@ -84,6 +84,11 @@ class DashboardController extends AbstractController
                 ]);
 
                 $squareMeterPrices = $this->squareMeterPriceCalculator->calculate($addressData['inseeCode'], $addressData['address']['postCode'], $addressData['address']['city'],);
+            } else {
+                $this->addFlash(
+                    'error',
+                    $this->translator->trans('dashboard.project.preview.flashbag.error.geo_api.retrieve_more_info')
+                );
             }
         }
 
@@ -155,8 +160,6 @@ class DashboardController extends AbstractController
         return $this->redirectToRoute('dashboard_index');
     }
 
-
-
     private function generateProjectFromData(array $addressData, array $urbanDocumentsData): Project
     {
         /** @var User $user */
@@ -192,45 +195,6 @@ class DashboardController extends AbstractController
         }
 
         return $project;
-    }
-
-    private function getMoreAddressInfo(string $address): array | null
-    {
-        /** @var ResponseInterface $response */
-        $response = $this->geoApiFr->findOneByQuery($address);
-
-        if ($response->getStatusCode() === Response::HTTP_OK) {
-            $addressData = $response->toArray()['features'][0];
-
-            // Based on assets/js/search/addressSearchBar.js
-            $cityOnly = $addressData['properties']['city'] . ' ' . $addressData['properties']['postcode'] === $address;
-
-            return [
-                'address' => [
-                    'name' => $addressData['properties']['name'],
-                    'postCode' => $addressData['properties']['postcode'],
-                    'city' => $addressData['properties']['city'],
-                ],
-                'departmentCode' => explode(',', $addressData['properties']['context'])[0],
-                'inseeCode' => $addressData['properties']['citycode'],
-                'longitude' => $addressData['geometry']['coordinates'][0],
-                'latitude' => $addressData['geometry']['coordinates'][1],
-                'cityOnly' => $cityOnly,
-            ];
-        }
-
-        $this->logger->error(sprintf(
-            '[GEO API] Retrieve more info - Errno : %s Message : %s',
-            $response->getStatusCode(),
-            $response->getInfo('error')
-        ));
-
-        $this->addFlash(
-            'error',
-            $this->translator->trans('dashboard.project.preview.flashbag.error.geo_api.retrieve_more_info')
-        );
-
-        return null;
     }
 
     private function getUrbanDocuments(string $inseeCode): array | null

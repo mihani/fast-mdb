@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Api\GeoApiFr\GeoApiFr;
 use App\Elasticsearch\Repository\DvfRepository;
 use App\Entity\Contact\Contact;
 use App\Entity\Contact\EstateAgent;
@@ -14,6 +15,7 @@ use App\Entity\Multimedia;
 use App\Entity\Note;
 use App\Entity\Project;
 use App\Exception\FastMdbLogicException;
+use App\Factory\AddressFactory;
 use App\Form\Contact\EstateAgentType;
 use App\Form\Contact\NotaryType;
 use App\Form\Contact\SearchExistingContactType;
@@ -146,6 +148,30 @@ class ProjectController extends AbstractController
             'documentsForm' => $documentForm->createView(),
             'squareMeterPrices' => (($address !== null) ? $this->squareMeterPriceCalculator->calculate($address->getInseeCode(), $address->getPostalCode(), $address->getCity()): [])
         ]);
+    }
+    #[Route('/{id}/address/edit', name: 'edit_project_address', methods: ['POST'])]
+    public function editProjectAddress(Project $project, Request $request, GeoApiFr $geoApiFr): RedirectResponse
+    {
+        if (!$request->request->has('address_more_information')) {
+            return $this->redirectToRoute('project_show', ['id' => $project->getId()]);
+        }
+
+        $address = $request->request->get('address_more_information')['address'];
+        $addressData = $geoApiFr->getMoreAddressInfo($address);
+        $project->setAddress(AddressFactory::create(
+            $addressData['address']['name'],
+            $addressData['address']['city'],
+            $addressData['address']['postCode'],
+            $addressData['inseeCode'],
+            $addressData['latitude'],
+            $addressData['longitude'],
+            $addressData['cityOnly']
+        ));
+
+        $this->entityManager->persist($project);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('project_show', ['id' => $project->getId()]);
     }
 
     #[Route('/{id}/contact/remove/{contact}', name: 'project_remove_contact', methods: ['GET'])]

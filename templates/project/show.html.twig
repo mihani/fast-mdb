@@ -76,6 +76,17 @@
                                         <br>
                                     {% endif %}
                                     {{ project.address.city }}, {{ project.address.postalCode }}
+
+                                    {% set modalTitle = 'project.show.address.edit'|trans() %}
+                                    {% set modalId = 'address_edit' %}
+                                    <br />
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#{{ modalId }}"><i class="bi bi-geo-alt"></i> {{ modalTitle }}</a>
+                                    {% include 'project/modal/address_edit.html.twig' with {
+                                        'modalId': modalId,
+                                        'modalTitle': modalTitle,
+                                        'modalAction': 'show',
+                                        'projectId': project.id
+                                    } only %}
                                 </p>
                                 <h6>{{ 'project.card.gps_coordinates.title'|trans }}</h6>
                                 <p>
@@ -355,7 +366,10 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('streetViewMap') }}
-    {{ encore_entry_script_tags('aerialViewMap') }}
+    {{ encore_entry_script_tags('addressSearchBar') }}
     {{ encore_entry_script_tags('contactSearchBar') }}
+    {% if not project.address.cityOnly %}
+        {{ encore_entry_script_tags('streetViewMap') }}
+        {{ encore_entry_script_tags('aerialViewMap') }}
+    {% endif %}
 {% endblock %}
