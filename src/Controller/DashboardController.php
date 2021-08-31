@@ -37,7 +37,6 @@ class DashboardController extends AbstractController
 
     public const ITEM_PER_PAGE = 5;
 
-    private GeoApiFr $geoApiFr;
     private TranslatorInterface $translator;
     private LoggerInterface $logger;
     private GeoPortailUrbanisme $geoPortailUrbanisme;
@@ -45,9 +44,8 @@ class DashboardController extends AbstractController
     private DvfRepository $dvfRepository;
     private SquareMeterPriceCalculator $squareMeterPriceCalculator;
 
-    public function __construct(GeoApiFr $geoApiFr, TranslatorInterface $translator, LoggerInterface $logger, GeoPortailUrbanisme $geoPortailUrbanisme, EntityManagerInterface $entityManager, DvfRepository $dvfRepository, SquareMeterPriceCalculator $squareMeterPriceCalculator)
+    public function __construct(TranslatorInterface $translator, LoggerInterface $logger, GeoPortailUrbanisme $geoPortailUrbanisme, EntityManagerInterface $entityManager, DvfRepository $dvfRepository, SquareMeterPriceCalculator $squareMeterPriceCalculator)
     {
-        $this->geoApiFr = $geoApiFr;
         $this->translator = $translator;
         $this->logger = $logger;
         $this->geoPortailUrbanisme = $geoPortailUrbanisme;
@@ -106,17 +104,24 @@ class DashboardController extends AbstractController
                 $searchProjectsQuery = $this->entityManager
                     ->getRepository(Project::class)
                     ->searchProjectsQuery(
-                        $this->getUser(),
+                        $this->getUser()->getCompany(),
                         $searchProjectFormData['states'],
                         $searchProjectFormData['cityOrPostalCode'],
                         $searchProjectFormData['contactSearch']['contactId']
                     )
                 ;
             }
+        } else {
+            $searchProjectsQuery = $this->entityManager
+                ->getRepository(Project::class)
+                ->searchProjectsQuery(
+                    $this->getUser()->getCompany()
+                )
+            ;
         }
 
         $projectsPagination = $paginator->paginate(
-            is_null($searchProjectsQuery) ? $this->getUser()->getProjects() : $searchProjectsQuery,
+            $searchProjectsQuery,
             $request->query->getInt('projectPage', 1),
             self::ITEM_PER_PAGE,
             ['pageParameterName' => 'projectPage']

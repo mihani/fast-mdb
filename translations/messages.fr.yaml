@@ -81,8 +81,11 @@ menu:
   admin:
     title: Admin
     items:
-      company: Société
-      user: User
+      company: Sociétés
+      user: Utilisateurs
+  manager:
+    company: Société
+    user: Utilisateurs
   user:
     title: Utilisateur
     logout: Déconnexion

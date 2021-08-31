@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Company;
 use App\Entity\User;
 use App\Form\User\UserType;
 use App\Repository\UserRepository;
@@ -38,6 +39,14 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/company/{id}', name: 'user_index_by_company', methods: ['GET'])]
+    public function indexFromCompany(Company $company, UserRepository $userRepository): Response
+    {
+        return $this->render('user/index.html.twig', [
+            'users' => $userRepository->findBy(['company' => $company]),
+        ]);
+    }
+
     #[Route('/new', name: 'user_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {
@@ -55,7 +64,7 @@ class UserController extends AbstractController
 
             $this->emailSender->sendAccountCreatedEmail($user->getEmail());
 
-            return $this->redirectToRoute('user_index');
+            return $this->redirectToRoute('user_index_by_company', ['id' => $user->getCompany()->getId()]);
         }
 
         return $this->render('user/new.html.twig', [
@@ -82,7 +91,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
 
-            return $this->redirectToRoute('user_index');
+            return $this->redirectToRoute('user_index_by_company', ['id' => $user->getCompany()->getId()]);
         }
 
         return $this->render('user/edit.html.twig', [
@@ -94,12 +103,13 @@ class UserController extends AbstractController
     #[Route('/{id}', name: 'user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user): Response
     {
+        $company = $user->getCompany();
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             $user->setActive(false);
             $this->entityManager->remove($user);
             $this->entityManager->flush();
         }
 
-        return $this->redirectToRoute('user_index');
+        return $this->redirectToRoute('user_index_by_company', ['id' => $company->getId()]);
     }
 }

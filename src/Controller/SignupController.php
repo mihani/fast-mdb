@@ -65,7 +65,7 @@ class SignupController extends AbstractController
             $user->setPassword(
                 $passwordEncoder->encodePassword($user, Uuid::uuid4()->toString())
             );
-            $user->setRoles(['ROLE_USER', 'ROLE_COMPANY']);
+            $user->setRoles(['ROLE_USER', 'ROLE_MANAGER']);
 
             $em->persist($company);
             $em->persist($user);

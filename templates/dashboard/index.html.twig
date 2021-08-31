@@ -199,7 +199,7 @@
                 {# @var project \App\Entity\Project #}
                 {% for project in projectsPagination %}
                 <a href="{{ path('project_show', {'id': project.id}) }}">
-                    <div class="card card-shadow mt-3">
+                    <div class="card card-shadow">
                         <div class="card-content">
                             <div class="card-body">
                                 {% if project.getFirstImage %}

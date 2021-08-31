@@ -37,16 +37,6 @@ class Company
      */
     private $name;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Project::class, mappedBy="company")
-     */
-    private $projects;
-
-    public function __construct()
-    {
-        $this->projects = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -60,36 +50,6 @@ class Company
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Project[]
-     */
-    public function getProjects(): Collection
-    {
-        return $this->projects;
-    }
-
-    public function addProject(Project $project): self
-    {
-        if (!$this->projects->contains($project)) {
-            $this->projects[] = $project;
-            $project->setCompany($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProject(Project $project): self
-    {
-        if ($this->projects->removeElement($project)) {
-            // set the owning side to null (unless already changed)
-            if ($project->getCompany() === $this) {
-                $project->setCompany(null);
-            }
-        }
 
         return $this;
     }

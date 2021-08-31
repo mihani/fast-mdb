@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Company;
 use App\Entity\Project;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -23,12 +24,12 @@ class ProjectRepository extends ServiceEntityRepository
         parent::__construct($registry, Project::class);
     }
 
-    public function searchProjectsQuery(UserInterface $user, array $states = [], ?string $cityOrPostalCode = null, ?string $contactId = null): Query
+    public function searchProjectsQuery(Company $company, array $states = [], ?string $cityOrPostalCode = null, ?string $contactId = null): Query
     {
         $projectQueryBuilder = $this
             ->createQueryBuilder('project')
-            ->where('project.user = :user')
-            ->setParameter('user', $user)
+            ->where('project.company = :company')
+            ->setParameter('company', $company)
         ;
 
         if (!is_null($cityOrPostalCode)) {
