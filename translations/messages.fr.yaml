@@ -84,6 +84,7 @@ menu:
       company: Sociétés
       user: Utilisateurs
   manager:
+    title: Gestion
     company: Société
     user: Utilisateurs
   user:

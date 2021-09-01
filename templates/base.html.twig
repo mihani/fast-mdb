@@ -21,9 +21,6 @@
             {% include "_partials/_sidebar.html.twig" %}
         </div>
         <div id="main" class='layout-navbar'>
-            <header>
-                {% include "_partials/_vertical_nav.html.twig" with {'user': connectedUser } only %}
-            </header>
             <div id="main-content">
                 {% block body %}{% endblock %}
             </div>
