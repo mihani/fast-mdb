@@ -1,3 +1,30 @@
+signup:
+  error:
+    company_exist: Veuillez modifier le nom de votre société
+    email_exist: L'adresse e-mail est incorrect
+  success: Pour finaliser votre inscription, consultez vos mails.
+  log_in: Connectez-vous.
+  remember_account: Vous avez déjà un compte ?
+  button:
+    submit: S'inscrire
+  subtitle: Inscrivez-vous.
+  constraint:
+    lastname:
+      not_blank: Le nom doit être renseigné
+    firstname:
+      not_blank: Le prénom doit être renseigné
+    company:
+      not_blank: La société doit être renseignée
+    email:
+      not_blank: L'email doit être renseigné
+      valid: L'email doit être valide. Nous allons l'utiliser pour vous envoyer vos informations de connexion.
+  form_field:
+    lastname: Nom
+    firstname: Prénom
+    company: Société
+    email: Email
+  link: Inscription
+  title: Inscription
 reset_password:
   title: Réinitialiser votre mot de passe
   form_field:
@@ -54,12 +81,20 @@ menu:
   admin:
     title: Admin
     items:
-      company: Société
-      user: User
-vertical_nav:
-  dropdown:
+      company: Sociétés
+      user: Utilisateurs
+  manager:
+    title: Gestion
+    company: Société
+    user: Utilisateurs
+  user:
+    title: Utilisateur
     logout: Déconnexion
 project:
+  modal:
+    address:
+      edit:
+        submit: Modifier
   title: Project
   goods_type_not_defined: Type de bien non définit
   fields:
@@ -72,7 +107,9 @@ project:
   documents:
     title: Documents
   show:
-    title: 'Project : "%address%"'
+    address:
+      edit: Modification de l'adresse
+    title: 'Projet : "%name%"'
     contact:
       title: Contacts
       replace_by_existing_contact: Remplacer par un contact existant
@@ -125,17 +162,21 @@ project:
       table:
         header:
           address: Adresse
-          price: Prix de vente (en €)
+          price: Prix de vente
+          desc: Détails
           date: Date
           local_type: Type de local
-          land_area: Surface terrain (en m²)
-          actual_build_area: Surface réelle bati (en m²)
+          surface: Surface
+          land_area: Surface terrain
+          actual_build_area: Surface réelle bati
     table:
       head:
         address: Adresse
         sales_price: Prix de vente
         date: Date
   form_field:
+    name: Nom du projet
+    description: Description du projet
     good_type:
       label: Type de bien
       placeholder: Choisir un type de bien
@@ -228,6 +269,7 @@ note:
   edit:
     title: Ajouter une note
     button:
+      update: Mettre à jour
       close: Fermer
       submit: Ajouter
   show:

@@ -44,6 +44,16 @@ class Project
     private $id;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
      * @ORM\Column(type="string", length=125)
      */
     private $state;
@@ -97,11 +107,6 @@ class Project
     private $seller;
 
     /**
-     * @ORM\ManyToMany(targetEntity=SquareMeterPrice::class, mappedBy="projects")
-     */
-    private $squareMeterPrices;
-
-    /**
      * @ORM\OneToMany(targetEntity=Note::class, mappedBy="project", orphanRemoval=true)
      */
     private $notes;
@@ -120,7 +125,6 @@ class Project
     {
         $this->state = self::STATUS_DRAFT;
         $this->urbanDocuments = new ArrayCollection();
-        $this->squareMeterPrices = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->multimedia = new ArrayCollection();
         $this->documents = new ArrayCollection();
@@ -151,6 +155,30 @@ class Project
     public function setCadastralPlanNumber(?string $cadastralPlanNumber): self
     {
         $this->cadastralPlanNumber = $cadastralPlanNumber;
+
+        return $this;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
 
         return $this;
     }
@@ -284,33 +312,6 @@ class Project
     }
 
     /**
-     * @return Collection|SquareMeterPrice[]
-     */
-    public function getSquareMeterPrices(): Collection
-    {
-        return $this->squareMeterPrices;
-    }
-
-    public function addSquareMeterPrice(SquareMeterPrice $squareMeterPrice): self
-    {
-        if (!$this->squareMeterPrices->contains($squareMeterPrice)) {
-            $this->squareMeterPrices[] = $squareMeterPrice;
-            $squareMeterPrice->addProject($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSquareMeterPrice(SquareMeterPrice $squareMeterPrice): self
-    {
-        if ($this->squareMeterPrices->removeElement($squareMeterPrice)) {
-            $squareMeterPrice->removeProject($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Note[]
      */
     public function getNotes(): Collection
@@ -346,6 +347,17 @@ class Project
     public function getMultimedia(): Collection
     {
         return $this->multimedia;
+    }
+
+    public function getFirstImage(): ?Multimedia
+    {
+        foreach ($this->multimedia as $multimedium) {
+            if ($multimedium->isImage()) {
+                return $multimedium;
+            }
+        }
+
+        return null;
     }
 
     public function addMultimedia(Multimedia $multimedia): self

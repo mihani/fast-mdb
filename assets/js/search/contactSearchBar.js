@@ -1,21 +1,12 @@
 "use strict";
 
 import * as $ from 'jquery';
+import 'jquery.typewatch';
 
 $(document).ready(function() {
-    $('body')
-        .click(function() {
-            $('.search-existing-contact__list-group').css('display','none');
-        })
-        .on('click', '.contact-search-result-item', function (){
-            let data = $(this).children('div').data();
-            $('.search-existing-contact__search-bar').val(data.fullname);
-            $('.search-existing-contact__contact-id').val(data.id);
-        })
-        .on('click', '.contact-search-no-result-item', function (){
-            $(this).css('display','none');
-        })
-        .find('.search-existing-contact__search-bar').keyup(function (){
+
+    var typeWatchOptions = {
+        callback: function () {
             let contactSearched = $(this).val();
             if (contactSearched === ''){
                 return;
@@ -38,6 +29,25 @@ $(document).ready(function() {
             }).done(function (data){
                 return elementWhichShowResult.css('display','flex').html(data);
             })
+        },
+        wait: 500,
+        highlight: true,
+        allowSubmit: false,
+        captureLength: 3
+    }
+
+    $('body')
+        .click(function() {
+            $('.search-existing-contact__list-group').css('display','none');
         })
+        .on('click', '.contact-search-result-item', function (){
+            let data = $(this).children('div').data();
+            $('.search-existing-contact__search-bar').val(data.fullname);
+            $('.search-existing-contact__contact-id').val(data.id);
+        })
+        .on('click', '.contact-search-no-result-item', function (){
+            $(this).css('display','none');
+        })
+        .find('.search-existing-contact__search-bar').typeWatch(typeWatchOptions)
     ;
 });

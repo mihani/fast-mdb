@@ -21,27 +21,13 @@
             {% include "_partials/_sidebar.html.twig" %}
         </div>
         <div id="main" class='layout-navbar'>
-            <header>
-                {% include "_partials/_vertical_nav.html.twig" with {'user': connectedUser } only %}
-            </header>
             <div id="main-content">
                 {% block body %}{% endblock %}
-                <footer>
-                    <div class="footer clearfix mb-0 text-muted">
-                        <div class="float-start">
-                            <p>2021 &copy; Mazer</p>
-                        </div>
-                        <div class="float-end">
-                            <p>
-                                Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="http://ahmadsaugi.com">A. Saugi</a>
-                            </p>
-                        </div>
-                    </div>
-                </footer>
             </div>
         </div>
     </div>
     {% block javascripts %}
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         {{ encore_entry_script_tags('app') }}
         {{ encore_entry_script_tags('main') }}
     {% endblock %}

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Api\GeoApiFr\GeoApiFr;
 use App\Elasticsearch\Repository\DvfRepository;
 use App\Entity\Contact\Contact;
 use App\Entity\Contact\EstateAgent;
@@ -14,6 +15,7 @@ use App\Entity\Multimedia;
 use App\Entity\Note;
 use App\Entity\Project;
 use App\Exception\FastMdbLogicException;
+use App\Factory\AddressFactory;
 use App\Form\Contact\EstateAgentType;
 use App\Form\Contact\NotaryType;
 use App\Form\Contact\SearchExistingContactType;
@@ -24,6 +26,7 @@ use App\Form\NoteType;
 use App\Form\Project\ProjectType;
 use App\Repository\NoteRepository;
 use App\Security\Voter\ProjectVoter;
+use App\Service\SquareMeterPriceCalculator;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,11 +43,13 @@ class ProjectController extends AbstractController
 
     private TranslatorInterface $translator;
     private EntityManagerInterface $entityManager;
+    private SquareMeterPriceCalculator $squareMeterPriceCalculator;
 
-    public function __construct(TranslatorInterface $translator, EntityManagerInterface $entityManager)
+    public function __construct(TranslatorInterface $translator, EntityManagerInterface $entityManager, SquareMeterPriceCalculator $squareMeterPriceCalculator)
     {
         $this->translator = $translator;
         $this->entityManager = $entityManager;
+        $this->squareMeterPriceCalculator = $squareMeterPriceCalculator;
     }
 
     #[Route('/{id}', name: 'project_show', methods: ['GET', 'POST'])]
@@ -106,17 +111,9 @@ class ProjectController extends AbstractController
             ]),
         ]);
 
-        $noteForm = $this->createForm(NoteType::class, new Note());
-        $noteForm->handleRequest($request);
-
-        if ($noteForm->isSubmitted() && $noteForm->isValid()) {
-            $note = $noteForm->getData();
-            $note->setProject($project)
-                ->setAuthor($this->getUser()->getFullName().' - '.$this->getUser()->getEmail())
-            ;
-            $this->entityManager->persist($note);
-            $this->entityManager->flush();
-        }
+        $noteForm = $this->createForm(NoteType::class, new Note(), [
+            'action' => $this->generateUrl('project_note_create', ['project' => $project->getId()])
+        ]);
 
         $notes = $noteRepository->findBy(['project' => $project], ['createdAt' => 'DESC']);
         $notesPagination = null;
@@ -141,7 +138,32 @@ class ProjectController extends AbstractController
             'notesPagination' => $notesPagination,
             'multimediaForm' => $multimediaForm->createView(),
             'documentsForm' => $documentForm->createView(),
+            'squareMeterPrices' => (($address !== null) ? $this->squareMeterPriceCalculator->calculate($address->getInseeCode(), $address->getPostalCode(), $address->getCity()): [])
         ]);
+    }
+    #[Route('/{id}/address/edit', name: 'edit_project_address', methods: ['POST'])]
+    public function editProjectAddress(Project $project, Request $request, GeoApiFr $geoApiFr): RedirectResponse
+    {
+        if (!$request->request->has('address_more_information')) {
+            return $this->redirectToRoute('project_show', ['id' => $project->getId()]);
+        }
+
+        $address = $request->request->get('address_more_information')['address'];
+        $addressData = $geoApiFr->getMoreAddressInfo($address);
+        $project->setAddress(AddressFactory::create(
+            $addressData['address']['name'],
+            $addressData['address']['city'],
+            $addressData['address']['postCode'],
+            $addressData['inseeCode'],
+            $addressData['latitude'],
+            $addressData['longitude'],
+            $addressData['cityOnly']
+        ));
+
+        $this->entityManager->persist($project);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('project_show', ['id' => $project->getId()]);
     }
 
     #[Route('/{id}/contact/remove/{contact}', name: 'project_remove_contact', methods: ['GET'])]

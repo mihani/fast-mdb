@@ -1,0 +1,27 @@
+{% extends '_partials/_modal/_modal_form.html.twig' %}
+
+{% block modal_form_title %}{{ modalTitle }}{% endblock %}
+
+{% block modal_form_body %}
+    <form name="address_more_information" method="post" class="address-search-bar" action="{{ path('edit_project_address', {id: projectId}) }}">
+        <div class="modal-body" style="max-height: 300px;">
+            <div class="input-group address-search-bar__input-group">
+                <span class="input-group-text" id="search-address-button">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="search" id="address_more_information_address" name="address_more_information[address]"
+                       required="required" placeholder="{{ 'dashboard.project.preview.form_field.search.bar' | trans }}"
+                       autocomplete="off" class="form-control dashboard-new-project-search-bar"
+                       aria-describedby="search-address-button">
+            </div>
+            <div id="address-search-bar__list-group" class="list-group address-search-bar__list-group" style="position: inherit;">
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit" id="search-address-button">
+                {{ 'project.modal.address.edit.submit'|trans }}
+            </button>
+        </div>
+    </form>
+{% endblock %}

@@ -19,12 +19,11 @@
                 <div class="card-body">
                     {{ include('company/_form.html.twig', {'button_label': 'admin.company.button.update'|trans}) }}
                 </div>
-                <div class="card-footer">
-                    {{ include('company/_delete_form.html.twig') }}
-                </div>
             </div>
         </div>
     </section>
-    <a class="btn icon icon-left btn-outline-primary" href="{{ path('company_index') }}"><i class="bi bi-chevron-left"></i><span>{{ 'admin.company.button.back_to_list'|trans }}</span></a>
+    {% if is_granted('ROLE_ADMIN') %}
+        <a class="btn icon icon-left btn-outline-primary" href="{{ path('company_index') }}"><i class="bi bi-chevron-left"></i><span>{{ 'admin.company.button.back_to_list'|trans }}</span></a>
+    {% endif %}
 </div>
 {% endblock %}

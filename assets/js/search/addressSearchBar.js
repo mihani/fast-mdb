@@ -1,39 +1,53 @@
 "use strict";
 
 import * as $ from 'jquery';
+import 'jquery.typewatch';
 
 $(document).ready(function() {
+    let $form = $('form[name="address_more_information"]');
+
     $('body')
         .click(function() {
             $('#address-search-bar__list-group').css('display','none');
         })
         .on('click', '.result-item', function (){
             $('.dashboard-new-project-search-bar').val($(this).children('div').text());
+            $form.submit();
         })
     ;
 
-    $('.dashboard-new-project-search-bar').keyup(function (){
-        let addressSearched = $(this).val();
-        if (addressSearched === ''){
-            return;
-        }
-        let elementWhichShowResult = $('#address-search-bar__list-group');
+    let typeWatchOptions = {
+        callback: function () {
+            let addressSearched = $(this).val();
+            if (addressSearched === ''){
+                return;
+            }
+            let elementWhichShowResult = $('#address-search-bar__list-group');
 
-        $.ajax({
-            url: "https://api-adresse.data.gouv.fr/search/?q="+addressSearched.replace(/\s/g,'+')+"&limit=5&type=housenumber&autocomplete=1",
-            header:{
-                'Access-Control-Allow-Origin':'*'
-            },
-            type: 'GET'
-        }).done(function (data){
-            let resultLines = '';
-            (data.features).forEach(function (object) {
-                resultLines += fillTemplateWithData(object.properties.label, object.properties.context)
-            });
+            $.ajax({
+                url: "/search/address?q="+addressSearched.replace(/\s/g,'+'),
+                type: 'GET'
+            }).done(function (data){
+                let resultLines = '';
+                (data.cities).forEach(function (object) {
+                    let label = object.nom + ' ' + object.codesPostaux[0];
+                    let context = object.departement.code + ', ' + object.departement.nom
+                    resultLines += fillTemplateWithData(label, context)
+                });
+                (data.addresses.features).forEach(function (object) {
+                    resultLines += fillTemplateWithData(object.properties.label, object.properties.context)
+                });
 
-            return elementWhichShowResult.css('display','flex').html(resultLines);
-        })
-    });
+                return elementWhichShowResult.css('display','flex').html(resultLines);
+            })
+        },
+        wait: 500,
+        highlight: true,
+        allowSubmit: false,
+        captureLength: 3
+    }
+
+    $('.dashboard-new-project-search-bar').typeWatch(typeWatchOptions);
 });
 
 function fillTemplateWithData(address, context) {

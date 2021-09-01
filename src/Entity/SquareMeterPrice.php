@@ -30,6 +30,11 @@ class SquareMeterPrice
     private $inseeCode;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $type;
+
+    /**
      * @ORM\Column(type="float")
      */
     private $price;
@@ -38,11 +43,6 @@ class SquareMeterPrice
      * @ORM\Column(type="string", length=8)
      */
     private $year;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Project::class, inversedBy="squareMeterPrices")
-     */
-    private $projects;
 
     public function __construct()
     {
@@ -90,26 +90,14 @@ class SquareMeterPrice
         return $this;
     }
 
-    /**
-     * @return Collection|Project[]
-     */
-    public function getProjects(): Collection
+    public function getType(): ?string
     {
-        return $this->projects;
+        return $this->type;
     }
 
-    public function addProject(Project $project): self
+    public function setType($type): self
     {
-        if (!$this->projects->contains($project)) {
-            $this->projects[] = $project;
-        }
-
-        return $this;
-    }
-
-    public function removeProject(Project $project): self
-    {
-        $this->projects->removeElement($project);
+        $this->type = $type;
 
         return $this;
     }

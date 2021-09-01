@@ -30,7 +30,7 @@ class Address
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $addressLine1;
 
@@ -64,6 +64,16 @@ class Address
      */
     private $inseeCode;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $cityOnly;
+
+    public function __construct()
+    {
+        $this->cityOnly = false;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,7 +84,7 @@ class Address
         return $this->addressLine1;
     }
 
-    public function setAddressLine1(string $addressLine1): self
+    public function setAddressLine1(?string $addressLine1): self
     {
         $this->addressLine1 = $addressLine1;
 
@@ -153,11 +163,23 @@ class Address
         return $this;
     }
 
+    public function isCityOnly()
+    {
+        return $this->cityOnly;
+    }
+
+    public function setCityOnly(bool $cityOnly): self
+    {
+        $this->cityOnly = $cityOnly;
+
+        return $this;
+    }
+
     public function getInlineAddress(): string
     {
         return AddressUtils::inlineFormatFromEntity(
-            $this->addressLine1,
-            $this->addressLine2,
+            (!$this->cityOnly ? $this->addressLine1 ?: '' : ''),
+            (!$this->cityOnly ? $this->addressLine2 ?: '' : ''),
             $this->postalCode,
             $this->city
         );

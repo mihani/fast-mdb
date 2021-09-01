@@ -24,27 +24,35 @@ class AddressUtils
     public static function inlineFormatFromDvfEntry(string $number, string $btq, string $type, string $name, string $postalCode, string $city): string
     {
         $inlineAddress = sprintf(
-            '%s%s %s %s %s %s',
+            "%s%s %s %s - %s %s",
             $number,
             $btq,
             strtolower($type),
             ucfirst(strtolower($name)),
-            $postalCode,
-            ucfirst(strtolower($city))
+            ucfirst(strtolower($city)),
+            $postalCode
         );
 
         return preg_replace('/\s+/', ' ', trim($inlineAddress));
     }
 
-    public static function inlineFormatFromEntity(string $addressLine1, ?string $addressLine2, string $postalCode, string $city): string
+    public static function inlineFormatFromEntity(string $addressLine1, string $addressLine2, string $postalCode, string $city): string
     {
-        $inlineAddress = sprintf(
-            '%s %s %s %s',
-            $addressLine1,
-            $addressLine2,
-            $postalCode,
-            $city
-        );
+        if ($addressLine1 != '' || $addressLine2 != '') {
+            $inlineAddress = sprintf(
+                '%s %s - %s %s',
+                $addressLine1,
+                $addressLine2,
+                $city,
+                $postalCode
+            );
+        } else {
+            $inlineAddress = sprintf(
+                '%s %s',
+                $city,
+                $postalCode
+            );
+        }
 
         return preg_replace('/\s+/', ' ', trim($inlineAddress));
     }

@@ -3,7 +3,7 @@ fos_ck_editor:
     default_config: my_config
     configs:
         my_config:
-            toolbar: [ ["Source", "-", "Bold", "Italic", "Underline" ] ]
+            toolbar: [ ["Bold", "Italic", "Underline", "Strike", 'NumberedList', 'BulletedList', "FontSize", "TextColor", "BGColor" ] ]
             removePlugins: 'exportpdf'
 
 twig:
