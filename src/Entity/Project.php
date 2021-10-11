@@ -76,7 +76,7 @@ class Project
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="projects")
+     * @ORM\ManyToOne(targetEntity=Company::class)
      * @ORM\JoinColumn(nullable=false)
      */
     private $company;

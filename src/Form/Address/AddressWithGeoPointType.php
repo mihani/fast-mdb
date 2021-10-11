@@ -35,7 +35,9 @@ class AddressWithGeoPointType extends AbstractType
                 'grouping' => \NumberFormatter::TYPE_DOUBLE,
                 'scale' => 6,
             ])
-            ->add('cityOnly', CheckboxType::class)
+            ->add('cityOnly', CheckboxType::class, [
+                'required' => false
+            ])
         ;
     }
 
