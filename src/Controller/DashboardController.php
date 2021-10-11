@@ -62,26 +62,16 @@ class DashboardController extends AbstractController
         ]);
         $searchBarForm->handleRequest($request);
 
-        $addressData = $squareMeterPrices = $urbanDocuments = $proximitySalesPagination = $projectFromPreviewForm = null;
+        $addressData  = $urbanDocuments = $projectFromPreviewForm = null;
+
         if ($searchBarForm->isSubmitted() && $searchBarForm->isValid()) {
             $addressData = $geoApiFr->getMoreAddressInfo($searchBarForm->get('address')->getData());
             if ($addressData !== null) {
                 $urbanDocuments = $this->getUrbanDocuments($addressData['inseeCode']);
-                $proximitySales = $this->dvfRepository->getProximitySales($addressData['latitude'], $addressData['longitude']);
-                if ($proximitySales) {
-                    $proximitySalesPagination = $paginator->paginate(
-                        $proximitySales,
-                        $request->query->getInt('proximitySalesPage', 1),
-                        self::ITEM_PER_PAGE,
-                        ['pageParameterName' => 'proximitySalesPage']
-                    );
-                }
                 $project = $this->generateProjectFromData($addressData, $urbanDocuments);
                 $projectFromPreviewForm = $this->createForm(ProjectFromPreviewType::class, $project, [
                     'action' => $this->generateUrl('dashboard_create_project'),
                 ]);
-
-                $squareMeterPrices = $this->squareMeterPriceCalculator->calculate($addressData['inseeCode'], $addressData['address']['postCode'], $addressData['address']['city'],);
             } else {
                 $this->addFlash(
                     'error',
@@ -94,8 +84,12 @@ class DashboardController extends AbstractController
         $searchProjectForm->handleRequest($request);
 
         $searchProjectsQuery = null;
-        if ($searchProjectForm->isSubmitted() && $searchProjectForm->isValid()) {
-            $searchProjectFormData = $searchProjectForm->getData();
+        $searchProjectFormData = $searchProjectForm->getData();
+
+        if ($searchProjectForm->isSubmitted()
+            && $searchProjectForm->isValid()
+            && ($searchProjectFormData['states'] || $searchProjectFormData['cityOrPostalCode']  || $searchProjectFormData['contactSearch']['contactId'])
+        ) {
             if (is_null($searchProjectFormData['contactSearch']['search'])) {
                 $searchProjectFormData['contactSearch']['contactId'] = null;
             }
@@ -115,7 +109,8 @@ class DashboardController extends AbstractController
             $searchProjectsQuery = $this->entityManager
                 ->getRepository(Project::class)
                 ->searchProjectsQuery(
-                    $this->getUser()->getCompany()
+                    $this->getUser()->getCompany(),
+                    Project::STATUSES_ACTIVE
                 )
             ;
         }
@@ -131,11 +126,9 @@ class DashboardController extends AbstractController
             'searchBarForm' => $searchBarForm->createView(),
             'addressData' => $addressData,
             'urbanDocuments' => empty($urbanDocuments) ? null : $urbanDocuments,
-            'proximitySalesPagination' => $proximitySalesPagination,
             'projectFromPreviewForm' => $projectFromPreviewForm ? $projectFromPreviewForm->createView() : null,
             'projectsPagination' => $projectsPagination,
             'searchProjectForm' => $searchProjectForm->createView(),
-            'squareMeterPrices' => $squareMeterPrices,
         ]);
     }
 

@@ -9,7 +9,7 @@ for(var i=0; i<choices.length;i++) {
             {
                 delimiter: ',',
                 editItems: true,
-                maxItemCount: 5,
+                maxItemCount: 50,
                 removeItemButton: true,
             });
     }else{

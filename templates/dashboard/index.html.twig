@@ -103,17 +103,8 @@
                                             <p>{{ 'project.card.map.no_street_view_exist'|trans }}</p>
                                         </div>
                                     </div>
-                                    <div class="mt-3 col-12">
-                                        {% include "project/square_meter_price.html.twig" with {'squareMeterPrices' : squareMeterPrices} only %}
-                                    </div>
                                 </div>
                             {% endif %}
-                            {# Sales in address area #}
-                            <div class="row">
-                                <div class="col-12">
-                                    {% include "project/sales_in_delimited_area.html.twig" with {'proximitySalesPagination' : proximitySalesPagination} only %}
-                                </div>
-                            </div>
                         </div>
                         <div class="card-footer">
                             <div class="row">

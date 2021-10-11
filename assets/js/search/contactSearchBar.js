@@ -36,6 +36,8 @@ $(document).ready(function() {
         captureLength: 3
     }
 
+    let $formSearchContact = $('form[name="search_existing_contact"]');
+
     $('body')
         .click(function() {
             $('.search-existing-contact__list-group').css('display','none');
@@ -44,6 +46,7 @@ $(document).ready(function() {
             let data = $(this).children('div').data();
             $('.search-existing-contact__search-bar').val(data.fullname);
             $('.search-existing-contact__contact-id').val(data.id);
+            $formSearchContact.submit();
         })
         .on('click', '.contact-search-no-result-item', function (){
             $(this).css('display','none');

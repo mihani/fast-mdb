@@ -64,6 +64,8 @@ class ProjectRepository extends ServiceEntityRepository
             ;
         }
 
+        $projectQueryBuilder->orderBy('project.updatedAt', 'desc');
+
         return $projectQueryBuilder->getQuery();
     }
 }

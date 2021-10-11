@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Contact\Contact;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,37 +19,21 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ContactRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, $class = null)
     {
-        parent::__construct($registry, Contact::class);
+        parent::__construct($registry, $class ?? Contact::class);
     }
 
-    // /**
-    //  * @return Contact[] Returns an array of Contact objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    protected function getBaseSearchQueryBuilder(string $queryString): QueryBuilder
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
+            ->orWhere('c.firstname like :val')
+            ->orWhere('c.lastname like :val')
+            ->orWhere('c.email like :val')
+            ->orWhere('c.mobileNumber like :val')
+            ->setParameter('val', $queryString.'%')
+            ->orderBy('c.id', 'DESC')
             ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
         ;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Contact
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

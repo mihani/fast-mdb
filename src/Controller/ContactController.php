@@ -86,35 +86,18 @@ class ContactController extends AbstractController
     }
 
     #[Route('/search/{contactType}', name: 'contact_search', methods: ['GET'])]
-    public function searchContact(Request $request, ContactRepository $contactElasticRepository, string $contactType = Contact::TYPE)
+    public function searchContact(Request $request, string $contactType = Contact::TYPE)
     {
         if (!$request->isXmlHttpRequest()) {
             return new JsonResponse([], Response::HTTP_FORBIDDEN);
         }
 
-        $contactDocuments = $contactElasticRepository->searchContact($request->get('query'), $contactType);
-
-        if (is_null($contactDocuments)) {
-            $resultTemplate = $this->renderView('contact/contact_result.html.twig', ['contacts' => null]);
-
-            return new JsonResponse($resultTemplate, Response::HTTP_NOT_FOUND);
-        }
-
-        $contacts = [];
-        foreach ($contactDocuments as $contactDocument) {
-            $current = $contactDocument['_source'];
-            $contacts[] = [
-                'id' => $contactDocument['_id'],
-                'fullname' => $current['fullname'],
-                'contactType' => $current['contact_metadata']['type'],
-                'mobileNumber' => $current['mobile_number'],
-                'email' => $current['email'],
-            ];
-
-            if (isset($current['estate_agency'])) {
-                $contacts['estateAgency'] = $current['estate_agency'];
-            }
-        }
+        $contacts = match ($contactType) {
+            Seller::TYPE => $this->entityManager->getRepository(Seller::class)->search($request->query->get('query')),
+            EstateAgent::TYPE => $this->entityManager->getRepository(EstateAgent::class)->search($request->query->get('query')),
+            Notary::TYPE => $this->entityManager->getRepository(Notary::class)->search($request->query->get('query')),
+            default => $this->entityManager->getRepository(Contact::class)->search($request->query->get('query')),
+        };
 
         $resultTemplate = $this->renderView('contact/contact_result.html.twig', ['contacts' => $contacts]);
 
@@ -129,15 +112,11 @@ class ContactController extends AbstractController
             /** @var Contact $contact */
             $contact = $form->getData();
 
-            $action = 'update';
             if (!$contact->getId()) {
                 $this->entityManager->persist($contact);
-                $action = 'create';
             }
 
             $this->entityManager->flush();
-
-            $this->createOrUpdateContactDocument($contact, $action);
 
             if ($projectId = $request->get('projectId')) {
                 return $this->redirectToRoute('project_add_contact', [

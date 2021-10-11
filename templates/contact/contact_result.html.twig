@@ -1,31 +1,39 @@
-{% if contacts is null %}
+{% for contact in contacts %}
+    <a href="#" class="list-group-item list-group-item-action contact-search-result-item">
+        <div class="d-flex align-items-center w-100" data-fullname="{{ contact.fullname }}" data-id="{{ contact.id }}">
+            {% if instanceOf(contact, 'App\\Entity\\Contact\\Notary') %}
+                <i class="me-1 fas fa-pen-nib fa-xs"></i>
+            {% elseif instanceOf(contact, 'App\\Entity\\Contact\\Seller') %}
+                <i class="me-1 fas fa-hand-holding-usd fa-xs"></i>
+            {% elseif instanceOf(contact, 'App\\Entity\\Contact\\EstateAgent') %}
+                <i class="me-1 fas fa-home fa-xs"></i>
+            {% endif %}
+            <h6 class="mb-0">{{ contact.fullname }}</h6>
+        </div>
+        <p class="mb-0">
+            {% if (contact.mobileNumber is defined) and (contact.mobileNumber is not empty) %}
+                <small><i class="bi bi-telephone"></i> {{ contact.mobileNumber }}</small>
+            {% endif %}
+            {% if (contact.email is defined) and (contact.email is not empty) %}
+                <small><i class="bi bi-at"></i> {{ contact.email }}</small>
+            {% endif %}
+
+            {% if (contact.estateAgencyName is defined) and (contact.estateAgencyName is not empty) %}
+                <small><i class="bi bi-building"></i> {{ contact.estateAgencyName }}</small>
+            {% endif %}
+
+            {% if (contact.companyName is defined) and (contact.companyName is not empty) %}
+                <small><i class="bi bi-building"></i> {{ contact.companyName }}</small>
+            {% endif %}
+
+            {% if (contact.notaryOffice is defined) and (contact.notaryOffice is not empty) %}
+                <small><i class="bi bi-building"></i> {{ contact.notaryOffice }}</small>
+            {% endif %}
+        </p>
+    </a>
+{% else %}
     <a href="#" class="list-group-item list-group-item-action contact-search-no-result-item">
         <p>{{ 'project.show.contact.search_bar.no_result_found'|trans }}</p>
     </a>
-{% else %}
-    {% for contact in contacts %}
-        <a href="#" class="list-group-item list-group-item-action contact-search-result-item">
-            <div class="d-flex align-items-center w-100" data-fullname="{{ contact['fullname'] }}" data-id="{{ contact['id'] }}">
-                {% if contact['contactType'] == constant('App\\Entity\\Contact\\Notary::TYPE') %}
-                    <i class="me-1 fas fa-pen-nib fa-xs"></i>
-                {% elseif contact['contactType'] == constant('App\\Entity\\Contact\\Seller::TYPE') %}
-                    <i class="me-1 fas fa-hand-holding-usd fa-xs"></i>
-                {% elseif contact['contactType'] == constant('App\\Entity\\Contact\\EstateAgent::TYPE') %}
-                    <i class="me-1 fas fa-home fa-xs"></i>
-                {% endif %}
-                <h6 class="mb-0">{{ contact['fullname'] }}</h6>
-            </div>
-            <p class="mb-0">
-                {% if (contact['mobileNumber'] is defined) and (contact['mobileNumber'] is not empty) %}
-                    <small><i class="bi bi-telephone"></i> {{ contact['mobileNumber'] }}</small>
-                {% endif %}
-                {% if (contact['email'] is defined) and (contact['email'] is not empty) %}
-                    <small><i class="bi bi-at"></i> {{ contact['email'] }}</small>
-                {% endif %}
-                {% if (contact['estateAgency'] is defined) and (contact['estateAgency'] is not empty) %}
-                    <small><i class="bi bi-building"></i> {{ contact['estateAgency'] }}</small>
-                {% endif %}
-            </p>
-        </a>
-    {% endfor %}
-{% endif %}
+{% endfor %}
+

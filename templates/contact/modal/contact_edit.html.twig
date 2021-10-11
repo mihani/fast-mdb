@@ -16,7 +16,6 @@
         {{ form_start(searchForm, {'attr': {'class': 'search-existing-contact'}}) }}
             <div id="search-existing-contact__input-group" class="search-existing-contact__input-group input-group">
                 {{ form_widget(searchForm.search, {'attr': { 'class':'form-control search-existing-contact__search-bar', 'aria-describedby':'button-add-existing-'~contactType, 'data-url':url('contact_search', {'contactType':contactType} ) }}) }}
-                <button class="btn btn-primary" type="submit" id="button-add-existing-{{ contactType }}">{{'project.show.contact.search_bar.submit'|trans}}</button>
             </div>
             <div class="list-group search-existing-contact__list-group">
 

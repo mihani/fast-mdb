@@ -57,8 +57,6 @@ class ProjectController extends AbstractController
     {
         $this->denyAccessUnlessGranted(ProjectVoter::COMPANY_VIEW, $project);
 
-        $proximitySalesPagination = null;
-
         $projectForm = $this->createForm(ProjectType::class, $project);
         $projectForm->handleRequest($request);
 
@@ -67,19 +65,6 @@ class ProjectController extends AbstractController
         }
 
         $address = $project->getAddress();
-        $proximitySales = $dvfRepository->getProximitySales(
-            $address->getLatitude(),
-            $address->getLongitude()
-        );
-
-        if ($proximitySales) {
-            $proximitySalesPagination = $paginator->paginate(
-                $proximitySales,
-                $request->query->getInt('proximitySalesPage', 1),
-                self::ITEM_PER_PAGE,
-                ['pageParameterName' => 'proximitySalesPage']
-            );
-        }
 
         $searchForms = [
             'seller' => $this->createForm(type: SearchExistingContactType::class, options: [
@@ -128,7 +113,6 @@ class ProjectController extends AbstractController
 
         return $this->render('project/show.html.twig', [
             'project' => $project,
-            'proximitySalesPagination' => $proximitySalesPagination,
             'projectForm' => $projectForm->createView(),
             'sellerContactForm' => $this->createSellerContactForm($project)->createView(),
             'estateAgentContactForm' => $this->createEstateAgentContactForm($project)->createView(),
@@ -138,7 +122,6 @@ class ProjectController extends AbstractController
             'notesPagination' => $notesPagination,
             'multimediaForm' => $multimediaForm->createView(),
             'documentsForm' => $documentForm->createView(),
-            'squareMeterPrices' => (($address !== null) ? $this->squareMeterPriceCalculator->calculate($address->getInseeCode(), $address->getPostalCode(), $address->getCity()): [])
         ]);
     }
     #[Route('/{id}/address/edit', name: 'edit_project_address', methods: ['POST'])]

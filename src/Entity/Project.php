@@ -27,14 +27,24 @@ class Project
     use TimestampableEntity;
     use SoftDeleteableEntity;
 
-    private const STATUS_DRAFT = 'draft';
-    private const STATUS_TO_DUG_UP = 'to_dug_up';
-    private const STATUS_SELLER_CONTACTED = 'seller_contacted';
-    private const STATUS_TO_RELAUNCH = 'to_relauch';
-    private const STATUS_SCHEDULED_VISIT = 'scheduled_visit';
-    private const STATUS_OFFER_SEND = 'offer_send';
-    private const STATUS_SIGNED_OFFER = 'signed_offer';
-    private const STATUS_ARCHIVED = 'archived';
+    public const STATUS_DRAFT = 'draft';
+    public const STATUS_TO_DUG_UP = 'to_dug_up';
+    public const STATUS_SELLER_CONTACTED = 'seller_contacted';
+    public const STATUS_TO_RELAUNCH = 'to_relauch';
+    public const STATUS_SCHEDULED_VISIT = 'scheduled_visit';
+    public const STATUS_OFFER_SEND = 'offer_send';
+    public const STATUS_SIGNED_OFFER = 'signed_offer';
+    public const STATUS_ARCHIVED = 'archived';
+
+    public const STATUSES_ACTIVE = [
+        self::STATUS_DRAFT,
+        self::STATUS_TO_DUG_UP,
+        self::STATUS_SELLER_CONTACTED,
+        self::STATUS_TO_RELAUNCH,
+        self::STATUS_SCHEDULED_VISIT,
+        self::STATUS_OFFER_SEND,
+        self::STATUS_SIGNED_OFFER,
+    ];
 
     /**
      * @ORM\Id
