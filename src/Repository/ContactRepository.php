@@ -24,6 +24,13 @@ class ContactRepository extends ServiceEntityRepository
         parent::__construct($registry, $class ?? Contact::class);
     }
 
+    public function search(string $queryString)
+    {
+        return $this->getBaseSearchQueryBuilder($queryString)
+            ->getQuery()
+            ->getResult();
+    }
+
     protected function getBaseSearchQueryBuilder(string $queryString): QueryBuilder
     {
         return $this->createQueryBuilder('c')
