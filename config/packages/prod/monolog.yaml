@@ -1,13 +1,11 @@
 monolog:
     handlers:
-        filter_for_errors:
+        main:
             type: fingers_crossed
             action_level: error
-            handler: error_log_handler
-            excluded_404s:
-                # regex: exclude all 404 errors from the logs
-                - ^/
-
-        error_log_handler:
-            type: error_log
-            level: info
+            handler: nested
+            excluded_http_codes: [404, 405]
+        nested:
+            type: stream
+            path: "php://stderr"
+            level: debug
